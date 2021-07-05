@@ -93,6 +93,12 @@ export default [
         navLink: "/apps/ecommerce/addProduct"
       },
       {
+        id: "ecommerce-category",
+        title: "Category",
+        icon: <Circle size={12} />,
+        navLink: "/apps/ecommerce/category"
+      },
+      {
         id: "wishList",
         title: "Wish List",
         icon: <Circle size={12} />,

@@ -1,6 +1,6 @@
 /* eslint-disable semi */
 import { Fragment, useState, useEffect } from "react";
-import { Row, Col, Button } from "reactstrap";
+import { Row, Col, Button, CustomInput, Label } from "reactstrap";
 // ** Custom Components
 import Breadcrumbs from "@components/breadcrumbs";
 import BlogSidebar from "../../../pages/blog/BlogSidebar";
@@ -28,6 +28,7 @@ const AddProduct = () => {
           <MoreInfo />
         </Col>
       </Row>
+     
       <Row>
         <Col className="mt-50">
           <Button.Ripple color="primary" className="mr-1">

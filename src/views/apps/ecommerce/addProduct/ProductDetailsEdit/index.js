@@ -179,6 +179,38 @@ const ProductDetailsEdit = () => {
                       </Media>
                     </div>
                   </Col>
+
+                  {/* <Col md="6" className='align-items-center'>
+
+                  
+                  </Col> */}
+                  <Col sm ='12'>
+                  <FormGroup row>
+                    <Col sm="6">
+                      <Label sm="6" for="manage_stock">
+                        Do you want to publish into website?<span className="text-danger">*</span>
+                      </Label>
+                    </Col>
+
+                    <Col sm="3" className="p-0.5">
+                      <CustomInput
+                        type="checkbox"
+                        id="manage-stock"
+                        defaultChecked={false}
+                        label="Yes"
+                      />
+                    </Col>
+
+                    <Col sm="3">
+                      <CustomInput
+                        type="checkbox"
+                        id="manage-stock"
+                        defaultChecked={false}
+                        label="No"
+                      />
+                    </Col>
+                  </FormGroup>
+                  </Col>
                 </Row>
               </Form>
             </CardBody>
