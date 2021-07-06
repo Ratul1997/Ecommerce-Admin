@@ -44,7 +44,7 @@ export const data = [
 export const columns = [
   {
     name: "Name",
-    selector: "category_name",
+    selector: "name",
     sortable: true,
     minWidth: "200px"
   },
@@ -72,10 +72,6 @@ export const columns = [
             </DropdownToggle>
             <DropdownMenu right>
               <DropdownItem>
-                <FileText size={15} />
-                <span className="align-middle ml-50">Details</span>
-              </DropdownItem>
-              <DropdownItem>
                 <Archive size={15} />
                 <span className="align-middle ml-50">Archive</span>
               </DropdownItem>
@@ -85,7 +81,6 @@ export const columns = [
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-          <Edit size={15} />
         </div>
       );
     }

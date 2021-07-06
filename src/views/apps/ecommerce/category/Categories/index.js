@@ -4,7 +4,8 @@ import { Fragment, useState } from "react";
 
 // ** Table Columns
 import { data, columns } from "./columns";
-
+// ** Store & Actions
+import { useDispatch, useSelector } from "react-redux";
 // ** Third Party Components
 import ReactPaginate from "react-paginate";
 import { ChevronDown } from "react-feather";
@@ -62,6 +63,10 @@ const Categories = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const store = useSelector(store => store.ecommerce);
+  
+  const {categories} = store
+
   // ** Function to handle pagination
   const handlePagination = page => {
     setCurrentPage(page.selected);
@@ -77,13 +82,13 @@ const Categories = () => {
     setSearchValue(value);
     console.log(value);
     if (value.length) {
-      updatedData = data.filter(item => {
+      updatedData = categories.filter(item => {
         const startsWith =
-          item.category_name.toLowerCase().startsWith(value.toLowerCase()) ||
+          item.name.toLowerCase().startsWith(value.toLowerCase()) ||
           item.description.toLowerCase().startsWith(value.toLowerCase());
 
         const includes =
-          item.category_name.toLowerCase().includes(value.toLowerCase()) ||
+          item.name.toLowerCase().includes(value.toLowerCase()) ||
           item.description.toLowerCase().includes(value.toLowerCase());
 
         if (startsWith) {
@@ -127,7 +132,7 @@ const Categories = () => {
       forcePage={currentPage}
       onPageChange={page => handlePagination(page)}
       pageCount={
-        searchValue.length ? filteredData.length / 7 : data.length / 7 || 1
+        searchValue.length ? filteredData.length / 25 : categories.length / 25 || 1
       }
       breakLabel={"..."}
       pageRangeDisplayed={2}
@@ -158,12 +163,12 @@ const Categories = () => {
         subHeader
         responsive
         columns={columns}
-        paginationPerPage={7}
+        paginationPerPage={25}
         sortIcon={<ChevronDown />}
         className="react-dataTable"
         paginationDefaultPage={currentPage + 1}
         paginationComponent={CustomPagination}
-        data={searchValue.length ? filteredData : data}
+        data={searchValue.length ? filteredData : categories}
         subHeaderComponent={
           <CustomHeader
             toggleSidebar={toggleSidebar}
