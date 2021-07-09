@@ -1,6 +1,6 @@
-/* eslint-disable semi */
+/* eslint-disable  */
 // ** React Import
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Select, { components } from "react-select";
 // ** Custom Components
@@ -26,11 +26,15 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
     description: "",
     parent_id: null
   };
-
   // ** States
   const [parentCategory, setParentCategory] = useState("");
-  const [description, setDescription] = useState("");
   const [categoryData, setCategoryData] = useState(initialState);
+
+  useEffect(() => {
+    return () => {
+      setCategoryData(initialState);
+    };
+  }, []);
 
   // ** Store Vars
 
@@ -40,11 +44,14 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
 
   const getOptions = () => {
     const options = [];
-    categories.map(item => { options.push({ value: item.category_id, label: item.name }); });
-    return options
+    categories &&
+      categories.map(item => {
+        options.push({ value: item.category_id, label: item.name });
+      });
+    return options;
   };
   // ** Vars
-  const iconOptions = [
+  const categoryOptions = [
     {
       label: "Categories",
       options: getOptions()
@@ -59,8 +66,8 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
       const res = await axios.post("http://localhost:5000/api/add-category", {
         categoryData
       });
-      dispatch(updateCategories(res.data))
-      toggleSidebar()
+      dispatch(updateCategories(res.data));
+      toggleSidebar();
     } catch (error) {
       console.log(error);
     }
@@ -68,18 +75,13 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
 
   // ** Function to handle form submit
   const onSubmit = e => {
-    e.preventDefault()
+    e.preventDefault();
     if (isObjEmpty(errors)) {
       // toggleSidebar();
       postData();
     }
   };
-  const handleInputChange = e => {
-    e.preventDefault()
 
-    console.log(e.value)
-    // return val
-  }
   return (
     <Sidebar
       size="lg"
@@ -99,7 +101,9 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
             id="category-name"
             placeholder="Bag/Watch..."
             innerRef={register({ required: true })}
-            onChange={e => setCategoryData({ ...categoryData, name: e.target.value })}
+            onChange={e =>
+              setCategoryData({ ...categoryData, name: e.target.value })
+            }
             className={classnames({ "is-invalid": errors["category-name"] })}
           />
         </FormGroup>
@@ -110,10 +114,12 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
         >
           <Label for="select-parentCategory">Parent Category</Label>
           <Select
-            options={iconOptions}
+            options={categoryOptions}
             className="react-select"
             classNamePrefix="select"
-            onChange={e => setCategoryData({ ...categoryData, parent_id : e.value }) }
+            onChange={e =>
+              setCategoryData({ ...categoryData, parent_id: e.value })
+            }
           />
         </FormGroup>
         <FormGroup>
@@ -125,7 +131,9 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
             rows="3"
             value={categoryData.description}
             placeholder="Description"
-            onChange={e => setCategoryData({ ...categoryData, description: e.target.value }) }
+            onChange={e =>
+              setCategoryData({ ...categoryData, description: e.target.value })
+            }
           />
           <span
             className={classnames("textarea-counter-value float-right", {

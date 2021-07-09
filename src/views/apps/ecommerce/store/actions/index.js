@@ -78,26 +78,23 @@ export const deleteCartItem = id => {
   };
 };
 
-// ** GET Categories
-
-// export const getCategories = () => {
-//   return dispatch => {
-//     return;
-//   };
-// };
-
 // ** Add Categories
 export const addCategories = params => {
-  console.log(params)
   return dispatch => {
     return dispatch({ type: "ADD_CATEGORY", data: params });
   };
 };
-
+// ** Update Categories list
 export const updateCategories = params => {
-  console.log(params)
   return dispatch => {
     return dispatch({ type: "UPDATE_CATEGORY", data: params });
   };
 };
 
+// ** Remove A Category Item
+export const removeItemInCategory = params => {
+  console.log(params);
+  return dispatch => {
+    return dispatch({ type: "REMOVE_CATEGORY_ITEM", data: params });
+  };
+};

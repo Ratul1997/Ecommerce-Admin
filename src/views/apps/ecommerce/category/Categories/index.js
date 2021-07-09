@@ -1,9 +1,7 @@
-/* eslint-disable semi */
+/* eslint-disable */
 // ** React Imports
 import { Fragment, useState } from "react";
-
-// ** Table Columns
-import { data, columns } from "./columns";
+import { Plus, Trash } from "react-feather";
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
 // ** Third Party Components
@@ -15,46 +13,16 @@ import {
   Card,
   CardHeader,
   CardTitle,
-  CardFooter,
-  CardText,
   Button,
   Input,
   Label,
   Row,
   Col,
-  CustomInput
 } from "reactstrap";
 import Sidebar from "./SideBar";
+import axios from "axios";
+import { removeItemInCategory } from "../../store/actions";
 
-const CustomHeader = ({ toggleSidebar, handleFilter, searchTerm }) => {
-  return (
-    <div className="invoice-list-table-header w-100 mr-1 ml-50 mt-2 mb-75">
-      <Row>
-        <Col xl="6" className="d-flex align-items-center p-0"></Col>
-        <Col
-          xl="6"
-          className="d-flex align-items-sm-center justify-content-lg-end justify-content-start flex-lg-nowrap flex-wrap flex-sm-row flex-column pr-lg-1 p-0 mt-lg-0 mt-1"
-        >
-          <div className="d-flex align-items-center mb-sm-0 mb-1 mr-1">
-            <Label className="mb-0" for="search-invoice">
-              Search:
-            </Label>
-            <Input
-              id="search-invoice"
-              className="ml-50 w-100"
-              type="text"
-              value={searchTerm}
-              onChange={e => handleFilter(e.target.value)}
-            />
-          </div>
-          <Button.Ripple color="primary" onClick={toggleSidebar}>
-            Add New Category
-          </Button.Ripple>
-        </Col>
-      </Row>
-    </div>
-  );
-};
 
 const Categories = () => {
   // ** State
@@ -63,9 +31,9 @@ const Categories = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const dispatch = useDispatch();
   const store = useSelector(store => store.ecommerce);
-  
-  const {categories} = store
+  const { categories } = store;
 
   // ** Function to handle pagination
   const handlePagination = page => {
@@ -76,11 +44,10 @@ const Categories = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   // ** Function to handle filter
-  const handleFilter = val => {
-    const value = val;
+  const handleFilter =e => {
+    const value = e.target.value;
     let updatedData = [];
     setSearchValue(value);
-    console.log(value);
     if (value.length) {
       updatedData = categories.filter(item => {
         const startsWith =
@@ -132,7 +99,9 @@ const Categories = () => {
       forcePage={currentPage}
       onPageChange={page => handlePagination(page)}
       pageCount={
-        searchValue.length ? filteredData.length / 25 : categories.length / 25 || 1
+        searchValue.length
+          ? filteredData.length / 25
+          : categories.length / 25 || 1
       }
       breakLabel={"..."}
       pageRangeDisplayed={2}
@@ -152,11 +121,88 @@ const Categories = () => {
     />
   );
 
+  const onDelete = category => async e => {
+    e.preventDefault();
+    console.log(category);
+    try {
+      const url = "http://localhost:5000/api/remove-a-category";
+      const res = await axios.post(url, {
+        category_id: category.category_id
+      });
+      console.log(res);
+      dispatch(removeItemInCategory(category));
+    } catch (error) {
+      console.log(error);
+      // alert("Something Went Wrong");
+    }
+  };
+  const CustomRows = ({ category }) => {
+    return (
+      <Button.Ripple
+        className="btn-icon rounded-circle"
+        color="warning"
+        onClick={onDelete(category)}
+      >
+        <Trash size={13} />
+      </Button.Ripple>
+    );
+  };
+  const columns = [
+    {
+      name: "Name",
+      selector: "name",
+      sortable: true,
+      minWidth: "200px"
+    },
+    {
+      name: "Description",
+      selector: "description",
+      sortable: true,
+      minWidth: "250px"
+    },
+    {
+      name: "Count",
+      selector: "count",
+      sortable: true,
+      minWidth: "150px"
+    },
+    {
+      name: "Actions",
+      allowOverflow: true,
+      cell: row => <CustomRows category={row} />
+    }
+  ];
+
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">
         <CardTitle tag="h4">Categories</CardTitle>
+        <div className="d-flex mt-md-0 mt-1">
+          <Button className="ml-2" color="primary" onClick={toggleSidebar}>
+            <Plus size={15} />
+            <span className="align-middle ml-50">Add Category</span>
+          </Button>
+        </div>
       </CardHeader>
+      <Row className="justify-content-end mx-0">
+        <Col
+          className="d-flex align-items-center justify-content-end mt-1"
+          md="6"
+          sm="12"
+        >
+          <Label className="mr-1" for="search-input">
+            Search
+          </Label>
+          <Input
+            className="dataTable-filter mb-50"
+            type="text"
+            bsSize="sm"
+            id="search-input"
+            value={searchValue}
+            onChange={handleFilter}
+          />
+        </Col>
+      </Row>
       <DataTable
         noHeader
         pagination
@@ -169,15 +215,7 @@ const Categories = () => {
         paginationDefaultPage={currentPage + 1}
         paginationComponent={CustomPagination}
         data={searchValue.length ? filteredData : categories}
-        subHeaderComponent={
-          <CustomHeader
-            toggleSidebar={toggleSidebar}
-            searchTerm={searchValue}
-            handleFilter={handleFilter}
-          />
-        }
       />
-
       <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </Card>
   );

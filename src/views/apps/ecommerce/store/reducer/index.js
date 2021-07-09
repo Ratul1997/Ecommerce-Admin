@@ -1,4 +1,4 @@
-/* eslint-disable semi */
+/* eslint-disable  */
 const initialState = {
   products: [],
   wishlist: [],
@@ -15,6 +15,13 @@ const updateCategory = (categories, data) => {
   return [...categories];
 };
 
+const removeACategoryItem = (categories, data) => {
+  const newCategories = categories.filter(item => {
+    if (item.category_id !== data.category_id) return item;
+  });
+  console.log(newCategories)
+  return [...newCategories];
+};
 const ecommerceReducer = (state = initialState, action) => {
   switch (action.type) {
     case "GET_PRODUCTS":
@@ -44,6 +51,11 @@ const ecommerceReducer = (state = initialState, action) => {
       return {
         ...state,
         categories: updateCategory(state.categories, action.data)
+      };
+    case "REMOVE_CATEGORY_ITEM":
+      return {
+        ...state,
+        categories: removeACategoryItem(state.categories, action.data)
       };
     default:
       return state;

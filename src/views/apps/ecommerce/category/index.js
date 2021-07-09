@@ -1,36 +1,41 @@
-/* eslint-disable semi */
-import React, { useState, useEffect } from "react";
+/* eslint-disable  */
+import React, { useState, useEffect, Fragment } from "react";
 import AddCategory from "./AddCategory";
 import Categories from "./Categories";
 
 // ** Store & Actions
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector} from "react-redux";
 import axios from "axios";
 import { addCategories } from "../store/actions";
+import { Row } from "reactstrap";
+import Col from "reactstrap/lib/Col";
+import DataTableWithButtons from "../../../tables/data-tables/basic/TableExpandable";
 
 export default function Category() {
   const store = useSelector(store => store.ecommerce);
   const dispatch = useDispatch();
-
+  const [isOnline, setisOnline] =  useState(null)
   const load = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/categories");
-      
+      const url = "http://localhost:5000/api/categories";
+      const res = await axios.get(url);
+
       dispatch(addCategories(res.data.data));
     } catch (err) {
-      console.log(err);
+      alert("Something Went Wrong");
     }
   };
 
   useEffect(() => {
-    load();
+    load()
   }, [dispatch]);
-
-  console.log(store);
   return (
-    <div>
-      {/* <AddCategory /> */}
-      <Categories />
-    </div>
+    <Fragment>
+      <Row>
+        <Col sm="12">
+          <Categories />
+        </Col>
+      </Row>
+    </Fragment>
   );
 }

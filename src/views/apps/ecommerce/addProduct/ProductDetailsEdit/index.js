@@ -2,7 +2,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
-import Avatar from "@components/avatar";
+
+// ** Store & Actions
+import { useDispatch, useSelector } from "react-redux";
+
 import htmlToDraft from "html-to-draftjs";
 import { selectThemeColors } from "@utils";
 import { Editor } from "react-draft-wysiwyg";
@@ -30,6 +33,10 @@ import "@styles/base/pages/page-blog.scss";
 const ProductDetailsEdit = () => {
   const initialContent = ``;
 
+  const dispatch = useDispatch();
+  const store = useSelector(store => store.ecommerce);
+  const { categories } = store;
+
   const contentBlock = htmlToDraft(initialContent);
   const contentState = ContentState.createFromBlockArray(
     contentBlock.contentBlocks
@@ -50,18 +57,30 @@ const ProductDetailsEdit = () => {
       setData(res.data);
       setTitle(res.data.blogTitle);
       setSlug(res.data.slug);
-      setBlogCategories(res.data.blogCategories);
+      // setBlogCategories(res.data.blogCategories);
       setFeaturedImg(res.data.featuredImage);
       setStatus(res.data.status);
     });
   }, []);
 
-  const categories = [
-    { value: "fashion", label: "Fashion" },
-    { value: "gaming", label: "Gaming" },
-    { value: "quote", label: "Quote" },
-    { value: "video", label: "Video" },
-    { value: "food", label: "Food" }
+  console.log(store);
+
+  const getOptions = () => {
+    const options =
+      categories &&
+      categories.map(item => {
+        return { value: item.category_id, label: item.name };
+      });
+    console.log(options);
+
+    return options;
+  };
+  // ** Vars
+  const categoryOptions = [
+    {
+      label: "Categories",
+      options: getOptions()
+    }
   ];
 
   const onChange = e => {
@@ -102,7 +121,7 @@ const ProductDetailsEdit = () => {
                         value={blogCategories}
                         isMulti
                         name="colors"
-                        options={categories}
+                        options={getOptions()}
                         className="react-select"
                         classNamePrefix="select"
                         onChange={data => setBlogCategories(data)}
@@ -184,32 +203,33 @@ const ProductDetailsEdit = () => {
 
                   
                   </Col> */}
-                  <Col sm ='12'>
-                  <FormGroup row>
-                    <Col sm="6">
-                      <Label sm="6" for="manage_stock">
-                        Do you want to publish into website?<span className="text-danger">*</span>
-                      </Label>
-                    </Col>
+                  <Col sm="12">
+                    <FormGroup row>
+                      <Col sm="6">
+                        <Label sm="6" for="manage_stock">
+                          Do you want to publish into website?
+                          <span className="text-danger">*</span>
+                        </Label>
+                      </Col>
 
-                    <Col sm="3" className="p-0.5">
-                      <CustomInput
-                        type="checkbox"
-                        id="manage-stock"
-                        defaultChecked={false}
-                        label="Yes"
-                      />
-                    </Col>
+                      <Col sm="3" className="p-0.5">
+                        <CustomInput
+                          type="checkbox"
+                          id="manage-stock"
+                          defaultChecked={false}
+                          label="Yes"
+                        />
+                      </Col>
 
-                    <Col sm="3">
-                      <CustomInput
-                        type="checkbox"
-                        id="manage-stock"
-                        defaultChecked={false}
-                        label="No"
-                      />
-                    </Col>
-                  </FormGroup>
+                      <Col sm="3">
+                        <CustomInput
+                          type="checkbox"
+                          id="manage-stock"
+                          defaultChecked={false}
+                          label="No"
+                        />
+                      </Col>
+                    </FormGroup>
                   </Col>
                 </Row>
               </Form>
