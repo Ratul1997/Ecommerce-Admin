@@ -1,4 +1,4 @@
-/* eslint-disable semi */
+/* eslint-disable */
 
 import { Fragment } from "react";
 
@@ -21,7 +21,7 @@ const colourOptions = [
   { value: "ocean", label: "Ocean" },
   { value: "blue", label: "Blue" }
 ];
-const Inventory = () => {
+const Inventory = ({ productData, setProductData }) => {
   return (
     <>
       <Fragment>
@@ -34,7 +34,15 @@ const Inventory = () => {
               SKU
             </Label>
             <Col sm="9">
-              <Input type="text" name="sku" id="sku" placeholder="SKU" />
+              <Input
+                type="text"
+                name="sku"
+                id="sku"
+                placeholder="SKU"
+                onChange={e =>
+                  setProductData({ ...productData, sku: e.target.value })
+                }
+              />
             </Col>
           </FormGroup>
           <FormGroup row>
@@ -56,10 +64,16 @@ const Inventory = () => {
             </Label>
             <Col sm="9">
               <Input
-                type="text"
+                type="number"
                 name="stock_quantity"
                 id="stock_quantity"
                 placeholder="Amount"
+                onChange={e =>
+                  setProductData({
+                    ...productData,
+                    quantity: parseInt(e.target.value)
+                  })
+                }
               />
             </Col>
           </FormGroup>

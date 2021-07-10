@@ -73,6 +73,7 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
     }
   };
 
+
   // ** Function to handle form submit
   const onSubmit = e => {
     e.preventDefault();

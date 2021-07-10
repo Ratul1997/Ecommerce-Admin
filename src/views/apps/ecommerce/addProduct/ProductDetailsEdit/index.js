@@ -1,4 +1,4 @@
-/* eslint-disable semi */
+/* eslint-disable */
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Select from "react-select";
@@ -6,22 +6,22 @@ import Select from "react-select";
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
 
-import htmlToDraft from "html-to-draftjs";
 import { selectThemeColors } from "@utils";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, ContentState } from "draft-js";
+import { EditorState, ContentState, convertToRaw } from "draft-js";
+import { Plus, X } from "react-feather";
 import {
   Row,
   Col,
   Card,
   CardBody,
-  CardText,
-  Media,
   Form,
   Label,
   Input,
   FormGroup,
   CustomInput,
+  CardHeader,
+  CardTitle,
   Button
 } from "reactstrap";
 
@@ -30,40 +30,54 @@ import "@styles/base/plugins/forms/form-quill-editor.scss";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/base/pages/page-blog.scss";
 
-const ProductDetailsEdit = () => {
-  const initialContent = ``;
-
-  const dispatch = useDispatch();
+const ProductDetailsEdit = ({ productData, setProductData }) => {
+  const initialCheckBoxState = {
+    "positive-checkbox": false,
+    "negative-checkbox": false
+  };
   const store = useSelector(store => store.ecommerce);
   const { categories } = store;
 
-  const contentBlock = htmlToDraft(initialContent);
-  const contentState = ContentState.createFromBlockArray(
-    contentBlock.contentBlocks
-  );
-  const editorState = EditorState.createWithContent(contentState);
+  const [slug, setSlug] = useState("");
+  const [featuredImageKey, setfeaturedImageKey] = useState(null);
 
-  const [data, setData] = useState(null),
-    [title, setTitle] = useState(""),
-    [slug, setSlug] = useState(""),
-    [status, setStatus] = useState(""),
-    [content, setContent] = useState(editorState),
-    [blogCategories, setBlogCategories] = useState([]),
-    [featuredImg, setFeaturedImg] = useState(null),
-    [imgPath, setImgPath] = useState("banner.jpg");
+  const [images, setImages] = useState([]);
+  const [imagesPath, setImagesPath] = useState([]);
+  const [isChecked, setIsChecked] = useState(initialCheckBoxState);
+  const handleFileChosen = async file => {
+    return new Promise((resolve, reject) => {
+      let fileReader = new FileReader();
+      fileReader.onload = () => {
+        console.log(fileReader.result);
 
-  useEffect(() => {
-    axios.get("/blog/list/data/edit").then(res => {
-      setData(res.data);
-      setTitle(res.data.blogTitle);
-      setSlug(res.data.slug);
-      // setBlogCategories(res.data.blogCategories);
-      setFeaturedImg(res.data.featuredImage);
-      setStatus(res.data.status);
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = reject;
+      fileReader.readAsDataURL(file);
     });
-  }, []);
+  };
 
-  console.log(store);
+  const convertObjectToArray = objects => {
+    let arr = [];
+    for (const [key, value] of Object.entries(objects)) {
+      arr.push(value);
+    }
+    return arr;
+  };
+  const onMultipleChange = async e => {
+    const files = e.target.files;
+    const AllFiles = convertObjectToArray(files);
+    const results = await Promise.all(
+      AllFiles.map(async file => {
+        const fileContents = await handleFileChosen(file);
+        return fileContents;
+      })
+    );
+    setImagesPath([...imagesPath, ...AllFiles]);
+    setImages([...images, ...results]);
+  };
+
+  //`${stateToHTML(productData.description.getCurrentContent())}`
 
   const getOptions = () => {
     const options =
@@ -71,28 +85,47 @@ const ProductDetailsEdit = () => {
       categories.map(item => {
         return { value: item.category_id, label: item.name };
       });
-    console.log(options);
 
     return options;
   };
-  // ** Vars
-  const categoryOptions = [
-    {
-      label: "Categories",
-      options: getOptions()
-    }
-  ];
 
-  const onChange = e => {
-    const reader = new FileReader(),
-      files = e.target.files;
-    setImgPath(files[0].name);
-    reader.onload = function() {
-      setFeaturedImg(reader.result);
-    };
-    reader.readAsDataURL(files[0]);
+  const onSelectFeaturedImage = (item, key) => e => {
+    e.preventDefault();
+    setfeaturedImageKey(item);
   };
 
+  const getWebsiteView = isChecked => {
+    if (!isChecked["negative-checkbox"] && !isChecked["positive-checkbox"])
+      return null;
+    if (isChecked["negative-checkbox"]) return false;
+    if (isChecked["positive-checkbox"]) return true;
+  };
+  const onCheckBoxValueChange = e => {
+    const { name, checked } = e.target;
+    console.log(name, checked);
+    const newIsChecked = {
+      ...isChecked,
+      [name]: checked
+    };
+    setIsChecked({
+      ...newIsChecked
+    });
+    setProductData({
+      ...productData,
+      view_on_website: getWebsiteView(newIsChecked)
+    });
+  };
+
+  const onRemove = key => e => {
+    const updatedImages = images;
+    const updatedImagePath = imagesPath;
+    updatedImages.splice(key, 1);
+    updatedImagePath.splice(key, 1);
+    setImages([...updatedImages]);
+    setImagesPath([...updatedImagePath]);
+    setfeaturedImageKey(updatedImages[0]);
+  };
+  
   return (
     <div className="blog-edit-wrapper">
       <Row>
@@ -106,8 +139,13 @@ const ProductDetailsEdit = () => {
                       <Label for="blog-edit-title">Title</Label>
                       <Input
                         id="blog-edit-title"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
+                        value={productData.name}
+                        onChange={e =>
+                          setProductData({
+                            ...productData,
+                            name: e.target.value
+                          })
+                        }
                       />
                     </FormGroup>
                   </Col>
@@ -118,13 +156,15 @@ const ProductDetailsEdit = () => {
                         id="blog-edit-category"
                         isClearable={false}
                         theme={selectThemeColors}
-                        value={blogCategories}
+                        value={productData.categories}
                         isMulti
                         name="colors"
                         options={getOptions()}
                         className="react-select"
                         classNamePrefix="select"
-                        onChange={data => setBlogCategories(data)}
+                        onChange={data =>
+                          setProductData({ ...productData, categories: data })
+                        }
                       />
                     </FormGroup>
                   </Col>
@@ -144,69 +184,124 @@ const ProductDetailsEdit = () => {
                       <Input
                         type="select"
                         id="blog-edit-status"
-                        value={status}
-                        onChange={e => setStatus(e.target.value)}
+                        value={productData.productStatusId.toString()}
+                        onChange={e =>
+                          setProductData({
+                            ...productData,
+                            productStatusId: parseInt(e.target.value)
+                          })
+                        }
                       >
-                        <option value="Published">Published</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Draft">Draft</option>
+                        <option value="1">Published</option>
+                        <option value="2">Draft</option>
+                        <option value="3">UnPublished</option>
+                        <option value="4">Pending</option>
                       </Input>
                     </FormGroup>
                   </Col>
-                  <Col sm="12">
+                  <Col sm="12" md="12" lg="9" xl="9">
                     <FormGroup className="mb-2">
                       <Label>Content</Label>
                       <Editor
-                        editorState={content}
-                        onEditorStateChange={data => setContent(data)}
+                        editorState={productData.description}
+                        onEditorStateChange={data =>
+                          setProductData({
+                            ...productData,
+                            description: data
+                          })
+                        }
                       />
                     </FormGroup>
                   </Col>
-                  <Col className="mb-2" sm="12">
-                    <div className="border rounded p-2">
-                      <h4 className="mb-1">Featured Image</h4>
-                      <Media className="flex-column flex-md-row">
-                        <img
-                          className="rounded mr-2 mb-1 mb-md-0"
-                          src={featuredImg}
-                          alt="featured img"
-                          width="170"
-                          height="110"
-                        />
-                        <Media body>
-                          <small className="text-muted">
-                            Required image resolution 800x400, image size 10mb.
-                          </small>
-
-                          <p className="my-50">
-                            <a href="/" onClick={e => e.preventDefault()}>
-                              {`C:/fakepath/${imgPath}`}
-                            </a>
-                          </p>
-                          <div className="d-inline-block">
-                            <FormGroup className="mb-0">
-                              <CustomInput
-                                type="file"
-                                id="exampleCustomFileBrowser"
-                                name="customFile"
-                                onChange={onChange}
-                                accept=".jpg, .png, .gif"
-                              />
-                            </FormGroup>
-                          </div>
-                        </Media>
-                      </Media>
-                    </div>
+                  <Col
+                    className="mb-2 "
+                    sm="12"
+                    md="12"
+                    lg="3"
+                    xl="3"
+                  >
+                    <FormGroup>
+                      <Label>Featured Image</Label>
+                      <div
+                        className="border rounded"
+                        style={{ width: 200, height: 210 }}
+                      >
+                        {featuredImageKey && (
+                          <img
+                            className="rounded m-1"
+                            src={featuredImageKey}
+                            alt="featured img"
+                            width="170"
+                            height="180"
+                          />
+                        )}
+                      </div>
+                    </FormGroup>
                   </Col>
-
-                  {/* <Col md="6" className='align-items-center'>
-
-                  
-                  </Col> */}
+                  <Col>
+                    <Card sm="12" className="border rounded p-2">
+                      <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">
+                        <CardTitle tag="h4">Gallery</CardTitle>
+                        <div className="d-flex mt-md-0 mt-1">
+                          <Button
+                            className="ml-2"
+                            color="primary"
+                            onClick={e =>
+                              document
+                                .getElementById("multipleFileSelect")
+                                .click()
+                            }
+                          >
+                            <Plus size={15} />
+                            <span className="align-middle ml-50">
+                              Add Image
+                            </span>
+                          </Button>
+                        </div>
+                      </CardHeader>
+                      <Row className="p-1">
+                        {images.length > 0 &&
+                          images.map((item, key) => (
+                            <div
+                              className={
+                                item === featuredImageKey
+                                  ? "rounded m-1  border-warning shadow "
+                                  : "rounded m-1"
+                              }
+                              style={{
+                                width: "170",
+                                height: "110"
+                              }}
+                              key={key}
+                            >
+                              <X
+                                className="float-right bg-primary"
+                                color="white"
+                                size={15}
+                                style={{
+                                  position: "absolute",
+                                  borderRadius: 50
+                                }}
+                                onClick={onRemove(key)}
+                              />
+                              <img
+                                src={item}
+                                alt="featured img"
+                                width="170"
+                                height="110"
+                                key={key}
+                                className="img-fluid rounded"
+                                onClick={onSelectFeaturedImage(item)}
+                              ></img>
+                            </div>
+                          ))}
+                      </Row>
+                    </Card>
+                  </Col>
                   <Col sm="12">
                     <FormGroup row>
                       <Col sm="6">
-                        <Label sm="6" for="manage_stock">
+                        <Label sm="6" for="check-box-for-website-positive">
                           Do you want to publish into website?
                           <span className="text-danger">*</span>
                         </Label>
@@ -215,18 +310,24 @@ const ProductDetailsEdit = () => {
                       <Col sm="3" className="p-0.5">
                         <CustomInput
                           type="checkbox"
-                          id="manage-stock"
+                          id="check-box-for-website-positive"
                           defaultChecked={false}
                           label="Yes"
+                          disabled={isChecked["negative-checkbox"]}
+                          name="positive-checkbox"
+                          onChange={onCheckBoxValueChange}
                         />
                       </Col>
 
                       <Col sm="3">
                         <CustomInput
                           type="checkbox"
-                          id="manage-stock"
+                          id="check-box-for-website-negative"
                           defaultChecked={false}
+                          disabled={isChecked["positive-checkbox"]}
                           label="No"
+                          name="negative-checkbox"
+                          onChange={onCheckBoxValueChange}
                         />
                       </Col>
                     </FormGroup>
@@ -237,6 +338,17 @@ const ProductDetailsEdit = () => {
           </Card>
         </Col>
       </Row>
+      <FormGroup className="mb-0">
+        <Input
+          type="file"
+          id="multipleFileSelect"
+          name="customFiles"
+          onChange={onMultipleChange}
+          accept=".jpg, .png, .gif"
+          multiple
+          className="d-none"
+        />
+      </FormGroup>
     </div>
   );
 };

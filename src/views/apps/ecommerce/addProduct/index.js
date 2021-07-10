@@ -9,26 +9,56 @@ import ProductDetailsEdit from "./ProductDetailsEdit";
 import WizardVertical from "../../../forms/wizard/WizardVertical";
 import MoreInfo from "./MoreInfo";
 
+import htmlToDraft from "html-to-draftjs";
+
+import { EditorState, ContentState } from "draft-js";
+
 const AddProduct = () => {
+  const initialContent = ``;
+
+  const contentBlock = htmlToDraft(initialContent);
+  const contentState = ContentState.createFromBlockArray(
+    contentBlock.contentBlocks
+  );
+  const editorState = EditorState.createWithContent(contentState);
+
+  const initialState = {
+    sku: "",
+    name: "",
+    description: editorState,
+    productStatusId: "",
+    regular_price: 0.0,
+    discount_price: 0.0,
+    quantity: 0,
+    view_on_website: null,
+    featured_img: "",
+    categories: []
+  };
+
+  const [productData, setProductData] = useState(initialState);
+  console.log(productData);
   return (
     <Fragment>
       <Breadcrumbs
-        breadCrumbTitle="Blog Edit"
-        breadCrumbParent="Pages"
-        breadCrumbParent2="Blog"
-        breadCrumbActive="Edit"
+        breadCrumbTitle="Add Product"
+        breadCrumbParent="eCommerce"
+        breadCrumbActive="Add Product"
       />
+
       <Row>
         <Col sm="12">
-          <ProductDetailsEdit />
+          <ProductDetailsEdit
+            productData={productData}
+            setProductData={setProductData}
+          />
         </Col>
       </Row>
       <Row>
         <Col sm="12">
-          <MoreInfo />
+          <MoreInfo productData={productData} setProductData={setProductData} />
         </Col>
       </Row>
-     
+
       <Row>
         <Col className="mt-50">
           <Button.Ripple color="primary" className="mr-1">

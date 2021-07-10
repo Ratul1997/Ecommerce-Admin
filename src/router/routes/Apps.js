@@ -110,6 +110,18 @@ const AppRoutes = [
     component: lazy(() => import("../../views/apps/invoice/print"))
   },
   {
+    path: "/apps/media/files",
+    component: lazy(() => import("../../views/apps/media/files"))
+  },
+  {
+    path: "/apps/media/images",
+    component: lazy(() => import("../../views/apps/media/images"))
+  },
+  {
+    path: "/apps/media/videos",
+    component: lazy(() => import("../../views/apps/media/videos"))
+  },
+  {
     path: "/apps/ecommerce/shop",
     className: "ecommerce-application",
     component: lazy(() => import("../../views/apps/ecommerce/shop"))

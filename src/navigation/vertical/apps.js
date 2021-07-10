@@ -1,4 +1,4 @@
-/* eslint-disable semi */
+/* eslint-disable */
 import {
   Mail,
   MessageSquare,
@@ -7,6 +7,7 @@ import {
   FileText,
   Circle,
   ShoppingCart,
+  File,
   User
 } from "react-feather";
 
@@ -109,6 +110,31 @@ export default [
         title: "Checkout",
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/checkout"
+      }
+    ]
+  },
+  {
+    id: "media",
+    title: "Media",
+    icon: <File size={20} />,
+    children: [
+      {
+        id: "mediaFiles",
+        title: "Files",
+        icon: <Circle size={12} />,
+        navLink: "/apps/media/files"
+      },
+      {
+        id: "mediaImages",
+        title: "Images",
+        icon: <Circle size={12} />,
+        navLink: "/apps/media/images"
+      },
+      {
+        id: "mediaVideo",
+        title: "Videos",
+        icon: <Circle size={12} />,
+        navLink: "/apps/media/videos"
       }
     ]
   },

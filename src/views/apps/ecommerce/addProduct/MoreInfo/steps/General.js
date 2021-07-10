@@ -1,65 +1,9 @@
 /* eslint-disable */
 import { Fragment, useState, useRef } from "react";
-import { ArrowLeft, ArrowRight } from "react-feather";
-import {
-  Label,
-  FormGroup,
-  Row,
-  Col,
-  Input,
-  Form,
-  Button,
-  Media,
-  CustomInput,
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle
-} from "reactstrap";
+import { ArrowLeft, ArrowRight, Plus } from "react-feather";
+import { Label, FormGroup, Row, Col, Input, Form } from "reactstrap";
 
-const General = ({ stepper, type }) => {
-  const [featuredImg, setFeaturedImg] = useState(null),
-    [imgPath, setImgPath] = useState("banner.jpg");
-
-  const handleFileChosen = async file => {
-    return new Promise((resolve, reject) => {
-      let fileReader = new FileReader();
-      fileReader.onload = () => {
-        console.log(fileReader.result);
-
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = reject;
-      fileReader.readAsDataURL(file);
-    });
-  };
-
-  const convertObjectToArray = objects => {
-    let arr = [];
-    for (const [key, value] of Object.entries(objects)) {
-      arr.push(value);
-    }
-    return arr;
-  };
-  const onChange = async e => {
-    const reader = new FileReader(),
-      files = e.target.files;
-    const AllFiles = convertObjectToArray(files);
-    setImgPath(files[0].name);
-    const results = await Promise.all(
-      AllFiles.map(async file => {
-        const fileContents = await handleFileChosen(file);
-        return fileContents;
-      })
-    );
-    console.log(results);
-    setFeaturedImg(results);
-    // reader.onload = function() {
-    //   console.log(reader.result);
-    //   setFeaturedImg(reader.result);
-    // };
-    // reader.readAsDataURL(files[0]);
-  };
+const General = ({ stepper, type, productData, setProductData }) => {
   return (
     <Fragment>
       <div className="content-header">
@@ -76,6 +20,12 @@ const General = ({ stepper, type }) => {
               name={`regular_price-${type}`}
               id={`regular_price-${type}`}
               placeholder="Amount"
+              onChange={e =>
+                setProductData({
+                  ...productData,
+                  regular_price: parseFloat(e.target.value)
+                })
+              }
             />
           </FormGroup>
           <FormGroup tag={Col} md="6">
@@ -87,56 +37,14 @@ const General = ({ stepper, type }) => {
               name={`selling_price-${type}`}
               id={`selling_price-${type}`}
               placeholder="Amount"
+              onChange={e =>
+                setProductData({
+                  ...productData,
+                  discount_price: parseFloat(e.target.value)
+                })
+              }
             />
           </FormGroup>
-        </Row>
-
-     
-        <FormGroup className="mb-0">
-          <Input
-            type="file"
-            id="multipleFileSelect"
-            name="customFile"
-            onChange={onChange}
-            accept=".jpg, .png, .gif"
-            multiple
-            className="d-none"
-          />
-        </FormGroup>
-        <Row>
-          <Col>
-            <Card sm="12">
-              <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">
-                <CardTitle tag="h4">Gallery</CardTitle>
-                <div className="d-flex mt-md-0 mt-1">
-                  <Button
-                    className="ml-2"
-                    color="primary"
-                    onClick={e =>
-                      document.getElementById("multipleFileSelect").click()
-                    }
-                  >
-                    {/* <Plus size={15} /> */}
-                    <span className="align-middle ml-50">Add Image</span>
-                  </Button>
-                </div>
-              </CardHeader>
-              <Row className="p-2">
-                {featuredImg &&
-                  featuredImg.map(item => (
-                    <Col sm="3">
-                      <img
-                        className="rounded mr-2 mb-1 mb-md-0"
-                        src={item}
-                        alt="featured img"
-                        width="170"
-                        height="110"
-                      />
-                    </Col>
-                  ))}
-              </Row>
-            </Card>
-          </Col>
         </Row>
       </Form>
     </Fragment>
