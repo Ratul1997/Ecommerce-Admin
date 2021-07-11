@@ -10,11 +10,11 @@ export default function Files() {
   return (
     <Fragment>
       <Breadcrumbs
-        breadCrumbTitle="Files"
+        breadCrumbTitle="All Files"
         breadCrumbParent="Media"
-        breadCrumbActive="Files"
+        breadCrumbActive="All Files"
       />
-      <FMediaView titles="Files" fileType='images/*' />
+      <FMediaView titles="Files" fileType= ".xlsx,.xls,.doc, .docx, .ppt, .pptx,.txt,.pdf,.zip,.csv,.txt" />
     </Fragment>
   );
 }

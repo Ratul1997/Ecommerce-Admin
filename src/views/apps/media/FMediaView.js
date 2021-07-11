@@ -9,12 +9,29 @@ import {
   Input,
   Row,
   Col,
-  CardText
+  CardText,
+  CardImg,
+  CardFooter
 } from "reactstrap";
+
+import { size, toArray } from "lodash";
 
 import { Menu, Item, useContextMenu } from "react-contexify";
 import { Plus, Trash } from "react-feather";
 import SweetAlert from "../../common/SweetAlert";
+import UploadProgress from "../../common/upload/UploadProgress/UploadProgress";
+
+// ** Store & Actions
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setUploadFile,
+  closeUpload
+} from "../../common/upload/store/action/uploadFile.actions";
+
+import pdf from "@src/assets/images/icons/file-icons/pdf.png";
+import doc from "@src/assets/images/icons/file-icons/doc.png";
+import zip from "@src/assets/images/icons/file-icons/zip.png";
+import excel from "@src/assets/images/icons/file-icons/excel.png";
 
 export default function FMediaView({ titles, fileType }) {
   const [files, setFiles] = useState([]);
@@ -22,6 +39,9 @@ export default function FMediaView({ titles, fileType }) {
     id: "menu_id"
   });
 
+  const dispatch = useDispatch();
+  const store = useSelector(store => store.UploadFile);
+  console.log(store);
   const confirmDeleteText = {
     title: "Are you sure?",
     text: "You won't be able to revert this!",
@@ -35,6 +55,17 @@ export default function FMediaView({ titles, fileType }) {
 
   const onDelete = () => {
     console.log("ss");
+  };
+
+  const onClose = () => {
+    const flag = false;
+    toArray(store).map(item => {
+      if (item.progress) {
+        flag = true;
+        return;
+      }
+    });
+    dispatch(closeUpload());
   };
 
   const handleFileChosen = async file => {
@@ -59,6 +90,7 @@ export default function FMediaView({ titles, fileType }) {
   };
   const onMultipleChange = async e => {
     const selectedFiles = e.target.files;
+    dispatch(setUploadFile(selectedFiles));
     const AllFiles = convertObjectToArray(selectedFiles);
     const results = await Promise.all(
       AllFiles.map(async file => {
@@ -88,41 +120,43 @@ export default function FMediaView({ titles, fileType }) {
         </CardHeader>
         <CardBody>
           <Row>
-            <Col sm="12">
-              {files.length > 0 &&
-                files.map((item, key) => {
-                  return (
-                    <>
-                      {/* <Card    width="170"
-                        height="110">  */}
-                      <img
-                        src={item}
-                        alt="featured img"
-                        width="170"
-                        height="110"
-                        key={key}
-                        className="img-fluid rounded m-1 shadow "
-                        //   onClick={e=>console.log(e.target)}
-                        onContextMenu={show}
-                        outline
-                      />
-                      <Menu id="menu_id">
-                        <Item onClick={SweetAlert(confirmDeleteText, onDelete)}>
-                          Delete
-                        </Item>
-                        <Item>Preview</Item>
-                      </Menu>
-                      {/* <CardBody>
-                        <CardText>
-                          Some quick example text to build on the card title and
-                          make up the bulk of the card's content.
-                        </CardText>
-                      </CardBody>
-                    </Card> */}
-                    </>
-                  );
-                })}
-            </Col>
+            {files.length > 0 &&
+              files.map((item, key) => {
+                return (
+                  <div
+                    className="img-fluid rounded m-1 shadow  bg-lighten-5 align-items-center"
+                    style={{ width: 150, height: 150 }}
+                  >
+                    <img
+                      src={excel}
+                      alt="featured img"
+                      width="150"
+                      height="110"
+                      key={key}
+                      className="shadow"
+                      //   onClick={e=>console.log(e.target)}
+                      onContextMenu={show}
+                      outline
+                    />
+                    <p
+                      className="font-weight-normal pl-1"
+                      style={{
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis"
+                      }}
+                    >
+                      Image Name .font-weight-normal.font-weight-normal .png
+                    </p>
+                    <Menu id="menu_id">
+                      <Item onClick={SweetAlert(confirmDeleteText, onDelete)}>
+                        Delete
+                      </Item>
+                      <Item>Preview</Item>
+                    </Menu>
+                  </div>
+                );
+              })}
           </Row>
         </CardBody>
       </Card>
@@ -135,6 +169,11 @@ export default function FMediaView({ titles, fileType }) {
         multiple
         className="d-none"
       />
+      <UploadProgress onClose={onClose} />
     </>
   );
+}
+
+{
+  /* */
 }
