@@ -1,5 +1,5 @@
 /* eslint-disable  */
-import React, { Fragment } from "react";
+import React, { Fragment,useEffect } from "react";
 import Breadcrumbs from "@components/breadcrumbs";
 import FMediaView from "../FMediaView";
 
@@ -7,6 +7,7 @@ import "react-contexify/dist/ReactContexify.min.css";
 import "@styles/react/libs/context-menu/context-menu.scss";
 
 export default function Files() {
+
   return (
     <Fragment>
       <Breadcrumbs
@@ -14,7 +15,7 @@ export default function Files() {
         breadCrumbParent="Media"
         breadCrumbActive="All Files"
       />
-      <FMediaView titles="Files" fileType= ".xlsx,.xls,.doc, .docx, .ppt, .pptx,.txt,.pdf,.zip,.csv,.txt" />
+      <FMediaView titles="Files" fileType= "application/*,.doc" />
     </Fragment>
   );
 }

@@ -29,6 +29,7 @@ import "@styles/react/libs/editor/editor.scss";
 import "@styles/base/plugins/forms/form-quill-editor.scss";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/base/pages/page-blog.scss";
+import SidebarImage from "./SideBar";
 
 const ProductDetailsEdit = ({ productData, setProductData }) => {
   const initialCheckBoxState = {
@@ -41,41 +42,12 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
   const [slug, setSlug] = useState("");
   const [featuredImageKey, setfeaturedImageKey] = useState(null);
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [images, setImages] = useState([]);
-  const [imagesPath, setImagesPath] = useState([]);
   const [isChecked, setIsChecked] = useState(initialCheckBoxState);
-  const handleFileChosen = async file => {
-    return new Promise((resolve, reject) => {
-      let fileReader = new FileReader();
-      fileReader.onload = () => {
-        console.log(fileReader.result);
 
-        resolve(fileReader.result);
-      };
-      fileReader.onerror = reject;
-      fileReader.readAsDataURL(file);
-    });
-  };
-
-  const convertObjectToArray = objects => {
-    let arr = [];
-    for (const [key, value] of Object.entries(objects)) {
-      arr.push(value);
-    }
-    return arr;
-  };
-  const onMultipleChange = async e => {
-    const files = e.target.files;
-    const AllFiles = convertObjectToArray(files);
-    const results = await Promise.all(
-      AllFiles.map(async file => {
-        const fileContents = await handleFileChosen(file);
-        return fileContents;
-      })
-    );
-    setImagesPath([...imagesPath, ...AllFiles]);
-    setImages([...images, ...results]);
-  };
+  // ** Function to toggle sidebar
+  const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   //`${stateToHTML(productData.description.getCurrentContent())}`
 
@@ -118,14 +90,12 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
 
   const onRemove = key => e => {
     const updatedImages = images;
-    const updatedImagePath = imagesPath;
+
     updatedImages.splice(key, 1);
-    updatedImagePath.splice(key, 1);
     setImages([...updatedImages]);
-    setImagesPath([...updatedImagePath]);
     setfeaturedImageKey(updatedImages[0]);
   };
-  
+
   return (
     <div className="blog-edit-wrapper">
       <Row>
@@ -213,25 +183,19 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
                       />
                     </FormGroup>
                   </Col>
-                  <Col
-                    className="mb-2 "
-                    sm="12"
-                    md="12"
-                    lg="3"
-                    xl="3"
-                  >
+                  <Col className="mb-2 " sm="12" md="12" lg="3" xl="3">
                     <FormGroup>
                       <Label>Featured Image</Label>
                       <div
                         className="border rounded"
-                        style={{ width: 200, height: 210 }}
+                        style={{ width: 210, height: 210 }}
                       >
                         {featuredImageKey && (
                           <img
                             className="rounded m-1"
-                            src={featuredImageKey}
+                            src={require(`@uploads/${featuredImageKey.file_name}`).default}
                             alt="featured img"
-                            width="170"
+                            width="180"
                             height="180"
                           />
                         )}
@@ -246,10 +210,11 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
                           <Button
                             className="ml-2"
                             color="primary"
-                            onClick={e =>
-                              document
-                                .getElementById("multipleFileSelect")
-                                .click()
+                            onClick={
+                              toggleSidebar
+                              // document
+                              //   .getElementById("multipleFileSelect")
+                              //   .click()
                             }
                           >
                             <Plus size={15} />
@@ -285,12 +250,13 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
                                 onClick={onRemove(key)}
                               />
                               <img
-                                src={item}
+                                src={
+                                  require(`@uploads/${item.file_name}`).default
+                                }
                                 alt="featured img"
                                 width="170"
                                 height="110"
                                 key={key}
-                                className="img-fluid rounded"
                                 onClick={onSelectFeaturedImage(item)}
                               ></img>
                             </div>
@@ -338,17 +304,12 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
           </Card>
         </Col>
       </Row>
-      <FormGroup className="mb-0">
-        <Input
-          type="file"
-          id="multipleFileSelect"
-          name="customFiles"
-          onChange={onMultipleChange}
-          accept=".jpg, .png, .gif"
-          multiple
-          className="d-none"
-        />
-      </FormGroup>
+      <SidebarImage
+        open={sidebarOpen}
+        toggleSidebar={toggleSidebar}
+        selectedImages={images}
+        setSelectedImages={setImages}
+      />
     </div>
   );
 };

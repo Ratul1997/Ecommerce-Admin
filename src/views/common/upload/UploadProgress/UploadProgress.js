@@ -5,11 +5,11 @@ import { size, toArray } from "lodash";
 
 import UploadItem from "../UploadItem/UploadItem";
 import Styles from "./UploadProgress.module.css";
-import { retryUpload, uploadFile } from "../store/action/uploadFile.actions";
+import { uploadFile } from "../store/action";
 import { X } from "react-feather";
 
 const UploadProgress = props => {
-  const { fileProgress, uploadFile, retryUpload } = props;
+  const { fileProgress, uploadFile } = props;
   const uploadedFileAmount = size(fileProgress);
 
   useEffect(() => {
@@ -32,7 +32,6 @@ const UploadProgress = props => {
             <UploadItem
               key={file.id}
               file={file}
-              retryUpload={() => retryUpload(file.id)}
             />
           ))
         : null}
@@ -46,7 +45,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   uploadFile: files => dispatch(uploadFile(files)),
-  retryUpload: id => dispatch(retryUpload(id))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UploadProgress);

@@ -21,6 +21,8 @@ import {
 
 // ** Styles
 import '@styles/base/pages/app-ecommerce.scss'
+import { closeUpload } from '../../../common/upload/store/action'
+import { removeMediaFiles } from '../../media/store/action'
 
 const Shop = () => {
   // ** States
@@ -41,6 +43,8 @@ const Shop = () => {
         page: 1
       })
     )
+    dispatch(removeMediaFiles())
+    dispatch(closeUpload())
   }, [dispatch])
 
   return (

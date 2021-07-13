@@ -10,6 +10,7 @@ module.exports = function override(config, env) {
   config = rewireAliases.aliasesOptions({
     '@src': path.resolve(__dirname, 'src'),
     '@assets': path.resolve(__dirname, 'src/@core/assets'),
+    '@uploads': path.resolve(__dirname, 'src/assets/uploads'),
     '@components': path.resolve(__dirname, 'src/@core/components'),
     '@layouts': path.resolve(__dirname, 'src/@core/layouts'),
     '@store': path.resolve(__dirname, 'src/redux'),

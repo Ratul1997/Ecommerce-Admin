@@ -5,10 +5,36 @@ import { STATUS_UPLOAD } from "../constants";
 
 const UploadItem = props => {
   const { file, progress, cancelSource, status } = props.file;
+  const cancelUpload = () => {
+    // console.log(source.token);
 
-  console.log(props.file);
+    cancelSource.cancel("Cancelled by user");
+  };
+  // const renderIcon = () => {
+  //   if (props.progress != 100) {
+  //     return (
+  //       <span
+  //         title="Cancel upload"
+  //         style={{ color: "red" }}
+  //         onClick={props.cancelUpload}
+  //       >
+  //         ✕
+  //       </span>
+  //     );
+  //   }
+  // };
   const renderIcon = useMemo(() => {
-    if (status === STATUS_UPLOAD.success) {
+    if (status === STATUS_UPLOAD.uploading) {
+      return (
+        <span
+          title="Cancel upload"
+          style={{ color: "red" }}
+          onClick={cancelUpload}
+        >
+          ✕
+        </span>
+      );
+    } else if (status === STATUS_UPLOAD.success) {
       return (
         <span
           title="Success upload"

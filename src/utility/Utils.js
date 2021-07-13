@@ -65,6 +65,33 @@ export const getHomeRouteForLoggedInUser = userRole => {
   return '/login'
 }
 
+
+/**check file type image or not */
+export const checkFileTypeImageOrNot = mime_type => {
+  const type = mime_type.split("/")[0]
+  switch (type) {
+    case "image":
+      return true
+    default:
+      return false
+  }
+}
+
+
+export const removeFromArray = (array, index) => {
+  const newArray = array
+  newArray.splice(index, 1)
+  return [...newArray]
+}
+
+export const addToArray = (array, itemToBeAdd) => {
+  return [...array, itemToBeAdd]
+}
+
+export const findIndexToTheArray = (array, itemToBeFound) => {
+  return array.findIndex(item => item === itemToBeFound)
+}
+
 // ** React Select Theme Colors
 export const selectThemeColors = theme => ({
   ...theme,
