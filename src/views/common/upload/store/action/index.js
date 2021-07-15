@@ -2,7 +2,7 @@
 import axios from "axios";
 import uploadFileTypes from "../utils/uploadFile.types";
 import { addMediaFiles } from "../../../../apps/media/store/action";
-
+import {urls} from '@urls'
 export const setUploadFile = data => ({
   type: uploadFileTypes.SET_UPLOAD_FILE,
   payload: data
@@ -34,8 +34,8 @@ export const uploadFile = files => dispatch => {
 
       try {
         const res = await axios({
-          baseURL: "http://localhost:5000",
-          url: "/api/file-upload",
+          baseURL: process.env.REACT_APP_BASE_URL,
+          url: urls.UPLOAD_A_FILE,
           method: "post",
           data: formPayload,
           cancelToken: file.cancelSource.token,

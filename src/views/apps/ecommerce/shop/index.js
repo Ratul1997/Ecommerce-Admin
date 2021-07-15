@@ -43,8 +43,8 @@ const Shop = () => {
         page: 1
       })
     )
-    dispatch(removeMediaFiles())
-    dispatch(closeUpload())
+    // dispatch(removeMediaFiles())
+    // dispatch(closeUpload())
   }, [dispatch])
 
   return (

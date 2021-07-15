@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TextareaCounter from "@src/views/forms/form-elements/textarea/TextareaCounter";
 import axios from "axios";
 import { addCategories, updateCategories } from "../../store/actions";
-
+import { urls } from "@urls";
 const SidebarNewCategory = ({ open, toggleSidebar }) => {
   const initialState = {
     name: "",
@@ -61,9 +61,9 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
 
   const postData = async () => {
     const formData = new FormData();
-    formData.append("data", categoryData);
+    formData.append("categoryData", categoryData);
     try {
-      const res = await axios.post("http://localhost:5000/api/add-category", {
+      const res = await axios.post(urls.ADD_A_CATEGORY, {
         categoryData
       });
       dispatch(updateCategories(res.data));
@@ -72,7 +72,6 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
       console.log(error);
     }
   };
-
 
   // ** Function to handle form submit
   const onSubmit = e => {

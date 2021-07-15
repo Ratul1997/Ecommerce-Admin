@@ -17,6 +17,7 @@ module.exports = function override(config, env) {
     '@styles': path.resolve(__dirname, 'src/@core/scss'),
     '@configs': path.resolve(__dirname, 'src/configs'),
     '@utils': path.resolve(__dirname, 'src/utility/Utils'),
+    '@urls': path.resolve(__dirname, 'src/utility/Urls'),
     '@hooks': path.resolve(__dirname, 'src/utility/hooks')
   })(config, env)
 

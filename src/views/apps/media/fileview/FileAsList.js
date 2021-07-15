@@ -34,7 +34,7 @@ export default function FileAsList({ files }) {
   };
   const CustomFileTime = ({ file }) => {
     const dates = convertTimeStampToString(file.inserted_at);
-
+    console.log(files)
     return (
       <div className="text-truncate">
         <span className="d-block  text-truncate">

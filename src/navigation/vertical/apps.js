@@ -88,6 +88,12 @@ export default [
         navLink: "/apps/ecommerce/product-detail"
       },
       {
+        id: "products",
+        title: "Products",
+        icon: <Circle size={12} />,
+        navLink: "/apps/ecommerce/products"
+      },
+      {
         id: "addProduct",
         title: "Add Product",
         icon: <Circle size={12} />,

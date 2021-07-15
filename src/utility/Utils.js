@@ -104,3 +104,5 @@ export const selectThemeColors = theme => ({
     neutral30: '#ededed' // for input hover border-color
   }
 })
+
+export const BASE_URL = process.env.REACT_APP_BASE_URL

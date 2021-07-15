@@ -22,6 +22,7 @@ import {
 import Sidebar from "./SideBar";
 import axios from "axios";
 import { removeItemInCategory } from "../../store/actions";
+import { urls } from "@urls";
 
 
 const Categories = () => {
@@ -125,7 +126,7 @@ const Categories = () => {
     e.preventDefault();
     console.log(category);
     try {
-      const url = "http://localhost:5000/api/remove-a-category";
+      const url = urls.REMOVE_A_CATEGORY;
       const res = await axios.post(url, {
         category_id: category.category_id
       });
@@ -152,19 +153,19 @@ const Categories = () => {
       name: "Name",
       selector: "name",
       sortable: true,
-      minWidth: "200px"
+      minWidth: "10px"
     },
     {
       name: "Description",
       selector: "description",
       sortable: true,
-      minWidth: "250px"
+      minWidth: "50px"
     },
     {
       name: "Count",
       selector: "count",
       sortable: true,
-      minWidth: "150px"
+      minWidth: "50px"
     },
     {
       name: "Actions",

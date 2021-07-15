@@ -142,6 +142,11 @@ const AppRoutes = [
     component: lazy(() => import("../../views/apps/ecommerce/addProduct"))
   },
   {
+    path: "/apps/ecommerce/products",
+    className: "ecommerce-application",
+    component: lazy(() => import("../../views/apps/ecommerce/products"))
+  },
+  {
     path: "/apps/ecommerce/product-detail",
     exact: true,
     className: "ecommerce-application",

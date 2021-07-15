@@ -46,9 +46,11 @@ const IMAGE_INDEX_THRESHOLD = -1;
 const SidebarImage = ({
   open,
   toggleSidebar,
-  selectedImages,
-  setSelectedImages
+  productData,
+  setProductData
 }) => {
+
+  const {product_gallery} = productData
   const mediaFiles = useSelector(store => store.mediaReducer);
   const dispatch = useDispatch();
   const images = mediaFiles.files.filter(item => {
@@ -70,15 +72,15 @@ const SidebarImage = ({
   };
 
   const onClickOnImagesList = item => e => {
-    const index = findIndexToTheArray(selectedImages, item);
+    const index = findIndexToTheArray(product_gallery, item);
     console.log(index);
     var updatedSelectedList = [];
     if (index > IMAGE_INDEX_THRESHOLD) {
-      updatedSelectedList = removeFromArray(selectedImages, index);
+      updatedSelectedList = removeFromArray(product_gallery, index);
     } else {
-      updatedSelectedList = addToArray(selectedImages, item);
+      updatedSelectedList = addToArray(product_gallery, item);
     }
-    setSelectedImages(updatedSelectedList);
+    setProductData({...productData, product_gallery: updatedSelectedList});
   };
   return (
     <Sidebar
@@ -111,7 +113,7 @@ const SidebarImage = ({
           images.map((item, key) => (
             <div
               className={
-                findIndexToTheArray(selectedImages, item) >
+                findIndexToTheArray(product_gallery, item) >
                 IMAGE_INDEX_THRESHOLD
                   ? "img-fluid rounded m-1 bg-lighten-5 border-primary"
                   : "img-fluid rounded m-1 bg-lighten-5 "

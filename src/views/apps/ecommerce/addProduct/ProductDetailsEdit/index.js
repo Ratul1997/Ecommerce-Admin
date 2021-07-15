@@ -40,10 +40,9 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
   const { categories } = store;
 
   const [slug, setSlug] = useState("");
-  const [featuredImageKey, setfeaturedImageKey] = useState(null);
 
+  const { featured_img, product_gallery } = productData;
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [images, setImages] = useState([]);
   const [isChecked, setIsChecked] = useState(initialCheckBoxState);
 
   // ** Function to toggle sidebar
@@ -63,7 +62,7 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
 
   const onSelectFeaturedImage = (item, key) => e => {
     e.preventDefault();
-    setfeaturedImageKey(item);
+    setProductData({ ...productData, featured_img: item });
   };
 
   const getWebsiteView = isChecked => {
@@ -89,13 +88,16 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
   };
 
   const onRemove = key => e => {
-    const updatedImages = images;
-
+    const updatedImages = product_gallery;
     updatedImages.splice(key, 1);
-    setImages([...updatedImages]);
-    setfeaturedImageKey(updatedImages[0]);
+    setProductData({
+      ...productData,
+      featured_img: updatedImages[0],
+      product_gallery: [...updatedImages]
+    });
   };
 
+  console.log(productData);
   return (
     <div className="blog-edit-wrapper">
       <Row>
@@ -190,10 +192,13 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
                         className="border rounded"
                         style={{ width: 210, height: 210 }}
                       >
-                        {featuredImageKey && (
+                        {featured_img && (
                           <img
                             className="rounded m-1"
-                            src={require(`@uploads/${featuredImageKey.file_name}`).default}
+                            src={
+                              require(`@uploads/${featured_img.file_name}`)
+                                .default
+                            }
                             alt="featured img"
                             width="180"
                             height="180"
@@ -210,12 +215,7 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
                           <Button
                             className="ml-2"
                             color="primary"
-                            onClick={
-                              toggleSidebar
-                              // document
-                              //   .getElementById("multipleFileSelect")
-                              //   .click()
-                            }
+                            onClick={toggleSidebar}
                           >
                             <Plus size={15} />
                             <span className="align-middle ml-50">
@@ -225,11 +225,11 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
                         </div>
                       </CardHeader>
                       <Row className="p-1">
-                        {images.length > 0 &&
-                          images.map((item, key) => (
+                        {product_gallery &&
+                          product_gallery.map((item, key) => (
                             <div
                               className={
-                                item === featuredImageKey
+                                item === featured_img
                                   ? "rounded m-1  border-warning shadow "
                                   : "rounded m-1"
                               }
@@ -307,8 +307,8 @@ const ProductDetailsEdit = ({ productData, setProductData }) => {
       <SidebarImage
         open={sidebarOpen}
         toggleSidebar={toggleSidebar}
-        selectedImages={images}
-        setSelectedImages={setImages}
+        productData={productData}
+        setProductData={setProductData}
       />
     </div>
   );
