@@ -31,8 +31,13 @@ import {
   MoreVertical,
   Edit,
   Archive,
-  Trash
+  Trash,
+  Star,
+  Heart
 } from "react-feather";
+
+// ** Third Party Components
+import classnames from "classnames";
 // ** Bootstrap Checkbox Component
 const BootstrapCheckbox = forwardRef(({ onClick, ...rest }, ref) => (
   <div className="custom-control custom-checkbox">
@@ -47,6 +52,11 @@ const BootstrapCheckbox = forwardRef(({ onClick, ...rest }, ref) => (
 ));
 
 import Avatar from "@components/avatar";
+import {
+  checkImageTypeOrNot,
+  checkApplicationType,
+  convertTimeStampToString
+} from "../../media/files/utils/utils";
 
 // ** Vars
 const states = [
@@ -60,11 +70,10 @@ const states = [
 ];
 
 const status = {
-  1: { title: "Current", color: "light-primary" },
-  2: { title: "Professional", color: "light-success" },
-  3: { title: "Rejected", color: "light-danger" },
-  4: { title: "Resigned", color: "light-warning" },
-  5: { title: "Applied", color: "light-info" }
+  1: { title: "Published", color: "light-success" },
+  2: { title: "Draft", color: "light-primary" },
+  3: { title: "UnPublished", color: "light-danger" },
+  4: { title: "Pending", color: "light-info" }
 };
 const data = [
   {
@@ -128,71 +137,114 @@ const data = [
     status: 5
   }
 ];
+const CustomFileTime = ({ row }) => {
+  const dates = convertTimeStampToString(row.updated_at);
+
+  return (
+    <div className="text-truncate">
+      <span className="d-block  text-truncate">{dates.stringDate}</span>
+    </div>
+  );
+};
+
+{
+  /* <Star
+                      size={18}
+                      className={classnames({
+                        'text-warning fill-current': mail.isStarred
+                      })}
+                    /> */
+}
+const CustomPriceRow = ({ row }) => {
+  return (
+    <div className="text-truncate d-inline">
+      <s className="d-block  text-truncate">{row.regular_price}</s>
+      {row.discount_price}
+    </div>
+  );
+};
+
+const CustomFeaturedIcon = ({ row }) => {
+  return (
+    <div className="text-truncate d-inline">
+      <Star
+        size={18}
+        className={classnames({
+          "text-warning fill-current": row.featured_product
+        })}
+      />
+    </div>
+  );
+};
+
+const CustomPopularProductIcon = ({ row }) => {
+  return (
+    <div className="text-truncate d-inline">
+      <Heart size={18} className={classnames({
+          "text-warning fill-current": row.popular_product
+        })}/>
+    </div>
+  );
+};
 const columns = [
   {
-    name: "Name",
-    selector: "full_name",
-    sortable: true,
-    minWidth: "250px",
-    cell: row => (
-      <div className="d-flex align-items-center">
-        {row.avatar === "" ? (
-          <Avatar
-            color={`light-${states[row.status]}`}
-            content={row.full_name}
-            initials
-          />
-        ) : (
-          <Avatar
-            img={
-              require(`@src/assets/images/portrait/small/avatar-s-${row.avatar}`)
-                .default
-            }
-          />
-        )}
-        <div className="user-info text-truncate ml-1">
-          <span className="d-block font-weight-bold text-truncate">
-            {row.full_name}
-          </span>
-          <small>{row.post}</small>
-        </div>
-      </div>
-    )
-  },
-  {
-    name: "Email",
-    selector: "email",
+    name: "Product Name",
+    selector: "name",
     sortable: true,
     minWidth: "250px"
   },
   {
-    name: "Date",
-    selector: "start_date",
+    name: "Last Updated",
+    selector: "updated_at",
     sortable: true,
-    minWidth: "150px"
+    minWidth: "100px",
+    cell: row => <CustomFileTime row={row} />
   },
 
   {
-    name: "Salary",
-    selector: "salary",
+    name: "Price",
+    selector: "regular_price",
     sortable: true,
-    minWidth: "150px"
+    minWidth: "100px",
+    cell: row => <CustomPriceRow row={row} />
   },
   {
-    name: "Age",
-    selector: "age",
+    name: "Quantity",
+    selector: "quantity",
+    sortable: true,
+    minWidth: "100px"
+  },
+
+  {
+    name: "Featured",
+    selector: "featured_product",
+    sortable: true,
+    minWidth: "100px",
+    cell: row => <CustomFeaturedIcon row={row} />
+  },
+
+  {
+    name: "Popular",
+    selector: "popular_product",
+    sortable: true,
+    minWidth: "100px",
+    cell: row => <CustomPopularProductIcon row={row} />
+  },
+  {
+    name: "On Website",
+    selector: "view_on_website",
     sortable: true,
     minWidth: "100px"
   },
   {
     name: "Status",
-    selector: "status",
+    selector: "product_status_id",
     sortable: true,
     minWidth: "150px",
     cell: row => {
       return (
-        <Badge color={status[row.status].color} pill>
-          {status[row.status].title}
+        <Badge color={status[row.product_status_id].color} pill>
+          {status[row.product_status_id].title}
         </Badge>
       );
     }
@@ -244,7 +296,8 @@ const columns = [
   }
 ];
 
-export default function ProductTable() {
+export default function ProductTable({ products }) {
+  const data = products;
   // ** States
   const [modal, setModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -394,6 +447,7 @@ export default function ProductTable() {
       <DataTable
         noHeader
         pagination
+        responsive
         selectableRows
         columns={columns}
         paginationPerPage={5}
