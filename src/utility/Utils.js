@@ -92,6 +92,10 @@ export const findIndexToTheArray = (array, itemToBeFound) => {
   return array.findIndex(item => item === itemToBeFound)
 }
 
+export const findItemInArray = (array, itemToBeFound, key) => {
+  return array.findIndex(item => item[key] === itemToBeFound[key])
+}
+
 // ** React Select Theme Colors
 export const selectThemeColors = theme => ({
   ...theme,

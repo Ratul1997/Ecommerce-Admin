@@ -1,46 +1,48 @@
 /* eslint-disable */
-import { Fragment, React } from "react";
+import { Fragment, React, useContext } from "react";
 import { Form, FormGroup, Label, Col, CustomInput, Input } from "reactstrap";
-export default function Shipping({ productData, setProductData }) {
+import { ProductDataContext } from "../..";
+export default function Shipping() {
+	const { productData, setProductData } = useContext(ProductDataContext);
 	return (
-		<Fragment>
-			<div className="content-header">
-				<h5 className="mb-0">Shipping Details</h5>
-			</div>
-			<Form>
-				<FormGroup row>
-					<Label sm="3" for="manage_stock">
-						Shipping Status
-					</Label>
-					<Col sm="9">
-						<CustomInput
-							type="checkbox"
-							id="shipping-status"
-							defaultChecked={true}
-							onChange={(e) =>
-								setProductData({
-									...productData,
-									hasFreeShipping: e.target.checked
-								})
-							}
-							label="Enable Product Free Shipping"
-						/>
-					</Col>
-				</FormGroup>
-				<FormGroup row>
-					<Label sm="3" for="shipping_cost">
-						Shipping Cost
-					</Label>
-					<Col sm="9">
-						<Input
-							type="number"
-							name="shipping_cost"
-							id="shipping_cost"
-							placeholder="Amount"
-						/>
-					</Col>
-				</FormGroup>
-			</Form>
-		</Fragment>
-	);
+    <Fragment>
+      <div className="content-header">
+        <h5 className="mb-0">Shipping Details</h5>
+      </div>
+      <Form>
+        <FormGroup row>
+          <Label sm="3" for="manage_stock">
+            Shipping Status
+          </Label>
+          <Col sm="9">
+            <CustomInput
+              type="checkbox"
+              id="shipping-status"
+              defaultChecked={true}
+              onChange={e =>
+                setProductData({
+                  ...productData,
+                  hasFreeShipping: e.target.checked,
+                })
+              }
+              label="Enable Product Free Shipping"
+            />
+          </Col>
+        </FormGroup>
+        <FormGroup row>
+          <Label sm="3" for="shipping_cost">
+            Shipping Cost
+          </Label>
+          <Col sm="9">
+            <Input
+              type="number"
+              name="shipping_cost"
+              id="shipping_cost"
+              placeholder="Amount"
+            />
+          </Col>
+        </FormGroup>
+      </Form>
+    </Fragment>
+  );
 }

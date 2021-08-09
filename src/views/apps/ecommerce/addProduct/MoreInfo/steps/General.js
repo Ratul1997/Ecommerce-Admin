@@ -1,9 +1,10 @@
 /* eslint-disable */
-import { Fragment, useState, useRef } from "react";
+import { Fragment, useState, useRef, useContext } from "react";
 import { ArrowLeft, ArrowRight, Plus } from "react-feather";
 import { Label, FormGroup, Row, Col, Input, Form } from "reactstrap";
-
-const General = ({ stepper, type, productData, setProductData }) => {
+import { ProductDataContext } from "../..";
+const General = ({ stepper, type }) => {
+  const { productData, setProductData } = useContext(ProductDataContext);
   return (
     <Fragment>
       <div className="content-header">
@@ -23,7 +24,7 @@ const General = ({ stepper, type, productData, setProductData }) => {
               onChange={e =>
                 setProductData({
                   ...productData,
-                  regular_price: parseFloat(e.target.value)
+                  regular_price: parseFloat(e.target.value),
                 })
               }
             />
@@ -40,7 +41,7 @@ const General = ({ stepper, type, productData, setProductData }) => {
               onChange={e =>
                 setProductData({
                   ...productData,
-                  discount_price: parseFloat(e.target.value)
+                  discount_price: parseFloat(e.target.value),
                 })
               }
             />
