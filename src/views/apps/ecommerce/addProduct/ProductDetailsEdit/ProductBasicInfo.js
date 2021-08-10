@@ -22,7 +22,7 @@ import {
   CustomInput,
   CardHeader,
   CardTitle,
-  Button
+  Button,
 } from "reactstrap";
 
 import "@styles/react/libs/editor/editor.scss";
@@ -42,7 +42,7 @@ export default function ProductBasicInfo({
   onSelectFeaturedImage,
   product_gallery,
   getOptionsForStatus,
-  onRemove
+  onRemove,
 }) {
   return (
     <Row>
@@ -60,7 +60,7 @@ export default function ProductBasicInfo({
                       onChange={e =>
                         setProductData({
                           ...productData,
-                          name: e.target.value
+                          name: e.target.value,
                         })
                       }
                     />
@@ -68,14 +68,12 @@ export default function ProductBasicInfo({
                 </Col>
                 <Col md="6">
                   <FormGroup className="mb-2">
-                    <Label for="blog-edit-category">Category</Label>
+                    <Label>Category</Label>
                     <Select
-                      id="blog-edit-category"
                       isClearable={false}
                       theme={selectThemeColors}
                       value={productData.categories}
                       isMulti
-                      name="colors"
                       options={getOptions()}
                       className="react-select"
                       classNamePrefix="select"
@@ -87,9 +85,8 @@ export default function ProductBasicInfo({
                 </Col>
                 <Col md="6">
                   <FormGroup className="mb-2">
-                    <Label for="blog-edit-slug">Slug</Label>
+                    <Label>Slug</Label>
                     <Input
-                      id="blog-edit-slug"
                       value={slug}
                       onChange={e => setSlug(e.target.value)}
                     />
@@ -98,35 +95,18 @@ export default function ProductBasicInfo({
                 <Col md="6">
                   <FormGroup className="mb-2">
                     <Label for="blog-edit-status">Status</Label>
-                    {/* <Input
-                        type="select"
-                        id="blog-edit-status"
-                        value={productData.productStatusId.toString()}
-                        onChange={e =>
-                          setProductData({
-                            ...productData,
-                            productStatusId: parseInt(e.target.value)
-                          })
-                        }
-                      >
-                        <option value="1">Published</option>
-                        <option value="2">Draft</option>
-                        <option value="3">UnPublished</option>
-                        <option value="4">Pending</option>
-                      </Input> */}
                     <Select
                       id="blog-edit-status"
                       isClearable={false}
                       theme={selectThemeColors}
-                      value={productData.productStatusId}
-                      name="colors"
+                      value={productData.product_status_id}
                       options={getOptionsForStatus()}
                       className="react-select"
                       classNamePrefix="select"
                       onChange={data =>
                         setProductData({
                           ...productData,
-                          productStatusId: data.value
+                          product_status_id: data,
                         })
                       }
                     />
@@ -134,13 +114,13 @@ export default function ProductBasicInfo({
                 </Col>
                 <Col sm="12" md="12" lg="9" xl="9">
                   <FormGroup className="mb-2">
-                    <Label>Content</Label>
+                    <Label>Short Description</Label>
                     <Editor
-                      editorState={productData.description}
+                      editorState={productData.short_description}
                       onEditorStateChange={data =>
                         setProductData({
                           ...productData,
-                          description: data
+                          short_description: data,
                         })
                       }
                     />
@@ -194,7 +174,7 @@ export default function ProductBasicInfo({
                             }
                             style={{
                               width: "170",
-                              height: "110"
+                              height: "110",
                             }}
                             key={key}
                           >
@@ -204,7 +184,7 @@ export default function ProductBasicInfo({
                               size={15}
                               style={{
                                 position: "absolute",
-                                borderRadius: 50
+                                borderRadius: 50,
                               }}
                               onClick={onRemove(key)}
                             />
@@ -223,6 +203,7 @@ export default function ProductBasicInfo({
                     </Row>
                   </Card>
                 </Col>
+
                 <Col sm="12">
                   <FormGroup row>
                     <Col sm="6">
@@ -255,6 +236,20 @@ export default function ProductBasicInfo({
                         onChange={onCheckBoxValueChange}
                       />
                     </Col>
+                  </FormGroup>
+                </Col>
+                <Col sm="12">
+                  <FormGroup className="mb-2">
+                    <Label>Long Description</Label>
+                    <Editor
+                      editorState={productData.long_description}
+                      onEditorStateChange={data =>
+                        setProductData({
+                          ...productData,
+                          long_description: data,
+                        })
+                      }
+                    />
                   </FormGroup>
                 </Col>
               </Row>

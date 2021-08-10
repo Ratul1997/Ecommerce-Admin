@@ -22,9 +22,15 @@ const stockOptions = [
   { value: 1, label: "In Stock" },
   { value: 2, label: "Out Of Stock" },
 ];
+
+const backOrdersOptions = [
+  { value: 1, label: "Do not allow" },
+  { value: 2, label: "Allow, but notify customer" },
+  { value: 3, label: "Allow" },
+];
 const Inventory = () => {
-  const{ productData, setProductData } = useContext(ProductDataContext);
- 
+  const { productData, setProductData } = useContext(ProductDataContext);
+
   return (
     <>
       <Fragment>
@@ -98,7 +104,35 @@ const Inventory = () => {
                     type="text"
                     name="low_stock_threshold"
                     id="low_stock_threshold"
-                    placeholder="Low stock threshold"
+                    placeholder="Amount"
+                    onChange={e =>
+                      setProductData({
+                        ...productData,
+                        stock_threshold: parseInt(e.target.value),
+                      })
+                    }
+                  />
+                </Col>
+              </FormGroup>
+
+              <FormGroup row>
+                <Label sm="3" for="stock_status">
+                  Allow backorders?
+                </Label>
+                <Col sm="9">
+                  <Select
+                    theme={selectThemeColors}
+                    className="react-select"
+                    classNamePrefix="select"
+                    name="clear"
+                    options={backOrdersOptions}
+                    onChange={data =>
+                      setProductData({
+                        ...productData,
+                        stock_threshold: data,
+                      })
+                    }
+                    isClearable
                   />
                 </Col>
               </FormGroup>
@@ -113,9 +147,14 @@ const Inventory = () => {
                 theme={selectThemeColors}
                 className="react-select"
                 classNamePrefix="select"
-                name="clear"
                 options={stockOptions}
                 isClearable
+                onChange={data =>
+                  setProductData({
+                    ...productData,
+                    inventory_status: data,
+                  })
+                }
               />
             </Col>
           </FormGroup>

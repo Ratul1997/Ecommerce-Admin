@@ -1,18 +1,26 @@
 /* eslint-disable */
-import React, { useContext, Fragment, useState, useMemo } from "react";
+import React, { useContext, Fragment, useState, useMemo, useRef } from "react";
 import { Button, Col, FormGroup, Label } from "reactstrap";
 import { ProductDataContext } from "../../..";
+import SidebarImage from "./SideBar";
 import IndividualVariants from "./IndividualVariants";
+import { VariantsModel } from "./VairantsModel";
 
 export default function Variations({ stepper }) {
   const { productData, setProductData } = useContext(ProductDataContext);
   const { attributesList } = productData;
-
+  const variantIndex = useRef(null);
   const [combinationsList, setCombinationList] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  // ** Function to toggle sidebar
+  const toggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+    if (!sidebarOpen) variantIndex.current = null;
+  };
 
   const getOptions = useMemo(() => {
     const options = [];
-    console.log('updated')
     attributesList.map(item =>
       item.selectedOptions.map(item2 => options.push(item2))
     );
@@ -43,7 +51,55 @@ export default function Variations({ stepper }) {
   const onGenerate = () => {
     const combinationResults = combinations();
     alert(`Generated ${combinationResults.length} variations`);
-    setCombinationList(combinationResults);
+    setCombinationList(
+      combinationResults.map(item => VariantsModel({ combinations: item }))
+    );
+  };
+
+  const onClickOnImagesList = item => e => {
+    console.log(variantIndex.current);
+    const targetedValue = {
+      ...combinationsList[variantIndex.current],
+      featured_img: item,
+    };
+    combinationsList[variantIndex.current] = targetedValue;
+    setCombinationList([...combinationsList]);
+  };
+  const onChange =
+    (index, type = null, nameOfSelect = null) =>
+    e => {
+      let targetedValue;
+      if (type === "select") {
+        targetedValue = {
+          ...combinationsList[index],
+          [nameOfSelect]: e,
+        };
+      } else if (type === "image") {
+        toggleSidebar();
+        variantIndex.current = index;
+        targetedValue = {
+          ...combinationsList[index],
+        };
+      } else {
+        const { name, value, checked } = e.target;
+        targetedValue = {
+          ...combinationsList[index],
+          [name]: name === "manageStock" ? checked : value,
+        };
+      }
+      combinationsList[index] = targetedValue;
+      setCombinationList([...combinationsList]);
+    };
+
+  const onRemove = index => e => {
+    combinationsList.splice(index, 1);
+    setCombinationList([...combinationsList]);
+  };
+  const onSave = () => {
+    const formattedVariations = combinationsList.map(item => {
+      return { ...item, inventory_status: item.inventory_status.value };
+    });
+    setProductData({ ...productData, variations: formattedVariations });
   };
   if (productData.attributesList.length < 1)
     return (
@@ -75,13 +131,29 @@ export default function Variations({ stepper }) {
       {combinationsList.map((item, key) => {
         return (
           <IndividualVariants
-            combinations={item}
+            item={item}
             key={key}
             getOptions={getOptions}
+            index={key}
+            onChange={onChange}
+            toggleSidebar={toggleSidebar}
+            onRemove={onRemove}
           />
         );
       })}
-      {/* <h1>asd</h1> */}
+      {combinationsList.length > 0 && (
+        <>
+          {" "}
+          <SidebarImage
+            open={sidebarOpen}
+            toggleSidebar={toggleSidebar}
+            onClickOnImagesList={onClickOnImagesList}
+          />
+          <Button.Ripple color="primary mt-2" onClick={onSave}>
+            Save
+          </Button.Ripple>
+        </>
+      )}
     </>
   );
 }

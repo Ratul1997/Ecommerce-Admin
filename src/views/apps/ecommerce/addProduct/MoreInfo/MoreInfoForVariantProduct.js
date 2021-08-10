@@ -10,24 +10,11 @@ import Attributes from "./steps/Attributes";
 import Advance from "./steps/Advance.js";
 import Variations from "./steps/Variations/index.js";
 
-const MoreInfo = ({ productData, setProductData }) => {
+const MoreInfoForVariantProduct = ({ productData, setProductData }) => {
   const [stepper, setStepper] = useState(null);
   const ref = useRef(null);
 
   const steps = [
-    {
-      id: "general",
-      title: "General",
-      subtitle: "",
-      content: (
-        <General
-          stepper={stepper}
-          type="wizard-vertical"
-          productData={productData}
-          setProductData={setProductData}
-        />
-      ),
-    },
     {
       id: "inventory",
       title: "Inventory",
@@ -67,6 +54,19 @@ const MoreInfo = ({ productData, setProductData }) => {
         />
       ),
     },
+    {
+      id: "variations",
+      title: "Variation",
+      subtitle: "",
+      content: (
+        <Variations
+          stepper={stepper}
+          type="wizard-vertical"
+          productData={productData}
+          setProductData={setProductData}
+        />
+      ),
+    },
   ];
 
   return (
@@ -84,4 +84,4 @@ const MoreInfo = ({ productData, setProductData }) => {
   );
 };
 
-export default MoreInfo;
+export default MoreInfoForVariantProduct;

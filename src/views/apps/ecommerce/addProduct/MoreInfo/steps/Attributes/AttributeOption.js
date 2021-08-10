@@ -24,7 +24,7 @@ export default function AttributeOption({ attribute, index, onChange }) {
             {attribute.attribute_name}
           </Label>
         </FormGroup>
-        <FormGroup row>
+        {/* <FormGroup row>
           <Label sm="3" for="enable_for_variants">
             Variation
           </Label>
@@ -36,7 +36,7 @@ export default function AttributeOption({ attribute, index, onChange }) {
               label="Enable For Variants"
             />
           </Col>
-        </FormGroup>
+        </FormGroup> */}
         <FormGroup row>
           <Label sm="3" for="attribute_options">
             Attribute Options

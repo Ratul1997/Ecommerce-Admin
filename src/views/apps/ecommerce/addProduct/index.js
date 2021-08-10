@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React, { Fragment, useState, useEffect, useContext } from "react";
-import { Row, Col, Button, CustomInput, Label } from "reactstrap";
+import { Row, Col, Button, CustomInput, Label, FormGroup } from "reactstrap";
 // ** Custom Components
 import Breadcrumbs from "@components/breadcrumbs";
 import BlogSidebar from "../../../pages/blog/BlogSidebar";
@@ -9,12 +9,16 @@ import ProductDetailsEdit from "./ProductDetailsEdit";
 import WizardVertical from "../../../forms/wizard/WizardVertical";
 import MoreInfo from "./MoreInfo";
 import { urls } from "@urls";
+import Select from "react-select";
+
+import { selectThemeColors } from "@utils";
 
 import htmlToDraft from "html-to-draftjs";
 
 import { EditorState, ContentState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import axios from "axios";
+import MoreInfoForVariantProduct from "./MoreInfo/MoreInfoForVariantProduct";
 
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
@@ -24,13 +28,19 @@ const AddProduct = () => {
   const contentState = ContentState.createFromBlockArray(
     contentBlock.contentBlocks
   );
+
+  const getOptionsForProductType = [
+    { value: 1, label: "Single Product" },
+    { value: 2, label: "Product With Variants" },
+  ];
   const editorState = EditorState.createWithContent(contentState);
 
   const initialState = {
     sku: "",
     name: "",
-    description: editorState,
-    productStatusId: "",
+    short_description: editorState,
+    long_description: editorState,
+    product_status_id: "",
     regular_price: 0.0,
     discount_price: 0.0,
     quantity: 0,
@@ -41,30 +51,62 @@ const AddProduct = () => {
     categories: [],
     product_gallery: [],
     attributesList: [],
+    variations: [],
+    stock_threshold: 0,
+    allowBackOrders: null,
+    shipping_cost: 0.0,
+    inventory_status: { value: 1, label: "In Stock" },
+    productType: getOptionsForProductType[0],
   };
 
   const [productData, setProductData] = useState(initialState);
   console.table(productData.attributesList);
   const productContextValue = { productData, setProductData };
   const removeKeyFromImageObject = image => {
+    if (!image) return null;
     const updateImage = {
       file_name: image.file_name,
       file_id: image.file_id,
     };
     return updateImage;
   };
+  const getFormattedProductOptionsAndAttributes = () => {
+    const options = [];
+    const attributes = [];
+    productData.attributesList.map(item => {
+      const { selectedOptions } = item;
+      attributes.push({
+        attribute_id: item.attribute_id,
+        attribute_name: item.attribute_name,
+      });
+      selectedOptions.map(optionItem => {
+        options.push(optionItem.value);
+      });
+    });
+    return { options: options, attributes: attributes };
+  };
   //`${}`
   const onSave = e => {
     e.preventDefault();
+    const optionsAndAttributes = getFormattedProductOptionsAndAttributes();
     const dataOfProduct = {
       ...productData,
-      description: stateToHTML(productData.description.getCurrentContent()),
+      short_description: stateToHTML(
+        productData.short_description.getCurrentContent()
+      ),
+      long_description: stateToHTML(
+        productData.long_description.getCurrentContent()
+      ),
       featured_img: removeKeyFromImageObject(productData.featured_img),
       product_gallery: productData.product_gallery.map(item =>
         removeKeyFromImageObject(item)
       ),
+      productType: productData.productType.value,
+      product_options: optionsAndAttributes.options,
+      attributesList: optionsAndAttributes.attributes,
+      inventory_status: productData.inventory_status.value,
     };
-    uploadProduct(dataOfProduct);
+    console.log(dataOfProduct);
   };
 
   const uploadProduct = async product => {
@@ -93,12 +135,39 @@ const AddProduct = () => {
             />
           </Col>
         </Row>
+
+        <FormGroup row>
+          <Col sm="5">
+            <Label>Product Type</Label>
+            <Select
+              theme={selectThemeColors}
+              className="react-select"
+              classNamePrefix="select"
+              value={productData.productType}
+              options={getOptionsForProductType}
+              onChange={data =>
+                setProductData({
+                  ...productData,
+                  productType: data,
+                })
+              }
+            />
+          </Col>
+        </FormGroup>
+
         <Row>
           <Col sm="12">
-            <MoreInfo
-              productData={productData}
-              setProductData={setProductData}
-            />
+            {productData.productType.value === 1 ? (
+              <MoreInfo
+                productData={productData}
+                setProductData={setProductData}
+              />
+            ) : (
+              <MoreInfoForVariantProduct
+                productData={productData}
+                setProductData={setProductData}
+              />
+            )}
           </Col>
         </Row>
 
