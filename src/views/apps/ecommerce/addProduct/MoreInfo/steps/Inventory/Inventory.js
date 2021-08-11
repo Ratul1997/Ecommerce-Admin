@@ -129,7 +129,7 @@ const Inventory = () => {
                     onChange={data =>
                       setProductData({
                         ...productData,
-                        stock_threshold: data,
+                        allowBackOrders: data,
                       })
                     }
                     isClearable

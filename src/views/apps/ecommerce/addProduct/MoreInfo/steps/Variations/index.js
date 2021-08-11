@@ -97,7 +97,15 @@ export default function Variations({ stepper }) {
   };
   const onSave = () => {
     const formattedVariations = combinationsList.map(item => {
-      return { ...item, inventory_status: item.inventory_status.value };
+      console.log(item.featured_img);
+      return {
+        ...item,
+        inventory_status: item.inventory_status.value,
+        featured_img: item.featured_img
+          ? JSON.stringify(item.featured_img)
+          : null,
+        allowBackOrders: item.allowBackOrders.value,
+      };
     });
     setProductData({ ...productData, variations: formattedVariations });
   };

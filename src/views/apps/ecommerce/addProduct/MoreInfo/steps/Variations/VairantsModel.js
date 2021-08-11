@@ -10,7 +10,10 @@ export const VariantsModel = item => {
     manageStock: item.manageStock || false,
     sku: item.sku || "",
     stock_threshold: item.stock_threshold || 0,
-    allowBackOrders: item.allowBackOrders || 1,
+    allowBackOrders: item.allowBackOrders || {
+      value: 1,
+      label: "Do not allow",
+    },
     inventory_status: item.inventory_status || { value: 1, label: "In Stock" },
   };
   return variantsProduct;

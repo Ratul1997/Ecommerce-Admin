@@ -43,7 +43,7 @@ export default function Shipping() {
                 onChange={e => {
                   setProductData({
                     ...productData,
-                    shipping_cost: e.target.checked,
+                    shipping_cost:  parseFloat(e.target.value),
                   });
                 }}
               />

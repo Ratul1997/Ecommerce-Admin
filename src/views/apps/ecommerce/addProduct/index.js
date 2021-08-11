@@ -52,8 +52,8 @@ const AddProduct = () => {
     product_gallery: [],
     attributesList: [],
     variations: [],
-    stock_threshold: 0,
-    allowBackOrders: null,
+    stock_threshold: null,
+    allowBackOrders: { value: 1, label: "Do not allow" },
     shipping_cost: 0.0,
     inventory_status: { value: 1, label: "In Stock" },
     productType: getOptionsForProductType[0],
@@ -63,7 +63,7 @@ const AddProduct = () => {
   console.table(productData.attributesList);
   const productContextValue = { productData, setProductData };
   const removeKeyFromImageObject = image => {
-    if (!image) return null;
+    if (!image) return { file_name: null, file_id: null };
     const updateImage = {
       file_name: image.file_name,
       file_id: image.file_id,
@@ -91,22 +91,39 @@ const AddProduct = () => {
     const optionsAndAttributes = getFormattedProductOptionsAndAttributes();
     const dataOfProduct = {
       ...productData,
+      regular_price: productData.productType ===1 ? productData.regular_price : 0,
+      discount_price: productData.productType ===1 ? productData.discount_price : 0,
       short_description: stateToHTML(
         productData.short_description.getCurrentContent()
       ),
       long_description: stateToHTML(
         productData.long_description.getCurrentContent()
       ),
-      featured_img: removeKeyFromImageObject(productData.featured_img),
-      product_gallery: productData.product_gallery.map(item =>
-        removeKeyFromImageObject(item)
+      featured_img: JSON.stringify(
+        removeKeyFromImageObject(productData.featured_img)
+      ),
+      product_gallery: JSON.stringify(
+        productData.product_gallery.map(item => removeKeyFromImageObject(item))
       ),
       productType: productData.productType.value,
-      product_options: optionsAndAttributes.options,
-      attributesList: optionsAndAttributes.attributes,
+      product_options:
+        optionsAndAttributes.options.length > 0
+          ? optionsAndAttributes.options
+          : null,
+
+      attributesList:
+        optionsAndAttributes.attributes.length > 0
+          ? optionsAndAttributes.attributes
+          : null,
+      variations:
+        productData.variations.length > 0 ? productData.variations : null,
+
       inventory_status: productData.inventory_status.value,
+      product_status_id: productData.product_status_id.value,
+      allowBackOrders: productData.allowBackOrders.value,
     };
     console.log(dataOfProduct);
+    uploadProduct(dataOfProduct);
   };
 
   const uploadProduct = async product => {
