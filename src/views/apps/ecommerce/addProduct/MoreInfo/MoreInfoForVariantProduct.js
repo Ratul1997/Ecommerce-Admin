@@ -16,6 +16,19 @@ const MoreInfoForVariantProduct = ({ productData, setProductData }) => {
 
   const steps = [
     {
+      id: "general",
+      title: "General",
+      subtitle: "",
+      content: (
+        <General
+          stepper={stepper}
+          type="wizard-vertical"
+          productData={productData}
+          setProductData={setProductData}
+        />
+      ),
+    },
+    {
       id: "inventory",
       title: "Inventory",
       subtitle: "",

@@ -12,11 +12,10 @@ export default function Products() {
   const loadProducts = async () => {
     try {
       const res = await axios.get(urls.GET_PRODUCTS);
-      console.log(res.data.data.products);
-      setProducts(res.data.data.products);
+      setProducts(res.data.products);
     } catch (error) {
       console.log(error);
-      alert(error.msg);
+      // alert(error);
     }
   };
   return (

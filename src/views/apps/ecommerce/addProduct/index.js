@@ -85,26 +85,31 @@ const AddProduct = () => {
     });
     return { options: options, attributes: attributes };
   };
-  //`${}`
+  
   const onSave = e => {
     e.preventDefault();
     const optionsAndAttributes = getFormattedProductOptionsAndAttributes();
     const dataOfProduct = {
       ...productData,
-      regular_price: productData.productType ===1 ? productData.regular_price : 0,
-      discount_price: productData.productType ===1 ? productData.discount_price : 0,
+      discount_price:
+        productData.discount_price === (0.0 || 0)
+          ? productData.discount_price
+          : 0,
       short_description: stateToHTML(
         productData.short_description.getCurrentContent()
       ),
       long_description: stateToHTML(
         productData.long_description.getCurrentContent()
       ),
+      
       featured_img: JSON.stringify(
         removeKeyFromImageObject(productData.featured_img)
       ),
+      
       product_gallery: JSON.stringify(
         productData.product_gallery.map(item => removeKeyFromImageObject(item))
       ),
+
       productType: productData.productType.value,
       product_options:
         optionsAndAttributes.options.length > 0
@@ -115,6 +120,7 @@ const AddProduct = () => {
         optionsAndAttributes.attributes.length > 0
           ? optionsAndAttributes.attributes
           : null,
+
       variations:
         productData.variations.length > 0 ? productData.variations : null,
 
