@@ -9,6 +9,8 @@ import ProductDetailsEdit from "./ProductDetailsEdit";
 import WizardVertical from "../../../forms/wizard/WizardVertical";
 import MoreInfo from "./MoreInfo";
 import { urls } from "@urls";
+
+import { Link, useHistory } from "react-router-dom";
 import Select from "react-select";
 
 import { selectThemeColors } from "@utils";
@@ -23,6 +25,7 @@ import MoreInfoForVariantProduct from "./MoreInfo/MoreInfoForVariantProduct";
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
   const initialContent = ``;
+  const history = useHistory();
 
   const contentBlock = htmlToDraft(initialContent);
   const contentState = ContentState.createFromBlockArray(
@@ -85,7 +88,7 @@ const AddProduct = () => {
     });
     return { options: options, attributes: attributes };
   };
-  
+
   const onSave = e => {
     e.preventDefault();
     const optionsAndAttributes = getFormattedProductOptionsAndAttributes();
@@ -101,11 +104,11 @@ const AddProduct = () => {
       long_description: stateToHTML(
         productData.long_description.getCurrentContent()
       ),
-      
+
       featured_img: JSON.stringify(
         removeKeyFromImageObject(productData.featured_img)
       ),
-      
+
       product_gallery: JSON.stringify(
         productData.product_gallery.map(item => removeKeyFromImageObject(item))
       ),
@@ -129,7 +132,8 @@ const AddProduct = () => {
       allowBackOrders: productData.allowBackOrders.value,
     };
     console.log(dataOfProduct);
-    uploadProduct(dataOfProduct);
+    history.replace("/apps/ecommerce/products");
+    // uploadProduct(dataOfProduct);
   };
 
   const uploadProduct = async product => {

@@ -19,6 +19,8 @@ import {
   Badge,
   UncontrolledDropdown,
 } from "reactstrap";
+
+import { Link, useHistory } from "react-router-dom";
 import {
   ChevronDown,
   Share,
@@ -132,6 +134,22 @@ const CustomPopularProductIcon = ({ row }) => {
     </div>
   );
 };
+
+const CustomCategoryRow = ({ row }) => {
+  const { categories } = row;
+  console.log(categories);
+  return (
+    <div className="text-truncate d-inline">
+      {categories.map(item => (
+        <>
+          <Badge color="light-primary" pill>
+            {item.category_name}
+          </Badge>
+        </>
+      ))}
+    </div>
+  );
+};
 const columns = [
   {
     name: "Product Name",
@@ -155,10 +173,11 @@ const columns = [
     cell: row => <CustomPriceRow row={row} />,
   },
   {
-    name: "Quantity",
-    selector: "quantity",
+    name: "Category",
+    selector: "categories",
+    minWidth: "150px",
     sortable: true,
-    minWidth: "100px",
+    cell: row => <CustomCategoryRow row={row} />,
   },
 
   {
@@ -381,10 +400,13 @@ export default function ProductTable({ products }) {
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledButtonDropdown>
-          <Button className="ml-2" color="primary">
-            <Plus size={15} />
-            <span className="align-middle ml-50">Add Record</span>
-          </Button>
+
+          <Link to="/apps/ecommerce/addProduct" target="_blank">
+            <Button className="ml-2" color="primary">
+              <Plus size={15} />
+              <span className="align-middle ml-50">Add Product</span>
+            </Button>
+          </Link>
         </div>
       </CardHeader>
       <Row className="justify-content-end mx-0">
