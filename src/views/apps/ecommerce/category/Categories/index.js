@@ -24,7 +24,6 @@ import axios from "axios";
 import { removeItemInCategory } from "../../store/actions";
 import { urls } from "@urls";
 
-
 const Categories = () => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0);
@@ -45,7 +44,7 @@ const Categories = () => {
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   // ** Function to handle filter
-  const handleFilter =e => {
+  const handleFilter = e => {
     const value = e.target.value;
     let updatedData = [];
     setSearchValue(value);
@@ -126,10 +125,8 @@ const Categories = () => {
     e.preventDefault();
     console.log(category);
     try {
-      const url = urls.REMOVE_A_CATEGORY;
-      const res = await axios.post(url, {
-        category_id: category.category_id
-      });
+      const url = urls.REMOVE_A_CATEGORY + category.category_id;
+      const res = await axios.delete(url);
       console.log(res);
       dispatch(removeItemInCategory(category));
     } catch (error) {
@@ -153,25 +150,25 @@ const Categories = () => {
       name: "Name",
       selector: "name",
       sortable: true,
-      minWidth: "10px"
+      minWidth: "10px",
     },
     {
       name: "Description",
       selector: "description",
       sortable: true,
-      minWidth: "50px"
+      minWidth: "50px",
     },
     {
       name: "Count",
       selector: "count",
       sortable: true,
-      minWidth: "50px"
+      minWidth: "50px",
     },
     {
       name: "Actions",
       allowOverflow: true,
-      cell: row => <CustomRows category={row} />
-    }
+      cell: row => <CustomRows category={row} />,
+    },
   ];
 
   return (

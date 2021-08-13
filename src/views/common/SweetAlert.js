@@ -6,14 +6,14 @@ import {
   CardTitle,
   Button,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 const MySwal = withReactContent(Swal);
 
-const SweetAlert = (item, onDelete) => e => {
+const SweetAlert = (item, cb) => e => {
   return MySwal.fire({
     title: item.title,
     text: item.text,
@@ -22,19 +22,19 @@ const SweetAlert = (item, onDelete) => e => {
     confirmButtonText: item.confirmButtonText,
     customClass: {
       confirmButton: "btn btn-primary",
-      cancelButton: "btn btn-outline-danger ml-1"
+      cancelButton: "btn btn-outline-danger ml-1",
     },
-    buttonsStyling: false
-  }).then(function(result) {
+    buttonsStyling: false,
+  }).then(function (result) {
     if (result.value) {
-      onDelete()
+      cb();
       MySwal.fire({
         icon: item.confirmIcon,
         title: item.confirmTitle,
         text: item.confirmText,
         customClass: {
-          confirmButton: "btn btn-success"
-        }
+          confirmButton: "btn btn-success",
+        },
       });
     }
   });

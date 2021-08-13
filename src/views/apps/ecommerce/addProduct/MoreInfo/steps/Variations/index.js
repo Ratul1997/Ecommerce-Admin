@@ -151,7 +151,6 @@ export default function Variations({ stepper }) {
       })}
       {combinationsList.length > 0 && (
         <>
-          {" "}
           <SidebarImage
             open={sidebarOpen}
             toggleSidebar={toggleSidebar}

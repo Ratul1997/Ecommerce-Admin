@@ -1,6 +1,14 @@
 /* eslint-disable */
 import React, { Fragment, useState, useEffect, useContext } from "react";
-import { Row, Col, Button, CustomInput, Label, FormGroup } from "reactstrap";
+import {
+  Row,
+  Col,
+  Button,
+  CustomInput,
+  Label,
+  FormGroup,
+  Spinner,
+} from "reactstrap";
 // ** Custom Components
 import Breadcrumbs from "@components/breadcrumbs";
 import BlogSidebar from "../../../pages/blog/BlogSidebar";
@@ -9,6 +17,7 @@ import ProductDetailsEdit from "./ProductDetailsEdit";
 import WizardVertical from "../../../forms/wizard/WizardVertical";
 import MoreInfo from "./MoreInfo";
 import { urls } from "@urls";
+import { toast } from "react-toastify";
 
 import { Link, useHistory } from "react-router-dom";
 import Select from "react-select";
@@ -21,6 +30,8 @@ import { EditorState, ContentState } from "draft-js";
 import { stateToHTML } from "draft-js-export-html";
 import axios from "axios";
 import MoreInfoForVariantProduct from "./MoreInfo/MoreInfoForVariantProduct";
+import Toaster from "@src/views/common/Toaster";
+import { ErrorToast, SuccessToast } from "../../../common/Toaster";
 
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
@@ -55,7 +66,7 @@ const AddProduct = () => {
     product_gallery: [],
     attributesList: [],
     variations: [],
-    stock_threshold: null,
+    stock_threshold:  { value: 1, label: "In Stock" },
     allowBackOrders: { value: 1, label: "Do not allow" },
     shipping_cost: 0.0,
     inventory_status: { value: 1, label: "In Stock" },
@@ -63,8 +74,9 @@ const AddProduct = () => {
   };
 
   const [productData, setProductData] = useState(initialState);
-  console.table(productData.attributesList);
+  const [isLoading, setIsLoading] = useState(false);
   const productContextValue = { productData, setProductData };
+
   const removeKeyFromImageObject = image => {
     if (!image) return { file_name: null, file_id: null };
     const updateImage = {
@@ -91,13 +103,10 @@ const AddProduct = () => {
 
   const onSave = e => {
     e.preventDefault();
+    setIsLoading(true);
     const optionsAndAttributes = getFormattedProductOptionsAndAttributes();
     const dataOfProduct = {
       ...productData,
-      discount_price:
-        productData.discount_price === (0.0 || 0)
-          ? productData.discount_price
-          : 0,
       short_description: stateToHTML(
         productData.short_description.getCurrentContent()
       ),
@@ -131,19 +140,26 @@ const AddProduct = () => {
       product_status_id: productData.product_status_id.value,
       allowBackOrders: productData.allowBackOrders.value,
     };
-    console.log(dataOfProduct);
-    history.replace("/apps/ecommerce/products");
-    // uploadProduct(dataOfProduct);
+    uploadProduct(dataOfProduct);
   };
-
   const uploadProduct = async product => {
     try {
       const url = urls.ADD_A_PRODUCT;
       const res = await axios.post(url, { product });
       console.log(res);
+      toast.success(
+        <SuccessToast toastText="Successfully Inserted A Product" />,
+        { hideProgressBar: true }
+      );
+
+      history.replace("/apps/ecommerce/products");
     } catch (error) {
-      console.log(error);
+      console.log(error)
+      toast.error(<ErrorToast toastText={error.massage} />, {
+        hideProgressBar: true,
+      });
     }
+    setIsLoading(false);
   };
   return (
     <ProductDataContext.Provider value={productContextValue}>
@@ -200,12 +216,25 @@ const AddProduct = () => {
 
         <Row>
           <Col className="mt-50">
-            <Button.Ripple color="primary" className="mr-1" onClick={onSave}>
-              Save
-            </Button.Ripple>
-            <Button.Ripple color="secondary" outline>
-              Cancel
-            </Button.Ripple>
+            {isLoading ? (
+              <Button.Ripple color="primary" disabled>
+                <Spinner size="sm" />
+                <span className="ml-50">Loading...</span>
+              </Button.Ripple>
+            ) : (
+              <>
+                <Button.Ripple
+                  color="primary"
+                  className="mr-1"
+                  onClick={onSave}
+                >
+                  Save
+                </Button.Ripple>
+                <Button.Ripple color="secondary" outline>
+                  Cancel
+                </Button.Ripple>
+              </>
+            )}
           </Col>
         </Row>
       </Fragment>
