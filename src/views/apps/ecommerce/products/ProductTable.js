@@ -101,10 +101,17 @@ const CustomFileTime = ({ row }) => {
                     /> */
 }
 const CustomPriceRow = ({ row }) => {
+  console.log(row.discount_price, row.regular_price);
   return (
     <div className="text-truncate d-inline">
-      <s className="d-block  text-truncate">{row.regular_price}</s>
-      {row.discount_price}
+      {row.discount_price ? (
+        <>
+          <s className="d-block  text-truncate">{row.regular_price}</s>
+          {row.discount_price}
+        </>
+      ) : (
+        <>{row.regular_price}</>
+      )}
     </div>
   );
 };

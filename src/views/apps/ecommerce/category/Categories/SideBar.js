@@ -20,11 +20,14 @@ import TextareaCounter from "@src/views/forms/form-elements/textarea/TextareaCou
 import axios from "axios";
 import { addCategories, updateCategories } from "../../store/actions";
 import { urls } from "@urls";
+
+import { toast } from "react-toastify";
+import { ErrorToast, SuccessToast } from "../../../../common/Toaster";
 const SidebarNewCategory = ({ open, toggleSidebar }) => {
   const initialState = {
     name: "",
     description: "",
-    parent_id: null
+    parent_id: null,
   };
   // ** States
   const [parentCategory, setParentCategory] = useState("");
@@ -54,8 +57,8 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
   const categoryOptions = [
     {
       label: "Categories",
-      options: getOptions()
-    }
+      options: getOptions(),
+    },
   ];
   const { register, errors, handleSubmit } = useForm();
 
@@ -64,12 +67,18 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
     formData.append("categoryData", categoryData);
     try {
       const res = await axios.post(urls.ADD_A_CATEGORY, {
-        categoryData
+        categoryData,
       });
       dispatch(updateCategories(res.data));
+      toast.error(<SuccessToast toastText='Successfully added.' />, {
+        hideProgressBar: true,
+      });
       toggleSidebar();
     } catch (error) {
-      console.log(error);
+      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
+        hideProgressBar: true,
+      });
+      console.log(error.response);
     }
   };
 
@@ -137,7 +146,7 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
           />
           <span
             className={classnames("textarea-counter-value float-right", {
-              "bg-danger": categoryData.description.length > 100
+              "bg-danger": categoryData.description.length > 100,
             })}
           >
             {`${categoryData.description.length}/100`}

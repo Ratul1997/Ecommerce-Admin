@@ -12,7 +12,15 @@ import { isObjEmpty } from "@utils";
 // ** Third Party Components
 import classnames from "classnames";
 import { useForm } from "react-hook-form";
-import { Button, FormGroup, Label, FormText, Form, Input } from "reactstrap";
+import {
+  Button,
+  FormGroup,
+  Label,
+  FormText,
+  Form,
+  Input,
+  Spinner,
+} from "reactstrap";
 
 import { toast } from "react-toastify";
 
@@ -23,6 +31,7 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
   const initialState = {
     attribute_name: "",
   };
+  const [isLoading, setIsLoading] = useState(false);
   // ** States
   const [attributeData, setAttributeData] = useState(initialState);
 
@@ -35,9 +44,10 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
   const { register, errors, handleSubmit } = useForm();
 
   const postData = async () => {
+    setIsLoading(true);
     try {
       const res = await axios.post(urls.ADD_ATTRIBUTE, {
-        attribute_name: attributeData.attribute_name,
+        attribute_name: attributeData.attribute_name.trim(),
       });
 
       onAddAttribute({
@@ -51,16 +61,16 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
         { hideProgressBar: true }
       );
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.massage} />, {
+      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
         hideProgressBar: true,
       });
     }
+    setIsLoading(false);
   };
 
   // ** Function to handle form submit
-  const onSubmit = e => {
-    e.preventDefault();
-    if (isObjEmpty(errors)) {
+  const onSubmit = () => {
+    if (isObjEmpty(errors) && !isLoading) {
       // toggleSidebar();
       postData();
     }
@@ -101,9 +111,15 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
           color="primary"
           onClick={onSubmit}
         >
+          {isLoading && <Spinner color="white" size="sm" />}
           Submit
         </Button>
-        <Button type="reset" color="secondary" outline onClick={toggleSidebar}>
+        <Button
+          type="reset"
+          color="secondary"
+          outline
+          onClick={!isLoading ? toggleSidebar : null}
+        >
           Cancel
         </Button>
       </Form>

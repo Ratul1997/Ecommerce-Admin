@@ -23,6 +23,8 @@ import Sidebar from "./SideBar";
 import axios from "axios";
 import { removeItemInCategory } from "../../store/actions";
 import { urls } from "@urls";
+import { toast } from "react-toastify";
+import { ErrorToast, SuccessToast } from "../../../../common/Toaster";
 
 const Categories = () => {
   // ** State
@@ -129,8 +131,14 @@ const Categories = () => {
       const res = await axios.delete(url);
       console.log(res);
       dispatch(removeItemInCategory(category));
+      toast.success(<SuccessToast toastText="Successfully removed." />, {
+        hideProgressBar: true,
+      });
     } catch (error) {
       console.log(error);
+      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
+        hideProgressBar: true,
+      });
       // alert("Something Went Wrong");
     }
   };

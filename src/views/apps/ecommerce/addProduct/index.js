@@ -66,7 +66,7 @@ const AddProduct = () => {
     product_gallery: [],
     attributesList: [],
     variations: [],
-    stock_threshold:  { value: 1, label: "In Stock" },
+    stock_threshold: { value: 1, label: "In Stock" },
     allowBackOrders: { value: 1, label: "Do not allow" },
     shipping_cost: 0.0,
     inventory_status: { value: 1, label: "In Stock" },
@@ -154,8 +154,9 @@ const AddProduct = () => {
 
       history.replace("/apps/ecommerce/products");
     } catch (error) {
-      console.log(error)
-      toast.error(<ErrorToast toastText={error.massage} />, {
+      console.log(error.response);
+
+      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
         hideProgressBar: true,
       });
     }

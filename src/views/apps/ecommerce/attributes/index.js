@@ -23,6 +23,8 @@ import axios from "axios";
 import { urls } from "@urls";
 import AttributesList from "./AttributesList";
 import CardBody from "reactstrap/lib/CardBody";
+import { toast } from "react-toastify";
+import { ErrorToast } from "../../../common/Toaster";
 
 const Attributes = () => {
   // ** State
@@ -36,8 +38,13 @@ const Attributes = () => {
   const loadAttributes = async () => {
     try {
       const res = await axios.get(urls.GET_ATTRIBUTES);
+      console.log(res.status);
       setAttributeList(res.data.results);
     } catch (error) {
+      console.log(error);
+      toast.error(<ErrorToast toastText={error.response} />, {
+        hideProgressBar: true,
+      });
       console.log(error);
     }
   };
