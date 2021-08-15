@@ -55,18 +55,12 @@ export const WarningToast = ({ toastText, toastTime }) => (
     </div>
   </Fragment>
 );
-export default function Toaster({}) {
-  const notifySuccess = () =>
-    toast.success(<SuccessToast />, { hideProgressBar: true });
-  const notifyError = () =>
-    toast.error(<ErrorToast />, { hideProgressBar: true });
-  const notifyWarning = () =>
-    toast.warning(<WarningToast />, { hideProgressBar: true });
-  const notifyInfo = () => toast.info(<InfoToast />, { hideProgressBar: true });
-  const notifySuccessProgress = () => toast.success(<SuccessProgressToast />);
-  return (
-    <>
-      <SuccessToast />
-    </>
-  );
-}
+export const onErrorToast = (toastText, toastTime = null) =>
+  toast.error(<ErrorToast toastText={toastText} toastTime={toastTime} />, {
+    hideProgressBar: true,
+  });
+
+export const onSuccessToast = (toastText, toastTime = null) =>
+  toast.success(<SuccessToast toastText={toastText} toastTime={toastTime} />, {
+    hideProgressBar: true,
+  });

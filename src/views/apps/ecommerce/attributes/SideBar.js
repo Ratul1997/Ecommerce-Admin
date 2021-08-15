@@ -26,7 +26,12 @@ import { toast } from "react-toastify";
 
 import axios from "axios";
 import { urls } from "@urls";
-import { ErrorToast, SuccessToast } from "../../../common/Toaster";
+import {
+  ErrorToast,
+  onErrorToast,
+  SuccessToast,
+} from "../../../common/Toaster";
+import axiosInstance from "../../../../configs/axiosInstance";
 const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
   const initialState = {
     attribute_name: "",
@@ -46,7 +51,7 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
   const postData = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.post(urls.ADD_ATTRIBUTE, {
+      const res = await axiosInstance().post(urls.ADD_ATTRIBUTE, {
         attribute_name: attributeData.attribute_name.trim(),
       });
 
@@ -61,9 +66,7 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
         { hideProgressBar: true }
       );
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage);
     }
     setIsLoading(false);
   };
