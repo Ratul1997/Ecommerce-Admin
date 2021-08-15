@@ -29,6 +29,7 @@ import { urls } from "@urls";
 import {
   ErrorToast,
   onErrorToast,
+  onSuccessToast,
   SuccessToast,
 } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
@@ -60,11 +61,7 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
         options: [],
       });
       toggleSidebar();
-
-      toast.success(
-        <SuccessToast toastText="Successfully Inserted A Product" />,
-        { hideProgressBar: true }
-      );
+      onSuccessToast("Successfully Inserted An Attribute");
     } catch (error) {
       onErrorToast(error.data.massage);
     }

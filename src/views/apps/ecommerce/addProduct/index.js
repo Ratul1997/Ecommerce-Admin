@@ -31,7 +31,13 @@ import { stateToHTML } from "draft-js-export-html";
 import axios from "axios";
 import MoreInfoForVariantProduct from "./MoreInfo/MoreInfoForVariantProduct";
 import Toaster from "@src/views/common/Toaster";
-import { ErrorToast, SuccessToast } from "../../../common/Toaster";
+import {
+  ErrorToast,
+  onErrorToast,
+  onSuccessToast,
+  SuccessToast,
+} from "../../../common/Toaster";
+import axiosInstance from "../../../../configs/axiosInstance";
 
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
@@ -145,20 +151,13 @@ const AddProduct = () => {
   const uploadProduct = async product => {
     try {
       const url = urls.ADD_A_PRODUCT;
-      const res = await axios.post(url, { product });
-      console.log(res);
-      toast.success(
-        <SuccessToast toastText="Successfully Inserted A Product" />,
-        { hideProgressBar: true }
-      );
+      const res = await axiosInstance().post(url, { product });
+
+      onSuccessToast("Successfully Inserted A Product");
 
       history.replace("/apps/ecommerce/products");
     } catch (error) {
-      console.log(error.response);
-
-      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage);
     }
     setIsLoading(false);
   };

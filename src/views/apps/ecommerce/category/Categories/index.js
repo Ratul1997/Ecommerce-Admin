@@ -24,7 +24,13 @@ import axios from "axios";
 import { removeItemInCategory } from "../../store/actions";
 import { urls } from "@urls";
 import { toast } from "react-toastify";
-import { ErrorToast, SuccessToast } from "../../../../common/Toaster";
+import {
+  ErrorToast,
+  onErrorToast,
+  onSuccessToast,
+  SuccessToast,
+} from "../../../../common/Toaster";
+import axiosInstance from "../../../../../configs/axiosInstance";
 
 const Categories = () => {
   // ** State
@@ -128,17 +134,12 @@ const Categories = () => {
     console.log(category);
     try {
       const url = urls.REMOVE_A_CATEGORY + category.category_id;
-      const res = await axios.delete(url);
-      console.log(res);
+      const res = await axiosInstance().delete(url);
       dispatch(removeItemInCategory(category));
-      toast.success(<SuccessToast toastText="Successfully removed." />, {
-        hideProgressBar: true,
-      });
+      onSuccessToast("Successfully removed.");
     } catch (error) {
       console.log(error);
-      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage);
       // alert("Something Went Wrong");
     }
   };

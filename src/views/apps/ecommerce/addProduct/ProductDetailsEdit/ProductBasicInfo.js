@@ -29,6 +29,8 @@ import "@styles/react/libs/editor/editor.scss";
 import "@styles/base/plugins/forms/form-quill-editor.scss";
 import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/base/pages/page-blog.scss";
+
+import defaultFeaturedImage from "@src/assets/images/icons/image.png";
 export default function ProductBasicInfo({
   productData,
   setProductData,
@@ -133,18 +135,18 @@ export default function ProductBasicInfo({
                       className="border rounded"
                       style={{ width: 210, height: 210 }}
                     >
-                      {featured_img && (
-                        <img
-                          className="rounded m-1"
-                          src={
-                            require(`@uploads/${featured_img.file_name}`)
-                              .default
-                          }
-                          alt="featured img"
-                          width="180"
-                          height="180"
-                        />
-                      )}
+                      <img
+                        className="rounded m-1"
+                        src={
+                          featured_img
+                            ? require(`@uploads/${featured_img.file_name}`)
+                                .default
+                            : defaultFeaturedImage
+                        }
+                        alt="featured img"
+                        width="180"
+                        height="180"
+                      />
                     </div>
                   </FormGroup>
                 </Col>

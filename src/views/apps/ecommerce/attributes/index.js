@@ -24,7 +24,7 @@ import { urls } from "@urls";
 import AttributesList from "./AttributesList";
 import CardBody from "reactstrap/lib/CardBody";
 import { toast } from "react-toastify";
-import { ErrorToast } from "../../../common/Toaster";
+import { ErrorToast, onErrorToast } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
 
 
@@ -44,9 +44,7 @@ const Attributes = () => {
       console.log(res);
       setAttributeList(res.data.results);
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.data.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage)
       console.log(error);
     }
   };

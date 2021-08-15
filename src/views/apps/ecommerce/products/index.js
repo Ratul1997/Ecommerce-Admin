@@ -4,6 +4,8 @@ import axios from "axios";
 import { urls } from "@urls";
 import Breadcrumbs from "@components/breadcrumbs";
 import ProductTable from "./ProductTable";
+import axiosInstance from "../../../../configs/axiosInstance";
+import { onErrorToast } from "../../../common/Toaster";
 export default function Products() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
@@ -11,10 +13,10 @@ export default function Products() {
   }, []);
   const loadProducts = async () => {
     try {
-      const res = await axios.get(urls.GET_PRODUCTS);
+      const res = await axiosInstance().get(urls.GET_PRODUCTS);
       setProducts(res.data.products);
     } catch (error) {
-      console.log(error);
+      onErrorToast(error.data.massage);
       // alert(error);
     }
   };
@@ -25,7 +27,7 @@ export default function Products() {
         breadCrumbParent="eCommerce"
         breadCrumbActive="Products"
       />
-      <ProductTable products={products}/>
+      <ProductTable products={products} />
     </Fragment>
   );
 }

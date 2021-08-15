@@ -22,7 +22,13 @@ import { addCategories, updateCategories } from "../../store/actions";
 import { urls } from "@urls";
 
 import { toast } from "react-toastify";
-import { ErrorToast, SuccessToast } from "../../../../common/Toaster";
+import {
+  ErrorToast,
+  onErrorToast,
+  onSuccessToast,
+  SuccessToast,
+} from "../../../../common/Toaster";
+import axiosInstance from "../../../../../configs/axiosInstance";
 const SidebarNewCategory = ({ open, toggleSidebar }) => {
   const initialState = {
     name: "",
@@ -63,22 +69,15 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
   const { register, errors, handleSubmit } = useForm();
 
   const postData = async () => {
-    const formData = new FormData();
-    formData.append("categoryData", categoryData);
     try {
-      const res = await axios.post(urls.ADD_A_CATEGORY, {
+      const res = await axiosInstance().post(urls.ADD_A_CATEGORY, {
         categoryData,
       });
       dispatch(updateCategories(res.data));
-      toast.error(<SuccessToast toastText='Successfully added.' />, {
-        hideProgressBar: true,
-      });
+      onSuccessToast("Successfully added.");
       toggleSidebar();
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.response.data.massage} />, {
-        hideProgressBar: true,
-      });
-      console.log(error.response);
+      onErrorToast(error.data.massage);
     }
   };
 

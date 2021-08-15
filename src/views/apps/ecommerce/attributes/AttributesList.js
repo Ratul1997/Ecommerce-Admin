@@ -6,8 +6,14 @@ import { Delete, Edit, Edit2, PlusCircle, Trash2 } from "react-feather";
 import { findItemInArray } from "@utils";
 import { urls } from "@urls";
 import { toast } from "react-toastify";
-import { ErrorToast, SuccessToast } from "../../../common/Toaster";
+import {
+  ErrorToast,
+  onErrorToast,
+  onSuccessToast,
+  SuccessToast,
+} from "../../../common/Toaster";
 import axios from "axios";
+import axiosInstance from "../../../../configs/axiosInstance";
 export default function AttributesList({
   attribute,
   index,
@@ -48,25 +54,20 @@ export default function AttributesList({
   const onSaveOption = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(urls.ADD_OPTION, {
+      const response = await axiosInstance().post(urls.ADD_OPTION, {
         option_name: option_name,
         attribute_id: attribute.attribute_id,
       });
 
-      console.log(response);
       const optionObject = {
         option_name: option_name,
         option_id: response.data.results.option_id,
       };
 
       onUpdateAttributeList(optionObject, index);
-      toast.success(<SuccessToast toastText="Successfully Inserted" />, {
-        hideProgressBar: true,
-      });
+      onSuccessToast("Successfully Inserted");
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage);
     }
     setIsLoading(false);
     onCancelAdd();
@@ -77,19 +78,15 @@ export default function AttributesList({
     const selectedOptions = selected.map(item => item.option_id);
 
     try {
-      const response = await axios.delete(urls.REMOVE_OPTIONS, {
+      const response = await axiosInstance().delete(urls.REMOVE_OPTIONS, {
         params: {
           option_ids: selectedOptions,
         },
       });
-      toast.success(<SuccessToast toastText="Successfully Deleted" />, {
-        hideProgressBar: true,
-      });
+      onSuccessToast("Successfully Deleted");
       onUpdateAttributeList(null, index, selectedOptions);
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage);
     }
     setIsLoading(false);
     onCancelDelete();
@@ -206,17 +203,13 @@ export default function AttributesList({
   const onRemove = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.delete(
+      const res = await axiosInstance().delete(
         urls.REMOVE_ATTRIBUTES + attribute.attribute_id
       );
-      toast.success(<SuccessToast toastText="Successfully Deleted" />, {
-        hideProgressBar: true,
-      });
+      onSuccessToast("Successfully Deleted");
       onRemoveAttribute(index);
     } catch (error) {
-      toast.error(<ErrorToast toastText={error.massage} />, {
-        hideProgressBar: true,
-      });
+      onErrorToast(error.data.massage);
     }
     setIsLoading(false);
   };
@@ -226,12 +219,7 @@ export default function AttributesList({
         {isLoading ? (
           <Spinner size="sm" color="primary" className="mr-1" />
         ) : (
-          <Trash2
-            size={15}
-            className="mr-1"
-            color="red"
-            onClick={onRemove}
-          />
+          <Trash2 size={15} className="mr-1" color="red" onClick={onRemove} />
         )}
         <h6>{title}</h6>
       </div>

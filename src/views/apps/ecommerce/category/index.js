@@ -11,6 +11,8 @@ import { Row } from "reactstrap";
 import Col from "reactstrap/lib/Col";
 import DataTableWithButtons from "../../../tables/data-tables/basic/TableExpandable";
 import { urls } from "@urls";
+import axiosInstance from "../../../../configs/axiosInstance";
+import { onErrorToast } from "../../../common/Toaster";
 
 export default function Category() {
   const store = useSelector(store => store.ecommerce);
@@ -19,10 +21,10 @@ export default function Category() {
   const load = async () => {
     try {
       const url = urls.GET_CATEGORIES;
-      const res = await axios.get(url);
+      const res = await axiosInstance().get(url);
       dispatch(addCategories(res.data.data));
     } catch (err) {
-      alert("Something Went Wrong");
+      onErrorToast(err.data.massage);
     }
   };
 
