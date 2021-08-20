@@ -8,7 +8,8 @@ import {
 	Circle,
 	ShoppingCart,
 	File,
-	User
+	User,
+	ShoppingBag
 } from "react-feather";
 
 export default [
@@ -50,18 +51,18 @@ export default [
 				icon: <Circle size={12} />,
 				navLink: "/apps/invoice/list"
 			},
-			{
-				id: "invoicePreview",
-				title: "Preview",
-				icon: <Circle size={12} />,
-				navLink: "/apps/invoice/preview"
-			},
-			{
-				id: "invoiceEdit",
-				title: "Edit",
-				icon: <Circle size={12} />,
-				navLink: "/apps/invoice/edit"
-			},
+			// {
+			// 	id: "invoicePreview",
+			// 	title: "Preview",
+			// 	icon: <Circle size={12} />,
+			// 	navLink: "/apps/invoice/preview"
+			// },
+			// {
+			// 	id: "invoiceEdit",
+			// 	title: "Edit",
+			// 	icon: <Circle size={12} />,
+			// 	navLink: "/apps/invoice/edit"
+			// },
 			{
 				id: "invoiceAdd",
 				title: "Add",
@@ -104,7 +105,7 @@ export default [
 	{
 		id: "productApp",
 		title: "Products",
-		icon: <ShoppingCart size={20} />,
+		icon: <ShoppingBag size={20} />,
 		children: [
 			{
 				id: "viewProducts",

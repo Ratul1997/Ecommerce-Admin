@@ -96,6 +96,24 @@ export const findItemInArray = (array, itemToBeFound, key) => {
   return array.findIndex(item => item[key] === itemToBeFound[key])
 }
 
+export const generateId = (startNumber, index) => {
+  const numberOfZeroes = 5
+  const repeatedString = '0'
+  const indexString = index.toString()
+  if (startNumber < indexString.length) return index
+  const remainingZeroes = numberOfZeroes > indexString.length ? numberOfZeroes - indexString.length : -1
+  if (remainingZeroes === -1) return `${startNumber}${indexString}`
+  return `${startNumber}${repeatedString.repeat(remainingZeroes)}${indexString}`
+
+}
+
+export const totalSumFromArray = (array, key) => {
+  let sum = 0.0
+  array.map(item => {
+    sum = sum + parseFloat(item[key])
+  })
+  return sum.toFixed(2)
+}
 // ** React Select Theme Colors
 export const selectThemeColors = theme => ({
   ...theme,

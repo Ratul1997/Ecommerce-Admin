@@ -37,7 +37,7 @@ const PreviewActions = ({
           )}
         </Pdf>
 
-        <Button.Ripple
+        {/* <Button.Ripple
           color="secondary"
           tag={Link}
           to="/apps/invoice/print"
@@ -64,7 +64,7 @@ const PreviewActions = ({
           onClick={() => setAddPaymentOpen(true)}
         >
           Add Payment
-        </Button.Ripple>
+        </Button.Ripple> */}
       </CardBody>
     </Card>
   );

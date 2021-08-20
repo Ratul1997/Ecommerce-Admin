@@ -91,7 +91,7 @@ const AppRoutes = [
 	},
 	{
 		path: "/apps/invoice/edit/:id",
-		component: lazy(() => import("../../views/apps/invoice/edit")),
+		component: lazy(() => import("../../views/apps/invoice/add")),
 		meta: {
 			navLink: "/apps/invoice/edit"
 		}

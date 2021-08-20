@@ -12,6 +12,8 @@ import PreviewActions from "./PreviewActions";
 import SendInvoiceSidebar from "../shared-sidebar/SidebarSendInvoice";
 import AddPaymentSidebar from "../shared-sidebar/SidebarAddPayment";
 
+import { urls } from "@urls";
+import axiosInstance from "@configs/axiosInstance.js";
 // ** Styles
 import "@styles/base/pages/app-invoice.scss";
 
@@ -31,13 +33,20 @@ const InvoicePreview = () => {
 
   // ** Get invoice on mount based on id
   useEffect(() => {
-    axios.get(`/api/invoice/invoices/${id}`).then(response => {
-      setData(response.data);
-    });
+    loadInvoice();
   }, []);
 
+  const loadInvoice = async () => {
+    try {
+      const res = await axiosInstance().get(urls.GET_INVOICE_BY_ID + id);
+      setData(res.data.results)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const onSave = () => {};
-  return data !== null && data.invoice !== undefined ? (
+  return data !== null && data !== undefined ? (
     <div className="invoice-preview-wrapper">
       <Row className="invoice-preview">
         <Col xl={9} md={8} sm={12}>

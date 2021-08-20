@@ -1,27 +1,67 @@
+/*eslint-disable*/
 // ** React Imports
-import { Fragment } from 'react'
-import { Link } from 'react-router-dom'
+import { Fragment } from "react";
+import { Link } from "react-router-dom";
 
 // ** Third Party Components
-import { Card, CardBody, Button, Input, CustomInput, Label } from 'reactstrap'
+import {
+  Card,
+  CardBody,
+  Button,
+  Input,
+  CustomInput,
+  Label,
+  Spinner,
+} from "reactstrap";
 
-const AddActions = () => {
+const AddActions = ({
+  onSave,
+  isLoading,
+  invoiceIdRef,
+  isEditedInvoice,
+  invoiceNumber,
+  onUpdate,
+}) => {
   return (
     <Fragment>
-      <Card className='invoice-action-wrapper'>
+      <Card className="invoice-action-wrapper">
         <CardBody>
-          <Button.Ripple color='primary' block className='mb-75' disabled>
+          {/* <Button.Ripple color="primary" block className="mb-75" disabled>
             Send Invoice
-          </Button.Ripple>
-          <Button.Ripple tag={Link} to='/apps/invoice/preview' color='primary' block outline className='mb-75'>
+          </Button.Ripple> */}
+          <Button.Ripple
+            tag={Link}
+            to={
+              isEditedInvoice
+                ? `/apps/invoice/preview/${invoiceNumber}`
+                : `/apps/invoice/preview/${invoiceIdRef.current}`
+            }
+            color="primary"
+            block
+            className="mb-75"
+            target="_blank"
+            disabled={invoiceIdRef.current || isEditedInvoice ? false : true}
+          >
             Preview
           </Button.Ripple>
-          <Button.Ripple color='primary' block outline>
-            Save
+          <Button.Ripple
+            color="primary"
+            block
+            outline
+            onClick={isLoading ? null : isEditedInvoice ? onUpdate : onSave}
+            disabled={!invoiceIdRef.current ? false : true}
+          >
+            {isLoading ? (
+              <Spinner size="sm" />
+            ) : isEditedInvoice ? (
+              "Update"
+            ) : (
+              "Save"
+            )}
           </Button.Ripple>
         </CardBody>
       </Card>
-      <div className='mt-2'>
+      {/* <div className='mt-2'>
         <div className='invoice-payment-option'>
           <p className='mb-50'>Accept payments via</p>
           <Input type='select' id='payment-select'>
@@ -53,8 +93,9 @@ const AddActions = () => {
           </div>
         </div>
       </div>
+     */}
     </Fragment>
-  )
-}
+  );
+};
 
-export default AddActions
+export default AddActions;

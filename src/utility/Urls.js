@@ -12,10 +12,21 @@ export const urls = {
 	REMOVE_A_CATEGORY: `${BASE_URL}api/categories/`,
 	ADD_A_CATEGORY: `${BASE_URL}api/category`,
 	UPLOAD_A_FILE: `api/file-upload`,
-	ADD_A_PRODUCT: `${BASE_URL}api/product`,
-	GET_PRODUCTS: `${BASE_URL}api/products`,
+	ADD_A_PRODUCT: `${BASE_URL}api/admin/product`,
+	GET_PRODUCTS: `${BASE_URL}api/admin/products`,
 	GET_FEATURED_PRODUCTS: `${BASE_URL}api/get-featured-product`,
 	GET_POPULAR_PRODUCTS: `${BASE_URL}api/get-popular-product`,
 	GET_ATTRIBUTES: `${BASE_URL}api/attributes`,
-	GET_ATTRIBUTES_OPTIONS: `${BASE_URL}api/attributes`
+	GET_ATTRIBUTES_OPTIONS: `${BASE_URL}api/attributes`,
+	GET_INVOICE_USERS: `${BASE_URL}api/invoices/clients`,
+	GET_LAST_INVOICE_ID: `${BASE_URL}api/invoices/lastId`,
+	ADD_INVOICE_CLIENT: `${BASE_URL}api/invoices/client`,
+	GET_RATINGS:`${BASE_URL}api/rating/total`,
+	ADD_INVOICE:`${BASE_URL}api/invoice`,
+	GET_INVOICE:`${BASE_URL}api/invoices`,
+	GET_INVOICE_BY_ID:`${BASE_URL}api/invoices/`,
+	REMOVE_INVOICE_BY_ID:`${BASE_URL}api/invoices/`,
+	UPDATE_INVOICE_BY_ID:`${BASE_URL}api/invoices/update/`,
+	
+
 };
