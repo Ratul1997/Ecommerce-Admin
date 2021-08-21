@@ -139,7 +139,6 @@ const AddEventSidebar = props => {
       extendedProps: {
         calendar: value[0].label,
         url: url.length ? url : undefined,
-        guests: guests.length ? guests : undefined,
         location: location.length ? location : undefined,
         desc: desc.length ? desc : undefined,
       },
@@ -163,7 +162,6 @@ const AddEventSidebar = props => {
     setUrl("");
     setLocation("");
     setDesc("");
-    setGuests({});
     setValue([{ value: "Business", label: "Business", color: "primary" }]);
     setStartPicker(new Date());
     setEndPickerDate(new Date());
@@ -186,15 +184,13 @@ const AddEventSidebar = props => {
         }
       };
       const end = new Date(selectedEvent.end);
-      console.log(end);
       const start = new Date(selectedEvent.start);
 
       setTitle(selectedEvent.title || title);
       setAllDay(selectedEvent.allDay || allDay);
-      setUrl(selectedEvent.url || url);
+      setUrl(selectedEvent.extendedProps.url || url);
       setLocation(selectedEvent.extendedProps.location || location);
-      setDesc(selectedEvent.extendedProps.description || desc);
-      setGuests(selectedEvent.extendedProps.guests || guests);
+      setDesc(selectedEvent.extendedProps.desc || desc);
       setStartPicker(start);
       setEndPickerDate(
         selectEvent.allDay || selectedEvent.end === null ? start : end
@@ -246,22 +242,17 @@ const AddEventSidebar = props => {
       allDay,
       start: startPicker,
       end: endPickerDate,
-      url,
+
       extendedProps: {
-        location,
-        description: desc,
-        guests,
+        url: url,
+        location: location,
+        desc: desc,
         calendar: value[0].label,
       },
     };
 
     const propsToUpdate = ["id", "title", "url"];
-    const extendedPropsToUpdate = [
-      "calendar",
-      "guests",
-      "location",
-      "description",
-    ];
+    const extendedPropsToUpdate = ["calendar", "location", "description"];
 
     dispatch(updateEvent(eventToUpdate));
     // updateEventInCalendar(eventToUpdate, propsToUpdate, extendedPropsToUpdate);
@@ -462,7 +453,7 @@ const AddEventSidebar = props => {
             />
           </FormGroup>
 
-          <FormGroup>
+          {/* <FormGroup>
             <Label for="guests">Guests</Label>
             <Select
               isMulti
@@ -478,7 +469,7 @@ const AddEventSidebar = props => {
                 Option: GuestsComponent,
               }}
             />
-          </FormGroup>
+          </FormGroup> */}
 
           <FormGroup>
             <Label for="location">Location</Label>

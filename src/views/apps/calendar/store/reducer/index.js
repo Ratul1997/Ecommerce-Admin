@@ -24,13 +24,13 @@ const calenderReducer = (state = initialState, action) => {
       const event = action.event;
       const ids = parseInt(event.id);
       const eventsList = state.events;
+
       const idx = eventsList.findIndex(item => item.id === ids);
       eventsList[idx] = event;
       return { ...state, events: [...eventsList] };
     case "UPDATE_FILTERS":
       // ** Updates Filters based on action filter
       const filterIndex = state.selectedCalendars.findIndex(i => {
-
         return i === action.filter;
       });
       if (state.selectedCalendars.includes(action.filter)) {

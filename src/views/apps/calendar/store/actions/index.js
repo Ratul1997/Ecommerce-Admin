@@ -56,8 +56,7 @@ export const updateEvent = event => {
         onSuccessToast("Event Updated!");
       })
       .catch(error => {
-        console.log(error)
-        // onErrorToast(error.data.massage);
+        onErrorToast(error.data.massage);
       });
   };
 };
