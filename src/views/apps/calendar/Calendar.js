@@ -1,3 +1,4 @@
+/*eslint-disable*/
 // ** React Import
 import { useEffect, useRef, memo, Fragment } from 'react'
 
@@ -104,6 +105,7 @@ const Calendar = props => {
     },
 
     eventClick({ event: clickedEvent }) {
+      // console.log(clickedEvent)
       dispatch(selectEvent(clickedEvent))
       handleAddEventSidebar()
 
