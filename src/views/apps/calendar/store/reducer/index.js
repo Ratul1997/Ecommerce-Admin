@@ -29,12 +29,10 @@ const calenderReducer = (state = initialState, action) => {
       return { ...state, events: [...eventsList] };
     case "UPDATE_FILTERS":
       // ** Updates Filters based on action filter
-      console.log("sdsd", action.filter, state);
       const filterIndex = state.selectedCalendars.findIndex(i => {
-        console.log(i);
+
         return i === action.filter;
       });
-      console.log(filterIndex);
       if (state.selectedCalendars.includes(action.filter)) {
         state.selectedCalendars.splice(filterIndex, 1);
       } else {
@@ -43,7 +41,6 @@ const calenderReducer = (state = initialState, action) => {
       if (state.selectedCalendars.length === 0) {
         state.events.length = 0;
       }
-      console.log(state);
       return { ...state };
     case "UPDATE_ALL_FILTERS":
       // ** Updates All Filters based on action value
