@@ -14,6 +14,8 @@ export const urls = {
   UPLOAD_A_FILE: `api/file-upload`,
   ADD_A_PRODUCT: `${BASE_URL}api/admin/product`,
   GET_PRODUCTS: `${BASE_URL}api/admin/products`,
+  GET_PRODUCTS_BY_ID:`${BASE_URL}api/admin/products/`,
+  GET_PRODUCTS_ADMIN_BY_ID:`${BASE_URL}api/admin/edit/products/`,
   GET_FEATURED_PRODUCTS: `${BASE_URL}api/get-featured-product`,
   GET_POPULAR_PRODUCTS: `${BASE_URL}api/get-popular-product`,
   GET_ATTRIBUTES: `${BASE_URL}api/attributes`,
@@ -31,4 +33,9 @@ export const urls = {
   GET_CALENDER_EVENTS: `${BASE_URL}api/calendar/events/`,
   REMOVE_CALENDER_EVENTS: `${BASE_URL}api/calendar/events/`,
   UPDATE_CALENDER_EVENTS: `${BASE_URL}api/calendar/update-event`,
+  GET_ORDERS_LIST: `${BASE_URL}api/orders`,
+  GET_ORDERS_BY_ID: `${BASE_URL}api/orders/`,
+  SEND_EMAIL: `${BASE_URL}api/send-email`,
+  GET_PRE_ORDERS:`${BASE_URL}api/pre-orders`,
+  GET_PRE_ORDERS_BY_ID: `${BASE_URL}api/pre-orders/`,
 };

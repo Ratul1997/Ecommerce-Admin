@@ -10,7 +10,8 @@ import { findItemInArray } from "@utils";
 import { ProductDataContext } from "../../..";
 
 export default function Attributes({ stepper }) {
-  const { productData, setProductData } = useContext(ProductDataContext);
+  const { productData, setProductData,isEditable,id } = useContext(ProductDataContext);
+  
   const [attributesList, setAttributesList] = useState([]);
   const [selectedAttributeOptions, setSelectedAttributeOptions] = useState([]);
   const [selectedAttribute, setSelectedAttribute] = useState([]);
@@ -22,17 +23,23 @@ export default function Attributes({ stepper }) {
 
   useEffect(() => {
     loadAttributes();
+    if(id){
+      console.log(productData)
+    }
   }, []);
+
   const loadAttributes = async () => {
     try {
       const res = await axios.get(urls.GET_ATTRIBUTES);
       setAttributesList(res.data.results);
+      if(id){
+        // onGetAttributeOptions(productData.attributesList);
+      }
     } catch (error) {
       console.warn(error);
     }
   };
   const onSave = () => {
-    console.log("click");
     console.table(selectedAttribute);
     setProductData({ ...productData, attributesList: [...selectedAttribute] });
     stepper.next();

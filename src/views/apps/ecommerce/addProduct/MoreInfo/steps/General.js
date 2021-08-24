@@ -5,6 +5,7 @@ import { Label, FormGroup, Row, Col, Input, Form } from "reactstrap";
 import { ProductDataContext } from "../..";
 const General = ({ stepper, type }) => {
   const { productData, setProductData } = useContext(ProductDataContext);
+
   return (
     <Fragment>
       <div className="content-header">
@@ -27,6 +28,7 @@ const General = ({ stepper, type }) => {
                   regular_price: parseFloat(e.target.value),
                 })
               }
+              value={productData.regular_price}
             />
           </FormGroup>
           <FormGroup tag={Col} md="6">
@@ -44,6 +46,7 @@ const General = ({ stepper, type }) => {
                   discount_price: parseFloat(e.target.value),
                 })
               }
+              value={productData.discount_price}
             />
           </FormGroup>
         </Row>

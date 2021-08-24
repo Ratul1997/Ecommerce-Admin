@@ -19,7 +19,7 @@ import MoreInfo from "./MoreInfo";
 import { urls } from "@urls";
 import { toast } from "react-toastify";
 
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams, useLocation } from "react-router-dom";
 import Select from "react-select";
 
 import { selectThemeColors } from "@utils";
@@ -38,11 +38,30 @@ import {
   SuccessToast,
 } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
+import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 
+const stockOptions = [
+  { value: 1, label: "In Stock" },
+  { value: 2, label: "Out Of Stock" },
+];
+
+const backOrdersOptions = [
+  { value: 1, label: "Do not allow" },
+  { value: 2, label: "Allow, but notify customer" },
+  { value: 3, label: "Allow" },
+];
+const getOptionsForStatus = [
+  { value: 1, label: "Published" },
+  { value: 2, label: "Draft" },
+  { value: 3, label: "UnPublished" },
+  { value: 4, label: "Pending" },
+];
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
   const initialContent = ``;
   const history = useHistory();
+  const params = useParams();
+  const location = useLocation();
 
   const contentBlock = htmlToDraft(initialContent);
   const contentState = ContentState.createFromBlockArray(
@@ -53,9 +72,23 @@ const AddProduct = () => {
     { value: 1, label: "Single Product" },
     { value: 2, label: "Product With Variants" },
   ];
+
   const editorState = EditorState.createWithContent(contentState);
 
+  const getProductTypeOptionForEdit = type => {
+    return getOptionsForProductType.filter(item => item.label === type)[0];
+  };
+  const convertHtmlToState = initialContent => {
+    const contentBlock = htmlToDraft(initialContent);
+    const contentState = ContentState.createFromBlockArray(
+      contentBlock.contentBlocks
+    );
+    const editorState = EditorState.createWithContent(contentState);
+
+    return editorState;
+  };
   const initialState = {
+    slug: "",
     sku: "",
     name: "",
     short_description: editorState,
@@ -79,9 +112,85 @@ const AddProduct = () => {
     productType: getOptionsForProductType[0],
   };
 
+  const [errorCode, setErrorCode] = useState(null);
   const [productData, setProductData] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
-  const productContextValue = { productData, setProductData };
+  const [isLoadingFetch, setIsLoadingFetch] = useState(true);
+
+  const [isEditable, setIsEditable] = useState(false);
+  const productContextValue = {
+    productData,
+    setProductData,
+    isEditable,
+    id: params.id,
+  };
+  useEffect(() => {
+    if (location.pathname.includes("edit")) {
+      const { id } = params;
+      loadProduct(id);
+    } else {
+      setIsLoadingFetch(false);
+    }
+  }, []);
+
+  const loadProduct = async id => {
+    try {
+      console.log(id);
+      const res = await axiosInstance().get(urls.GET_PRODUCTS_ADMIN_BY_ID + id);
+      console.log(res);
+      setStateForProduct(res.data.results);
+    } catch (error) {
+      setErrorCode(error);
+    }
+    setIsLoadingFetch(false);
+  };
+
+  const getStatus = status => {
+    return getOptionsForStatus.filter(item => item.value === status);
+  };
+  const getAllowBackOrders = allowBackOrders => {
+    return backOrdersOptions.filter(item => item.label === allowBackOrders);
+  };
+  const getStockStatus = stock => {
+    return stockOptions.filter(item => item.label === stock);
+  };
+  const setStateForProduct = data => {
+    console.log(data.attributes);
+    setIsEditable(true);
+    setProductData({
+      ...productData,
+      slug: data.slug,
+      sku: data.sku,
+      name: data.product_name,
+      short_description: convertHtmlToState(data.short_description),
+      long_description: convertHtmlToState(data.long_description),
+      product_status_id: getStatus(data.product_status_id),
+      regular_price: data.regular_price,
+      discount_price: data.discount_price,
+      quantity: data.manageStock ? data.inventory.quantity : 0,
+      manageStock: data.manageStock ? true : false,
+      hasFreeShipping: data.hasFreeShipping,
+      view_on_website: data.view_on_website,
+      featured_img: data.featured_img ? JSON.parse(data.featured_img) : null,
+      categories: data.categories.map(item => {
+        return { value: item.category_id, label: item.name };
+      }),
+      product_gallery: data.product_gallery
+        ? JSON.parse(data.product_gallery)
+        : [],
+      attributesList: data.attributes ,
+      variations: data.variants || [],
+      stock_threshold: data.hasFreeShipping
+        ? null
+        : data.inventory.stock_threshold,
+      allowBackOrders: data.manageStock
+        ? { value: 1, label: "Do not allow" }
+        : getAllowBackOrders(data.shipping.allowBackOrders),
+      shipping_cost: data.hasFreeShipping ? 0.0 : data.shipping.shipping_cost,
+      inventory_status: getStockStatus(data.inventory_status),
+      productType: getProductTypeOptionForEdit(data.productType),
+    });
+  };
 
   const removeKeyFromImageObject = image => {
     if (!image) return { file_name: null, file_id: null };
@@ -161,7 +270,12 @@ const AddProduct = () => {
     }
     setIsLoading(false);
   };
-  return (
+  // if (isEditable && isLoading) {
+  //   return <SpinnerComponent />;
+  // }
+  return isEditable && isLoadingFetch ? (
+    <SpinnerComponent />
+  ) : (
     <ProductDataContext.Provider value={productContextValue}>
       <Fragment>
         <Breadcrumbs

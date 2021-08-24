@@ -74,6 +74,10 @@ const AppRoutes = [
 		component: lazy(() => import("../../views/apps/calendar"))
 	},
 	{
+		path: "/apps/comments",
+		component: lazy(() => import("../../views/apps/comment"))
+	},
+	{
 		path: "/apps/invoice/list",
 		component: lazy(() => import("../../views/apps/invoice/list"))
 	},
@@ -133,12 +137,31 @@ const AppRoutes = [
 		component: lazy(() => import("../../views/apps/ecommerce/wishlist"))
 	},
 	{
+		path: "/apps/ecommerce/orders/list",
+		className: "ecommerce-application",
+		component: lazy(() => import("../../views/apps/ecommerce/orders/list"))
+	},
+	{
+		path: "/apps/ecommerce/pre-orders/list",
+		className: "ecommerce-application",
+		component: lazy(() => import("../../views/apps/ecommerce/preorders/list"))
+	},{
+		path: "/apps/ecommerce/orders/preview/:id",
+		className: "ecommerce-application",
+		component: lazy(() => import("../../views/apps/ecommerce/orders/preview"))
+	},
+	{
 		path: "/apps/ecommerce/category",
 		className: "ecommerce-application",
 		component: lazy(() => import("../../views/apps/ecommerce/category"))
 	},
 	{
 		path: "/apps/ecommerce/addProduct",
+		className: "ecommerce-application",
+		component: lazy(() => import("../../views/apps/ecommerce/addProduct"))
+	},
+	{
+		path: "/apps/ecommerce/product/edit/:id",
 		className: "ecommerce-application",
 		component: lazy(() => import("../../views/apps/ecommerce/addProduct"))
 	},

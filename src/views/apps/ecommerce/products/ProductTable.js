@@ -163,6 +163,12 @@ const columns = [
     selector: "product_name",
     sortable: true,
     minWidth: "250px",
+    cell: row => (
+      <Link
+        to={`/apps/ecommerce/product/edit/${row.product_id}`}
+        target="_blank"
+      >{`${row.product_name}`}</Link>
+    ),
   },
   {
     name: "Last Updated",
@@ -439,7 +445,7 @@ export default function ProductTable({ products }) {
         noHeader
         pagination
         responsive
-        selectableRows
+        // selectableRows
         columns={columns}
         paginationPerPage={PAGE_NUMBER}
         className="react-dataTable"

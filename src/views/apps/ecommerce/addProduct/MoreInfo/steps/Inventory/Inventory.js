@@ -30,7 +30,7 @@ const backOrdersOptions = [
 ];
 const Inventory = () => {
   const { productData, setProductData } = useContext(ProductDataContext);
-
+  console.log(productData);
   return (
     <>
       <Fragment>
@@ -51,6 +51,7 @@ const Inventory = () => {
                 onChange={e =>
                   setProductData({ ...productData, sku: e.target.value })
                 }
+                value={productData.sku}
               />
             </Col>
           </FormGroup>
@@ -62,7 +63,7 @@ const Inventory = () => {
               <CustomInput
                 type="checkbox"
                 id="manage-stock"
-                defaultChecked={false}
+                defaultChecked={productData.manageStock}
                 onChange={e =>
                   setProductData({
                     ...productData,
@@ -84,6 +85,7 @@ const Inventory = () => {
                     type="number"
                     name="stock_quantity"
                     id="stock_quantity"
+                    value={productData.quantity}
                     placeholder="Amount"
                     onChange={e =>
                       setProductData({
@@ -104,6 +106,7 @@ const Inventory = () => {
                     type="text"
                     name="low_stock_threshold"
                     id="low_stock_threshold"
+                    value={productData.stock_threshold}
                     placeholder="Amount"
                     onChange={e =>
                       setProductData({
@@ -133,6 +136,7 @@ const Inventory = () => {
                       })
                     }
                     isClearable
+                    value={productData.allowBackOrders}
                   />
                 </Col>
               </FormGroup>
@@ -155,6 +159,7 @@ const Inventory = () => {
                     inventory_status: data,
                   })
                 }
+                value={productData.inventory_status}
               />
             </Col>
           </FormGroup>

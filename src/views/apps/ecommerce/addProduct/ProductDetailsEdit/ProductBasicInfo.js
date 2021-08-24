@@ -46,6 +46,9 @@ export default function ProductBasicInfo({
   getOptionsForStatus,
   onRemove,
 }) {
+  const slugFormat = slug => {
+    return slug.replace(/\s/g, "-");
+  };
   return (
     <Row>
       <Col sm="12">
@@ -63,6 +66,7 @@ export default function ProductBasicInfo({
                         setProductData({
                           ...productData,
                           name: e.target.value,
+                          slug: slugFormat(e.target.value.toLowerCase()),
                         })
                       }
                     />
@@ -89,8 +93,13 @@ export default function ProductBasicInfo({
                   <FormGroup className="mb-2">
                     <Label>Slug</Label>
                     <Input
-                      value={slug}
-                      onChange={e => setSlug(e.target.value)}
+                      value={productData.slug}
+                      onChange={e =>
+                        setProductData({
+                          ...productData,
+                          slug: e.target.value.toLowerCase(),
+                        })
+                      }
                     />
                   </FormGroup>
                 </Col>
@@ -219,7 +228,7 @@ export default function ProductBasicInfo({
                       <CustomInput
                         type="checkbox"
                         id="check-box-for-website-positive"
-                        defaultChecked={false}
+                        defaultChecked={isChecked["positive-checkbox"]}
                         label="Yes"
                         disabled={isChecked["negative-checkbox"]}
                         name="positive-checkbox"
@@ -231,7 +240,7 @@ export default function ProductBasicInfo({
                       <CustomInput
                         type="checkbox"
                         id="check-box-for-website-negative"
-                        defaultChecked={false}
+                        defaultChecked={isChecked["negative-checkbox"]}
                         disabled={isChecked["positive-checkbox"]}
                         label="No"
                         name="negative-checkbox"

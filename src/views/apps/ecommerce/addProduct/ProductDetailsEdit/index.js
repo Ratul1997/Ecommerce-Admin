@@ -15,11 +15,13 @@ import ProductBasicInfo from "./ProductBasicInfo";
 import { ProductDataContext } from "..";
 
 const ProductDetailsEdit = () => {
-	const { productData, setProductData } = useContext(ProductDataContext);
-	const initialCheckBoxState = {
-    "positive-checkbox": false,
-    "negative-checkbox": false,
+  const { productData, setProductData, isEditable } =
+    useContext(ProductDataContext);
+  const initialCheckBoxState = {
+    "positive-checkbox": productData.view_on_website === 1 ? true : false,
+    "negative-checkbox": productData.view_on_website !== 1 ? true : false,
   };
+ 
   const store = useSelector(store => store.ecommerce);
   const { categories } = store;
 
@@ -28,6 +30,7 @@ const ProductDetailsEdit = () => {
   const { featured_img, product_gallery } = productData;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(initialCheckBoxState);
+
 
   // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
@@ -108,10 +111,7 @@ const ProductDetailsEdit = () => {
         getOptionsForStatus={getOptionsForStatus}
         onRemove={onRemove}
       />
-      <SidebarImage
-        open={sidebarOpen}
-        toggleSidebar={toggleSidebar}
-      />
+      <SidebarImage open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </div>
   );
 };

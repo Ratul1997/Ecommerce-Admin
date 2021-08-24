@@ -40,6 +40,8 @@ export default function Shipping() {
                 name="shipping_cost"
                 id="shipping_cost"
                 placeholder="Amount"
+
+                value={productData.shipping_cost}
                 onChange={e => {
                   setProductData({
                     ...productData,

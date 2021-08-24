@@ -46,7 +46,6 @@ const Shop = () => {
     // dispatch(removeMediaFiles())
     // dispatch(closeUpload())
   }, [dispatch])
-
   return (
     <Fragment>
       <Breadcrumbs breadCrumbTitle='Shop' breadCrumbParent='eCommerce' breadCrumbActive='Shop' />
