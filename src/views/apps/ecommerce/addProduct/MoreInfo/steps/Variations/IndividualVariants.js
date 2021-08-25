@@ -14,7 +14,7 @@ import { Trash2, X } from "react-feather";
 import { selectThemeColors } from "@utils";
 import image from "@src/assets/images/icons/image.png";
 import Select from "react-select";
-
+import { urls } from "@urls";
 const stockOptions = [
   { value: 1, label: "In Stock" },
   { value: 2, label: "Out Of Stock" },
@@ -80,7 +80,7 @@ export default function IndividualVariants({
                 className="rounded m-1"
                 src={
                   featured_img
-                    ? require(`@uploads/${featured_img.file_name}`).default
+                    ? urls.UPLOADED_LINK + featured_img.file_name
                     : image
                 }
                 onClick={onChange(index, "image")}

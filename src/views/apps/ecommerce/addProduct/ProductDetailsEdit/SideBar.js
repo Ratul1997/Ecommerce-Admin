@@ -42,7 +42,7 @@ import {
   removeFromArray,
 } from "../../../../../utility/Utils";
 import { ProductDataContext } from "..";
-
+import {urls} from '@urls'
 const IMAGE_INDEX_THRESHOLD = -1;
 const SidebarImage = ({ open, toggleSidebar }) => {
   const { productData, setProductData } = useContext(ProductDataContext);
@@ -122,7 +122,7 @@ const SidebarImage = ({ open, toggleSidebar }) => {
               key={key}
             >
               <LazyLoadImage
-                src={require(`@uploads/${item.file_name}`).default}
+                src={urls.UPLOADED_LINK + item.file_name}
                 alt={item.file_name}
                 width="100"
                 height="100"

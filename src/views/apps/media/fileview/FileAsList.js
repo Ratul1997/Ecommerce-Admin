@@ -10,6 +10,8 @@ import {
   convertTimeStampToString,
   formatBytes
 } from "../files/utils/utils";
+
+import {urls} from '@urls'
 export default function FileAsList({ files }) {
   const CustomFileNameRow = ({ file }) => {
     return (
@@ -20,7 +22,7 @@ export default function FileAsList({ files }) {
           content={file.file_name}
           img={
             checkImageTypeOrNot(file.mime_type)
-              ? require(`@uploads/${file.file_name}`).default
+              ? urls.UPLOADED_LINK + file.file_name
               : checkApplicationType(file.mime_type)
           }
         />

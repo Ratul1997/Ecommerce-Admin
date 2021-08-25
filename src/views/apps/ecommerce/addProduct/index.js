@@ -116,6 +116,7 @@ const AddProduct = () => {
   const [productData, setProductData] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingFetch, setIsLoadingFetch] = useState(true);
+  const [attributeListForData, setAttributeListForData] = useState([])
 
   const [isEditable, setIsEditable] = useState(false);
   const productContextValue = {
@@ -123,6 +124,7 @@ const AddProduct = () => {
     setProductData,
     isEditable,
     id: params.id,
+    attributeListForData
   };
   useEffect(() => {
     if (location.pathname.includes("edit")) {
@@ -178,7 +180,7 @@ const AddProduct = () => {
       product_gallery: data.product_gallery
         ? JSON.parse(data.product_gallery)
         : [],
-      attributesList: data.attributes ,
+      attributesList: [] ,
       variations: data.variants || [],
       stock_threshold: data.hasFreeShipping
         ? null
@@ -190,6 +192,7 @@ const AddProduct = () => {
       inventory_status: getStockStatus(data.inventory_status),
       productType: getProductTypeOptionForEdit(data.productType),
     });
+    setAttributeListForData({attributes:data.attributes,options:data.options})
   };
 
   const removeKeyFromImageObject = image => {

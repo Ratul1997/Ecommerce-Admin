@@ -42,9 +42,9 @@ import {
 } from "../../../../../../common/upload/store/action";
 import UploadProgress from "../../../../../../common/upload/UploadProgress/UploadProgress";
 import { checkImageTypeOrNot } from "../../../../../media/files/utils/utils";
-
+import { urls } from "@urls";
 const IMAGE_INDEX_THRESHOLD = -1;
-const SidebarImage = ({ open, toggleSidebar,onClickOnImagesList }) => {
+const SidebarImage = ({ open, toggleSidebar, onClickOnImagesList }) => {
   const productData = {
     product_gallery: [],
   };
@@ -69,7 +69,6 @@ const SidebarImage = ({ open, toggleSidebar,onClickOnImagesList }) => {
     // setSelectedFiles(files);
   };
 
-  
   return (
     <Sidebar
       size="lg"
@@ -114,7 +113,7 @@ const SidebarImage = ({ open, toggleSidebar,onClickOnImagesList }) => {
               key={key}
             >
               <LazyLoadImage
-                src={require(`@uploads/${item.file_name}`).default}
+                src={urls.UPLOADED_LINK + item.file_name}
                 alt={item.file_name}
                 width="100"
                 height="100"

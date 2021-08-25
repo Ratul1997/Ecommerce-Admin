@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { selectThemeColors } from "@utils";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, ContentState, convertToRaw } from "draft-js";
 import { Plus, X } from "react-feather";
 import {
   Row,
@@ -25,6 +24,7 @@ import {
   Button,
 } from "reactstrap";
 
+import { urls } from "@urls";
 import "@styles/react/libs/editor/editor.scss";
 import "@styles/base/plugins/forms/form-quill-editor.scss";
 import "@styles/react/libs/react-select/_react-select.scss";
@@ -148,11 +148,10 @@ export default function ProductBasicInfo({
                         className="rounded m-1"
                         src={
                           featured_img
-                            ? require(`@uploads/${featured_img.file_name}`)
-                                .default
+                            ? urls.UPLOADED_LINK + featured_img.file_name
                             : defaultFeaturedImage
                         }
-                        alt="featured img"
+                        alt='featured image'
                         width="180"
                         height="180"
                       />
@@ -200,10 +199,8 @@ export default function ProductBasicInfo({
                               onClick={onRemove(key)}
                             />
                             <img
-                              src={
-                                require(`@uploads/${item.file_name}`).default
-                              }
-                              alt="featured img"
+                              src={urls.UPLOADED_LINK + item.file_name}
+                              alt={item.file_name}
                               width="170"
                               height="110"
                               key={key}

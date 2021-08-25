@@ -21,7 +21,7 @@ export default function Variations({ stepper }) {
 
   const getOptions = useMemo(() => {
     const options = [];
-    attributesList || attributesList.map(item =>
+    attributesList.map(item =>
       item.selectedOptions.map(item2 => options.push(item2))
     );
     return options;

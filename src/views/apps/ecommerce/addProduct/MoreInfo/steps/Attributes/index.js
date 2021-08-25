@@ -10,8 +10,9 @@ import { findItemInArray } from "@utils";
 import { ProductDataContext } from "../../..";
 
 export default function Attributes({ stepper }) {
-  const { productData, setProductData,isEditable,id } = useContext(ProductDataContext);
-  
+  const { productData, setProductData, isEditable, id, attributeListForData } =
+    useContext(ProductDataContext);
+
   const [attributesList, setAttributesList] = useState([]);
   const [selectedAttributeOptions, setSelectedAttributeOptions] = useState([]);
   const [selectedAttribute, setSelectedAttribute] = useState([]);
@@ -21,10 +22,11 @@ export default function Attributes({ stepper }) {
     });
   };
 
+  console.log(id);
   useEffect(() => {
     loadAttributes();
-    if(id){
-      console.log(productData)
+    if (id) {
+      console.log("asas", attributeListForData);
     }
   }, []);
 
@@ -32,8 +34,9 @@ export default function Attributes({ stepper }) {
     try {
       const res = await axios.get(urls.GET_ATTRIBUTES);
       setAttributesList(res.data.results);
-      if(id){
-        // onGetAttributeOptions(productData.attributesList);
+      if (id) {
+        setSelectedAttributeOptions(attributeListForData.attributes);
+        onGetAttributeOptions(attributeListForData, res.data.results);
       }
     } catch (error) {
       console.warn(error);
@@ -49,14 +52,29 @@ export default function Attributes({ stepper }) {
     setSelectedAttributeOptions(data);
     onGetAttributeOptions(data);
   };
-  const onGetAttributeOptions = selectedAttributesData => {
-    const data = selectedAttributesData;
+  const onGetAttributeOptions = (selectedAttributesData, attribute = null) => {
+    const data = attribute
+      ? selectedAttributesData.attributes
+      : selectedAttributesData;
+    const temp_attributeList = attribute || attributesList;
+
     const attributes = data.map(item => {
-      const attribute = attributesList.filter(
-        attribute_item => attribute_item.attribute_id === item.value
-      );
-      return { ...attribute[0], selectedOptions: [] };
+      const attribute = temp_attributeList.filter(attribute_item => {
+        return attribute_item.attribute_id === item.value;
+      });
+      let selectOptions = [];
+      if (attribute && selectedAttributesData.options) {
+        attribute[0].options.filter(option_item => {
+          selectedAttributesData.options.filter(selected_option_item => {
+            if (selected_option_item.value === option_item.option_id) {
+              selectOptions.push(selected_option_item);
+            }
+          });
+        });
+      }
+      return { ...attribute[0], selectedOptions: selectOptions };
     });
+    console.log(attributes);
     setSelectedAttribute(attributes || []);
   };
   const onGo = e => {

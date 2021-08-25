@@ -7,8 +7,9 @@ import { Menu, Item } from "react-contexify";
 import SweetAlert from "@src/views/common/SweetAlert";
 import {
   checkImageTypeOrNot,
-  checkApplicationType
+  checkApplicationType,
 } from "../files/utils/utils";
+import { urls } from "@urls";
 export default function FileAsGrid({
   files,
   show,
@@ -18,16 +19,19 @@ export default function FileAsGrid({
   return (
     files.length > 0 &&
     files.map((file, key) => {
+      console.log(urls.UPLOADED_LINK + file.file_name)
       return (
         <div
           className="img-fluid rounded m-1 shadow  bg-lighten-5 align-items-center"
           style={{ width: 150, height: 150 }}
           key={key}
+
+          onContextMenu={show}
         >
           <LazyLoadImage
             src={
               checkImageTypeOrNot(file.mime_type)
-                ? require(`@uploads/${file.file_name}`).default
+                ? urls.UPLOADED_LINK + file.file_name
                 : checkApplicationType(file.mime_type)
             }
             effect="blur"
@@ -35,7 +39,6 @@ export default function FileAsGrid({
             width="150"
             height="110"
             className="shadow"
-            onContextMenu={show}
             outline
           />
           <p
@@ -43,7 +46,7 @@ export default function FileAsGrid({
             style={{
               overflow: "hidden",
               whiteSpace: "nowrap",
-              textOverflow: "ellipsis"
+              textOverflow: "ellipsis",
             }}
           >
             {file.file_name}
