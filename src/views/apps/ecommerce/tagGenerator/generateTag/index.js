@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { Fragment, useState } from "react";
 import {
 	Card,
