@@ -6,6 +6,7 @@ import Breadcrumbs from "@components/breadcrumbs";
 import ProductTable from "./ProductTable";
 import axiosInstance from "../../../../configs/axiosInstance";
 import { onErrorToast } from "../../../common/Toaster";
+import { findItemInArray, findValueInArray } from "../../../../utility/Utils";
 export default function Products() {
   const [products, setProducts] = useState([]);
   useEffect(() => {
@@ -20,6 +21,18 @@ export default function Products() {
       // alert(error);
     }
   };
+  const updatePopular = (id, type) => {
+    const productList = products;
+    if (type === "Popular") {
+      const index = findValueInArray(productList, id, "product_id");
+      productList[index].popular_product = !productList[index].popular_product;
+    }else{
+
+      const index = findValueInArray(productList, id, "product_id");
+      productList[index].featured_product = !productList[index].featured_product;
+    }
+    setProducts([...productList]);
+  };
   return (
     <Fragment>
       <Breadcrumbs
@@ -27,7 +40,7 @@ export default function Products() {
         breadCrumbParent="eCommerce"
         breadCrumbActive="Products"
       />
-      <ProductTable products={products} />
+      <ProductTable products={products} updatePopular={updatePopular} />
     </Fragment>
   );
 }

@@ -20,6 +20,8 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 
+import { urls } from "@urls";
+import axiosInstance from "@src/configs/axiosInstance";
 import { Link, useHistory } from "react-router-dom";
 import {
   ChevronDown,
@@ -59,6 +61,7 @@ import {
   checkApplicationType,
   convertTimeStampToString,
 } from "../../media/files/utils/utils";
+import { onErrorToast, onSuccessToast } from "../../../common/Toaster";
 
 // ** Vars
 const states = [
@@ -92,16 +95,7 @@ const CustomFileTime = ({ row }) => {
   );
 };
 
-{
-  /* <Star
-                      size={18}
-                      className={classnames({
-                        'text-warning fill-current': mail.isStarred
-                      })}
-                    /> */
-}
 const CustomPriceRow = ({ row }) => {
-  console.log(row.discount_price, row.regular_price);
   return (
     <div className="text-truncate d-inline">
       {row.discount_price ? (
@@ -116,7 +110,22 @@ const CustomPriceRow = ({ row }) => {
   );
 };
 
-const CustomFeaturedIcon = ({ row }) => {
+const CustomFeaturedIcon = ({ row, updatePopular }) => {
+  const onUpdate = async () => {
+    try {
+      await axiosInstance().patch(
+        urls.UPDATE_FEATURED_PRODUCT_BY_ID + row.product_id,
+        {
+          featured: !row.featured_product,
+        }
+      );
+      updatePopular(row.product_id, "Featured");
+      onSuccessToast("Updated");
+    } catch (error) {
+      onErrorToast(error.data.massage);
+    }
+  };
+
   return (
     <div className="text-truncate d-inline">
       <Star
@@ -124,19 +133,36 @@ const CustomFeaturedIcon = ({ row }) => {
         className={classnames({
           "text-warning fill-current": row.featured_product,
         })}
+        onClick={onUpdate}
       />
     </div>
   );
 };
 
-const CustomPopularProductIcon = ({ row }) => {
+const CustomPopularProductIcon = ({ row, updatePopular }) => {
+  const onUpdate = async () => {
+    try {
+      await axiosInstance().patch(
+        urls.UPDATE_POPULAR_PRODUCT_BY_ID + row.product_id,
+        {
+          popular: !row.popular_product,
+        }
+      );
+      updatePopular(row.product_id, "Popular");
+      onSuccessToast("Updated");
+    } catch (error) {
+      onErrorToast(error.data.massage);
+    }
+  };
+
   return (
     <div className="text-truncate d-inline">
       <Heart
         size={18}
         className={classnames({
-          "text-warning fill-current": row.popular_product,
+          "text-warning fill-current": row.popular_product === 0 ? false : true,
         })}
+        onClick={onUpdate}
       />
     </div>
   );
@@ -144,7 +170,6 @@ const CustomPopularProductIcon = ({ row }) => {
 
 const CustomCategoryRow = ({ row }) => {
   const { categories } = row;
-  console.log(categories);
   return (
     <div className="text-truncate d-inline">
       {categories.map(item => (
@@ -157,135 +182,141 @@ const CustomCategoryRow = ({ row }) => {
     </div>
   );
 };
-const columns = [
-  {
-    name: "Product Name",
-    selector: "product_name",
-    sortable: true,
-    minWidth: "250px",
-    cell: row => (
-      <Link
-        to={`/apps/ecommerce/product/edit/${row.product_id}`}
-        target="_blank"
-      >{`${row.product_name}`}</Link>
-    ),
-  },
-  {
-    name: "Last Updated",
-    selector: "updated_at",
-    sortable: true,
-    minWidth: "100px",
-    cell: row => <CustomFileTime row={row} />,
-  },
-
-  {
-    name: "Price",
-    selector: "regular_price",
-    sortable: true,
-    minWidth: "100px",
-    cell: row => <CustomPriceRow row={row} />,
-  },
-  {
-    name: "Category",
-    selector: "categories",
-    minWidth: "150px",
-    sortable: true,
-    cell: row => <CustomCategoryRow row={row} />,
-  },
-
-  {
-    name: "Featured",
-    selector: "featured_product",
-    sortable: true,
-    minWidth: "100px",
-    cell: row => <CustomFeaturedIcon row={row} />,
-  },
-
-  {
-    name: "Popular",
-    selector: "popular_product",
-    sortable: true,
-    minWidth: "100px",
-    cell: row => <CustomPopularProductIcon row={row} />,
-  },
-  {
-    name: "Stock Status",
-    selector: "inventory_status",
-    sortable: true,
-    minWidth: "100px",
-    cell: row => {
-      return (
-        <>
-          <Badge color={inventoryStatus[row.inventory_status]} pill>
-            {row.inventory_status}
-          </Badge>
-        </>
-      );
+const columns = updatePopular => {
+  return [
+    {
+      name: "Product Name",
+      selector: "product_name",
+      sortable: true,
+      minWidth: "250px",
+      cell: row => (
+        <Link
+          to={`/apps/ecommerce/product/edit/${row.product_id}`}
+          target="_blank"
+        >{`${row.product_name}`}</Link>
+      ),
     },
-  },
-  {
-    name: "Status",
-    selector: "product_status_id",
-    sortable: true,
-    minWidth: "150px",
-    cell: row => {
-      return (
-        <>
-          <Badge color={status[row.product_status_id].color} pill>
-            {status[row.product_status_id].title}
-          </Badge>
-        </>
-      );
+    {
+      name: "Last Updated",
+      selector: "updated_at",
+      sortable: true,
+      minWidth: "100px",
+      cell: row => <CustomFileTime row={row} />,
     },
-  },
-  {
-    name: "Actions",
-    allowOverflow: true,
-    cell: row => {
-      return (
-        <div className="d-flex">
-          <UncontrolledDropdown>
-            <DropdownToggle className="pr-1" tag="span">
-              <MoreVertical size={15} />
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={e => e.preventDefault()}
-              >
-                <FileText size={15} />
-                <span className="align-middle ml-50">Details</span>
-              </DropdownItem>
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={e => e.preventDefault()}
-              >
-                <Archive size={15} />
-                <span className="align-middle ml-50">Archive</span>
-              </DropdownItem>
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={e => e.preventDefault()}
-              >
-                <Trash size={15} />
-                <span className="align-middle ml-50">Delete</span>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
-          <Edit size={15} />
-        </div>
-      );
-    },
-  },
-];
 
-export default function ProductTable({ products }) {
+    {
+      name: "Price",
+      selector: "regular_price",
+      sortable: true,
+      minWidth: "100px",
+      cell: row => <CustomPriceRow row={row} />,
+    },
+    {
+      name: "Category",
+      selector: "categories",
+      minWidth: "150px",
+      sortable: true,
+      cell: row => <CustomCategoryRow row={row} />,
+    },
+
+    {
+      name: "Featured",
+      selector: "featured_product",
+      sortable: true,
+      minWidth: "100px",
+      cell: row => (
+        <CustomFeaturedIcon row={row} updatePopular={updatePopular} />
+      ),
+    },
+
+    {
+      name: "Popular",
+      selector: "popular_product",
+      sortable: true,
+      minWidth: "100px",
+      cell: row => (
+        <CustomPopularProductIcon row={row} updatePopular={updatePopular} />
+      ),
+    },
+    {
+      name: "Stock Status",
+      selector: "inventory_status",
+      sortable: true,
+      minWidth: "100px",
+      cell: row => {
+        return (
+          <>
+            <Badge color={inventoryStatus[row.inventory_status]} pill>
+              {row.inventory_status}
+            </Badge>
+          </>
+        );
+      },
+    },
+    {
+      name: "Status",
+      selector: "product_status_id",
+      sortable: true,
+      minWidth: "150px",
+      cell: row => {
+        return (
+          <>
+            <Badge color={status[row.product_status_id].color} pill>
+              {status[row.product_status_id].title}
+            </Badge>
+          </>
+        );
+      },
+    },
+    {
+      name: "Actions",
+      allowOverflow: true,
+      cell: row => {
+        return (
+          <div className="d-flex">
+            <UncontrolledDropdown>
+              <DropdownToggle className="pr-1" tag="span">
+                <MoreVertical size={15} />
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem
+                  tag="a"
+                  href="/"
+                  className="w-100"
+                  onClick={e => e.preventDefault()}
+                >
+                  <FileText size={15} />
+                  <span className="align-middle ml-50">Details</span>
+                </DropdownItem>
+                <DropdownItem
+                  tag="a"
+                  href="/"
+                  className="w-100"
+                  onClick={e => e.preventDefault()}
+                >
+                  <Archive size={15} />
+                  <span className="align-middle ml-50">Archive</span>
+                </DropdownItem>
+                <DropdownItem
+                  tag="a"
+                  href="/"
+                  className="w-100"
+                  onClick={e => e.preventDefault()}
+                >
+                  <Trash size={15} />
+                  <span className="align-middle ml-50">Delete</span>
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
+            <Edit size={15} />
+          </div>
+        );
+      },
+    },
+  ];
+};
+
+export default function ProductTable({ products, updatePopular }) {
   const data = products;
   // ** States
   const [modal, setModal] = useState(false);
@@ -369,27 +400,8 @@ export default function ProductTable({ products }) {
     <Card>
       <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">
         <CardTitle tag="h4">All Products</CardTitle>
-
-        {/* <div className="d-flex align-items-center">
-          <Label for="sort-select">Show</Label>
-          <Input
-            className="dataTable-select"
-            type="select"
-            id="sort-select"
-            // value={rowsPerPage}
-            // onChange={e => handlePerPage(e)}
-          >
-            <option value={7}>7</option>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={75}>75</option>
-            <option value={100}>100</option>
-          </Input>
-          <Label for="sort-select">entries</Label>
-        </div> */}
         <div className="d-flex mt-md-0 mt-1">
-          <UncontrolledButtonDropdown>
+          {/* <UncontrolledButtonDropdown>
             <DropdownToggle color="secondary" caret outline>
               <Share size={15} />
               <span className="align-middle ml-50">Export</span>
@@ -412,7 +424,7 @@ export default function ProductTable({ products }) {
                 <span className="align-middle ml-50">PDF</span>
               </DropdownItem>
             </DropdownMenu>
-          </UncontrolledButtonDropdown>
+          </UncontrolledButtonDropdown> */}
 
           <Link to="/apps/ecommerce/addProduct" target="_blank">
             <Button className="ml-2" color="primary">
@@ -446,7 +458,7 @@ export default function ProductTable({ products }) {
         pagination
         responsive
         // selectableRows
-        columns={columns}
+        columns={columns(updatePopular)}
         paginationPerPage={PAGE_NUMBER}
         className="react-dataTable"
         sortIcon={<ChevronDown size={10} />}

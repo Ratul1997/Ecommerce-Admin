@@ -27,7 +27,6 @@ const SweetAlert = (item, cb) => e => {
     buttonsStyling: false,
   }).then(function (result) {
     if (result.value) {
-      cb();
       MySwal.fire({
         icon: item.confirmIcon,
         title: item.confirmTitle,
@@ -36,6 +35,7 @@ const SweetAlert = (item, cb) => e => {
           confirmButton: "btn btn-success",
         },
       });
+      cb();
     }
   });
 };

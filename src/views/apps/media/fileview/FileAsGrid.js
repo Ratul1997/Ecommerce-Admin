@@ -52,10 +52,10 @@ export default function FileAsGrid({
             {file.file_name}
           </p>
           <Menu id="menu_id">
-            <Item onClick={SweetAlert(confirmDeleteText, onDelete)}>
+            <Item onClick={SweetAlert(confirmDeleteText, onDelete(file.file_id))}>
               Delete
             </Item>
-            <Item>Preview</Item>
+            {/* <Item>Preview</Item> */}
           </Menu>
         </div>
       );

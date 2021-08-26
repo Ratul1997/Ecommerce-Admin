@@ -39,5 +39,9 @@ export const urls = {
   GET_PRE_ORDERS: `${BASE_URL}api/pre-orders`,
   GET_PRE_ORDERS_BY_ID: `${BASE_URL}api/pre-orders/`,
   UPLOADED_LINK: `${BASE_URL}uploads/`,
-  GET_PRODUCT_ATTRIBUTES_BY_ID:`${BASE_URL}api/product-attributes/`
+  GET_PRODUCT_ATTRIBUTES_BY_ID:`${BASE_URL}api/product-attributes/`,
+  GET_FILES:`${BASE_URL}api/files`,
+  REMOVE_FILES_BY_ID:`${BASE_URL}api/files/`,
+  UPDATE_POPULAR_PRODUCT_BY_ID:`${BASE_URL}api/admin/popular/`,
+  UPDATE_FEATURED_PRODUCT_BY_ID:`${BASE_URL}api/admin/featured/`
 };

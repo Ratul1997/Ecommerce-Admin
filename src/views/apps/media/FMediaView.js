@@ -8,18 +8,24 @@ import Avatar from "@components/avatar";
 import { useContextMenu } from "react-contexify";
 import UploadProgress from "../../common/upload/UploadProgress/UploadProgress";
 
+import { onErrorToast, onSuccessToast } from "../../common/Toaster";
+
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
 import { setUploadFile, closeUpload } from "../../common/upload/store/action";
+
+import { urls } from "@urls";
+import axiosInstance from "@src/configs/axiosInstance";
 
 import MediaHeader from "./MediaHeader";
 import FileAsGrid from "./fileview/FileAsGrid";
 
 import FileAsList from "./fileview/FileAsList";
+import { addFiles, removeMediaFiles } from "./store/action";
 
 export default function FMediaView({ titles, fileType }) {
   const { show } = useContextMenu({
-    id: "menu_id"
+    id: "menu_id",
   });
   const dispatch = useDispatch();
   const mediaFiles = useSelector(store => store.mediaReducer);
@@ -34,11 +40,19 @@ export default function FMediaView({ titles, fileType }) {
     confirmButtonText: "Yes, delete it!",
     confirmIcon: "success",
     confirmTitle: "Deleted!",
-    confirmText: "Your file has been deleted."
+    confirmText: "Your file has been deleted.",
   };
 
-  const onDelete = () => {
-    console.log("ss");
+  const onDelete = id => async () => {
+    console.log(id);
+    try {
+      const res = await axiosInstance().delete(urls.REMOVE_FILES_BY_ID + id);
+      dispatch(removeMediaFiles(id));
+      onSuccessToast("Successfully Removed!");
+    } catch (error) {
+      console.log(error)
+      onErrorToast(error.data.massage);
+    }
   };
 
   useEffect(() => {
@@ -46,8 +60,13 @@ export default function FMediaView({ titles, fileType }) {
     return () => cleanUp();
   }, [dispatch]);
 
-  const loadFiles = () => {
-    
+  const loadFiles = async () => {
+    try {
+      const res = await axiosInstance().get(urls.GET_FILES);
+      dispatch(addFiles(res.data.results));
+    } catch (error) {
+      console.log(error);
+    }
   };
   const cleanUp = () => {
     dispatch(closeUpload());
@@ -61,8 +80,7 @@ export default function FMediaView({ titles, fileType }) {
     const files = e.target.files;
     dispatch(setUploadFile(files));
   };
- 
-  
+
   return (
     <>
       <Card>
@@ -82,7 +100,7 @@ export default function FMediaView({ titles, fileType }) {
               />
             </Row>
           ) : (
-            <FileAsList files={files}/>
+            <FileAsList files={files} />
           )}
         </CardBody>
       </Card>

@@ -128,12 +128,12 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/apps/ecommerce/products",
       },
-      {
-        id: "addProduct",
-        title: "Add Product",
-        icon: <Circle size={12} />,
-        navLink: "/apps/ecommerce/addProduct",
-      },
+      // {
+      //   id: "addProduct",
+      //   title: "Add Product",
+      //   icon: <Circle size={12} />,
+      //   navLink: "/apps/ecommerce/addProduct",
+      // },
       {
         id: "ecommerce-category",
         title: "Category",
@@ -158,20 +158,21 @@ export default [
     id: "media",
     title: "Media",
     icon: <File size={20} />,
-    children: [
-      {
-        id: "mediaImages",
-        title: "Images",
-        icon: <Circle size={12} />,
-        navLink: "/apps/media/images",
-      },
-      {
-        id: "mediaVideo",
-        title: "Videos",
-        icon: <Circle size={12} />,
-        navLink: "/apps/media/videos",
-      },
-    ],
+    navLink: "/apps/media/images",
+    // children: [
+    //   {
+    //     id: "mediaImages",
+    //     title: "Images",
+    //     icon: <Circle size={12} />,
+    //     navLink: "/apps/media/images",
+    //   },
+    //   {
+    //     id: "mediaVideo",
+    //     title: "Videos",
+    //     icon: <Circle size={12} />,
+    //     navLink: "/apps/media/videos",
+    //   },
+    // ],
   },
   {
     id: "users",

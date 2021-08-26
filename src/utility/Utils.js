@@ -96,6 +96,10 @@ export const findItemInArray = (array, itemToBeFound, key) => {
   return array.findIndex(item => item[key] === itemToBeFound[key])
 }
 
+export const findValueInArray = (array, value, key) => {
+  return array.findIndex(item => item[key] === value)
+}
+
 export const generateId = (startNumber, index) => {
   const numberOfZeroes = 5
   const repeatedString = '0'
