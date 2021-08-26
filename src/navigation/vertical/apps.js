@@ -160,12 +160,6 @@ export default [
     icon: <File size={20} />,
     children: [
       {
-        id: "mediaFiles",
-        title: "Files",
-        icon: <Circle size={12} />,
-        navLink: "/apps/media/files",
-      },
-      {
         id: "mediaImages",
         title: "Images",
         icon: <Circle size={12} />,

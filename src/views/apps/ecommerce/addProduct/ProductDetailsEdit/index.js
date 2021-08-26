@@ -13,15 +13,25 @@ import "@styles/base/pages/page-blog.scss";
 import SidebarImage from "./SideBar";
 import ProductBasicInfo from "./ProductBasicInfo";
 import { ProductDataContext } from "..";
+import { getOptionsForStatus } from "../Constants";
 
 const ProductDetailsEdit = () => {
   const { productData, setProductData, isEditable } =
     useContext(ProductDataContext);
+
   const initialCheckBoxState = {
-    "positive-checkbox": productData.view_on_website === 1 ? true : false,
-    "negative-checkbox": productData.view_on_website !== 1 ? true : false,
+    "positive-checkbox": isEditable
+      ? productData.view_on_website === 1
+        ? true
+        : false
+      : false,
+    "negative-checkbox": isEditable
+      ? productData.view_on_website !== 1
+        ? true
+        : false
+      : false,
   };
- 
+
   const store = useSelector(store => store.ecommerce);
   const { categories } = store;
 
@@ -31,21 +41,11 @@ const ProductDetailsEdit = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(initialCheckBoxState);
 
-
   // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   //`${stateToHTML(productData.description.getCurrentContent())}`
 
-  const getOptionsForStatus = () => {
-    const options = [
-      { value: 1, label: "Published" },
-      { value: 2, label: "Draft" },
-      { value: 3, label: "UnPublished" },
-      { value: 4, label: "Pending" },
-    ];
-    return options;
-  };
   const getOptions = () => {
     const options =
       categories &&

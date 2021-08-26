@@ -6,13 +6,11 @@ import AttributeOption from "./AttributeOption";
 
 
 export default function Attributes({ attributesList, setAttributesList }) {
+ 
   const onChange = index => data => {
-    console.log(data);
     attributesList[index]["selectedOptions"] = data;
     setAttributesList([...attributesList]);
   };
-
-  console.log(attributesList);
   return (
     <Fragment>
       <div className="content-header">
@@ -21,7 +19,6 @@ export default function Attributes({ attributesList, setAttributesList }) {
       {
         <ul>
           {attributesList.map((item, key) => {
-            console.log(key);
             return (
               <AttributeOption
                 attribute={item}

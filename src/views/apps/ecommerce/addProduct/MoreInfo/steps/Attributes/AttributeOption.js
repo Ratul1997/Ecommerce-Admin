@@ -1,17 +1,20 @@
 /* eslint-disable */
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { FormGroup, Label, Col, Card, CustomInput } from "reactstrap";
 import { X } from "react-feather";
 import Select from "react-select";
 
 import { selectThemeColors } from "@utils";
+import { ProductDataContext } from "../../..";
+
 export default function AttributeOption({ attribute, index, onChange }) {
+  const { productData, setProductData, isEditable, id, attributeListForData } =
+    useContext(ProductDataContext);
   const getOptions = () => {
     return attribute.options.map(item => {
       return { value: item.option_id, label: item.option_name };
     });
   };
-  
 
   return (
     <div>
@@ -52,6 +55,7 @@ export default function AttributeOption({ attribute, index, onChange }) {
               onChange={onChange(index)}
               className="react-select"
               classNamePrefix="select"
+              isDisabled={isEditable ? true : false}
             />
           </Col>
         </FormGroup>

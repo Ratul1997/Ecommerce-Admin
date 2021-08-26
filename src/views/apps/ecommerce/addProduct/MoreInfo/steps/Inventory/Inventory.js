@@ -18,19 +18,11 @@ import {
 import { selectThemeColors } from "@utils";
 import Select from "react-select";
 import { ProductDataContext } from "../../..";
-const stockOptions = [
-  { value: 1, label: "In Stock" },
-  { value: 2, label: "Out Of Stock" },
-];
+import { backOrdersOptions,stockOptions } from "../../../Constants";
 
-const backOrdersOptions = [
-  { value: 1, label: "Do not allow" },
-  { value: 2, label: "Allow, but notify customer" },
-  { value: 3, label: "Allow" },
-];
 const Inventory = () => {
   const { productData, setProductData } = useContext(ProductDataContext);
-  console.log(productData);
+
   return (
     <>
       <Fragment>

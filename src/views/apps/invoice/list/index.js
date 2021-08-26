@@ -17,6 +17,7 @@ import axiosInstance from "@configs/axiosInstance.js";
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
+import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -58,17 +59,21 @@ const InvoiceList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [invoiceList, setInvoiceList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     loadInvoiceList();
   }, []);
 
   const loadInvoiceList = async () => {
+    setIsLoading(true);
     try {
       const res = await axiosInstance().get(urls.GET_INVOICE);
       setInvoiceList(res.data.results);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
   const handleFilter = val => {
@@ -127,6 +132,7 @@ const InvoiceList = () => {
     );
   };
 
+  if (isLoading) <SpinnerComponent />;
   return (
     <div className="invoice-list-wrapper">
       <Card>

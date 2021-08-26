@@ -26,13 +26,13 @@ import CardBody from "reactstrap/lib/CardBody";
 import { toast } from "react-toastify";
 import { ErrorToast, onErrorToast } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
-
-
+import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 
 const Attributes = () => {
   // ** State
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [attributeList, setAttributeList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     loadAttributes();
@@ -41,11 +41,13 @@ const Attributes = () => {
   const loadAttributes = async () => {
     try {
       const res = await axiosInstance().get(urls.GET_ATTRIBUTES);
-      console.log(res);
+
       setAttributeList(res.data.results);
+      setIsLoading(false);
     } catch (error) {
-      onErrorToast(error.data.massage)
+      onErrorToast(error.data.massage);
       console.log(error);
+      setIsLoading(false);
     }
   };
   // ** Function to toggle sidebar
@@ -79,6 +81,7 @@ const Attributes = () => {
     attributeList[index] = targetObject;
     setAttributeList([...attributeList]);
   };
+  if (isLoading) return <SpinnerComponent />;
   return (
     <Card>
       <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">

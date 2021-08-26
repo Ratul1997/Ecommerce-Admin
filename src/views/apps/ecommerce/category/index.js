@@ -13,24 +13,31 @@ import DataTableWithButtons from "../../../tables/data-tables/basic/TableExpanda
 import { urls } from "@urls";
 import axiosInstance from "../../../../configs/axiosInstance";
 import { onErrorToast } from "../../../common/Toaster";
+import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 
 export default function Category() {
   const store = useSelector(store => store.ecommerce);
   const dispatch = useDispatch();
   const [isOnline, setisOnline] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const load = async () => {
+    setIsLoading(true);
     try {
       const url = urls.GET_CATEGORIES;
       const res = await axiosInstance().get(url);
       dispatch(addCategories(res.data.data));
+      setIsLoading(false);
     } catch (err) {
       onErrorToast(err.data.massage);
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     load();
   }, [dispatch]);
+
+  if (isLoading) return <SpinnerComponent />;
   return (
     <Fragment>
       <Row>

@@ -39,23 +39,13 @@ import {
 } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
+import { VariantsModel } from "./MoreInfo/steps/Variations/VairantsModel";
+import {
+  stockOptions,
+  backOrdersOptions,
+  getOptionsForStatus,
+} from "./Constants";
 
-const stockOptions = [
-  { value: 1, label: "In Stock" },
-  { value: 2, label: "Out Of Stock" },
-];
-
-const backOrdersOptions = [
-  { value: 1, label: "Do not allow" },
-  { value: 2, label: "Allow, but notify customer" },
-  { value: 3, label: "Allow" },
-];
-const getOptionsForStatus = [
-  { value: 1, label: "Published" },
-  { value: 2, label: "Draft" },
-  { value: 3, label: "UnPublished" },
-  { value: 4, label: "Pending" },
-];
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
   const initialContent = ``;
@@ -116,7 +106,7 @@ const AddProduct = () => {
   const [productData, setProductData] = useState(initialState);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingFetch, setIsLoadingFetch] = useState(true);
-  const [attributeListForData, setAttributeListForData] = useState([])
+  const [attributeListForData, setAttributeListForData] = useState([]);
 
   const [isEditable, setIsEditable] = useState(false);
   const productContextValue = {
@@ -124,7 +114,6 @@ const AddProduct = () => {
     setProductData,
     isEditable,
     id: params.id,
-    attributeListForData
   };
   useEffect(() => {
     if (location.pathname.includes("edit")) {
@@ -137,14 +126,14 @@ const AddProduct = () => {
 
   const loadProduct = async id => {
     try {
-      console.log(id);
       const res = await axiosInstance().get(urls.GET_PRODUCTS_ADMIN_BY_ID + id);
-      console.log(res);
       setStateForProduct(res.data.results);
     } catch (error) {
+      onErrorToast(error.toString());
       setErrorCode(error);
+
+      setIsLoadingFetch(false);
     }
-    setIsLoadingFetch(false);
   };
 
   const getStatus = status => {
@@ -157,7 +146,6 @@ const AddProduct = () => {
     return stockOptions.filter(item => item.label === stock);
   };
   const setStateForProduct = data => {
-    console.log(data.attributes);
     setIsEditable(true);
     setProductData({
       ...productData,
@@ -169,8 +157,8 @@ const AddProduct = () => {
       product_status_id: getStatus(data.product_status_id),
       regular_price: data.regular_price,
       discount_price: data.discount_price,
-      quantity: data.manageStock ? data.inventory.quantity : 0,
-      manageStock: data.manageStock ? true : false,
+      quantity: data.manageStock === 1 ? data.inventory.quantity : 0,
+      manageStock: data.manageStock === 1 ? true : false,
       hasFreeShipping: data.hasFreeShipping,
       view_on_website: data.view_on_website,
       featured_img: data.featured_img ? JSON.parse(data.featured_img) : null,
@@ -180,19 +168,23 @@ const AddProduct = () => {
       product_gallery: data.product_gallery
         ? JSON.parse(data.product_gallery)
         : [],
-      attributesList: [] ,
-      variations: data.variants || [],
-      stock_threshold: data.hasFreeShipping
-        ? null
-        : data.inventory.stock_threshold,
-      allowBackOrders: data.manageStock
-        ? { value: 1, label: "Do not allow" }
-        : getAllowBackOrders(data.shipping.allowBackOrders),
-      shipping_cost: data.hasFreeShipping ? 0.0 : data.shipping.shipping_cost,
+      attributesList: [],
+      variations: data.variants
+        ? data.variants.map(item => VariantsModel(item))
+        : [],
+      stock_threshold:
+        data.hasFreeShipping === 1 ? null : data.inventory.stock_threshold,
+      allowBackOrders:
+        data.manageStock === 0
+          ? { value: 1, label: "Do not allow" }
+          : getAllowBackOrders(data.shipping.allowBackOrders),
+      shipping_cost:
+        data.hasFreeShipping === 1 ? 0.0 : data.shipping.shipping_cost,
       inventory_status: getStockStatus(data.inventory_status),
       productType: getProductTypeOptionForEdit(data.productType),
     });
-    setAttributeListForData({attributes:data.attributes,options:data.options})
+
+    setIsLoadingFetch(false);
   };
 
   const removeKeyFromImageObject = image => {
@@ -273,18 +265,16 @@ const AddProduct = () => {
     }
     setIsLoading(false);
   };
-  // if (isEditable && isLoading) {
-  //   return <SpinnerComponent />;
-  // }
-  return isEditable && isLoadingFetch ? (
-    <SpinnerComponent />
-  ) : (
+  if (isLoadingFetch) {
+    return <SpinnerComponent />;
+  }
+  return (
     <ProductDataContext.Provider value={productContextValue}>
       <Fragment>
         <Breadcrumbs
-          breadCrumbTitle="Add Product"
+          breadCrumbTitle={isEditable ? "Product" : "Add Product"}
           breadCrumbParent="eCommerce"
-          breadCrumbActive="Add Product"
+          breadCrumbActive={isEditable ? "Product" : "Add Product"}
         />
 
         <Row>
@@ -339,18 +329,20 @@ const AddProduct = () => {
                 <span className="ml-50">Loading...</span>
               </Button.Ripple>
             ) : (
-              <>
-                <Button.Ripple
-                  color="primary"
-                  className="mr-1"
-                  onClick={onSave}
-                >
-                  Save
-                </Button.Ripple>
-                <Button.Ripple color="secondary" outline>
-                  Cancel
-                </Button.Ripple>
-              </>
+              !isEditable && (
+                <>
+                  <Button.Ripple
+                    color="primary"
+                    className="mr-1"
+                    onClick={onSave}
+                  >
+                    Save
+                  </Button.Ripple>
+                  <Button.Ripple color="secondary" outline>
+                    Cancel
+                  </Button.Ripple>
+                </>
+              )
             )}
           </Col>
         </Row>

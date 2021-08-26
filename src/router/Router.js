@@ -183,6 +183,7 @@ const Router = () => {
     })
   }
 
+  console.log(isUserLoggedIn())
   return (
     <AppRouter basename={process.env.REACT_APP_BASENAME}>
       <Switch>

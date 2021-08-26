@@ -1,5 +1,12 @@
 /* eslint-disable */
-import React, { useContext, Fragment, useState, useMemo, useRef } from "react";
+import React, {
+  useContext,
+  Fragment,
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import { Button, Col, FormGroup, Label } from "reactstrap";
 import { ProductDataContext } from "../../..";
 import SidebarImage from "./SideBar";
@@ -7,10 +14,14 @@ import IndividualVariants from "./IndividualVariants";
 import { VariantsModel } from "./VairantsModel";
 
 export default function Variations({ stepper }) {
-  const { productData, setProductData } = useContext(ProductDataContext);
+  const { productData, setProductData, isEditable, id } =
+    useContext(ProductDataContext);
   const { attributesList } = productData;
   const variantIndex = useRef(null);
-  const [combinationsList, setCombinationList] = useState([]);
+
+  const [combinationsList, setCombinationList] = useState(
+    productData.variations
+  );
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // ** Function to toggle sidebar
@@ -21,6 +32,7 @@ export default function Variations({ stepper }) {
 
   const getOptions = useMemo(() => {
     const options = [];
+
     attributesList.map(item =>
       item.selectedOptions.map(item2 => options.push(item2))
     );
@@ -57,7 +69,6 @@ export default function Variations({ stepper }) {
   };
 
   const onClickOnImagesList = item => e => {
-    console.log(variantIndex.current);
     const targetedValue = {
       ...combinationsList[variantIndex.current],
       featured_img: item,
@@ -97,7 +108,7 @@ export default function Variations({ stepper }) {
   };
   const onSave = () => {
     const formattedVariations = combinationsList.map(item => {
-      console.log(item.featured_img);
+      
       return {
         ...item,
         inventory_status: item.inventory_status.value,
@@ -109,7 +120,7 @@ export default function Variations({ stepper }) {
     });
     setProductData({ ...productData, variations: formattedVariations });
   };
-  if (productData.attributesList.length < 1)
+  if (!isEditable && productData.attributesList.length < 1)
     return (
       <>
         <FormGroup row>
@@ -124,31 +135,51 @@ export default function Variations({ stepper }) {
         </FormGroup>
       </>
     );
+
+  if (isEditable && productData.attributesList.length < 1)
+    return (
+      <>
+        <FormGroup row>
+          <Label sm="9">No Attributes Found</Label>
+          <Button.Ripple
+            color="primary"
+            className="ml-3"
+            onClick={() => stepper.previous()}
+          >
+            Load Attributes
+          </Button.Ripple>
+        </FormGroup>
+      </>
+    );
+    
   return (
     <>
-      <FormGroup row>
-        <Label sm="9" for="attribute_options">
-          Generate Variations from the Selected Attributes
-        </Label>
-        <Col sm="3">
-          <Button color="primary" onClick={onGenerate}>
-            Generate
-          </Button>
-        </Col>
-      </FormGroup>
-      {combinationsList.map((item, key) => {
-        return (
-          <IndividualVariants
-            item={item}
-            key={key}
-            getOptions={getOptions}
-            index={key}
-            onChange={onChange}
-            toggleSidebar={toggleSidebar}
-            onRemove={onRemove}
-          />
-        );
-      })}
+      {!isEditable && (
+        <FormGroup row>
+          <Label sm="9" for="attribute_options">
+            Generate Variations from the Selected Attributes
+          </Label>
+          <Col sm="3">
+            <Button color="primary" onClick={onGenerate}>
+              Generate
+            </Button>
+          </Col>
+        </FormGroup>
+      )}
+      {combinationsList.length > 0 &&
+        combinationsList.map((item, key) => {
+          return (
+            <IndividualVariants
+              item={item}
+              key={key}
+              getOptions={getOptions}
+              index={key}
+              onChange={onChange}
+              toggleSidebar={toggleSidebar}
+              onRemove={onRemove}
+            />
+          );
+        })}
       {combinationsList.length > 0 && (
         <>
           <SidebarImage
@@ -156,9 +187,11 @@ export default function Variations({ stepper }) {
             toggleSidebar={toggleSidebar}
             onClickOnImagesList={onClickOnImagesList}
           />
-          <Button.Ripple color="primary mt-2" onClick={onSave}>
-            Save
-          </Button.Ripple>
+          {!isEditable && (
+            <Button.Ripple color="primary mt-2" onClick={onSave}>
+              Save
+            </Button.Ripple>
+          )}
         </>
       )}
     </>

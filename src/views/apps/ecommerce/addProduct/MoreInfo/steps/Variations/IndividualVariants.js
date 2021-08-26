@@ -1,5 +1,5 @@
 /* eslint-disable */
-import React, { useMemo, Fragment, useState } from "react";
+import React, { useMemo, Fragment, useState, useContext } from "react";
 import AppCollapse from "@components/app-collapse";
 import {
   Col,
@@ -15,16 +15,8 @@ import { selectThemeColors } from "@utils";
 import image from "@src/assets/images/icons/image.png";
 import Select from "react-select";
 import { urls } from "@urls";
-const stockOptions = [
-  { value: 1, label: "In Stock" },
-  { value: 2, label: "Out Of Stock" },
-];
-
-const backOrdersOptions = [
-  { value: 1, label: "Do not allow" },
-  { value: 2, label: "Allow, but notify customer" },
-  { value: 3, label: "Allow" },
-];
+import { ProductDataContext } from "../../..";
+import { backOrdersOptions, stockOptions } from "../../../Constants";
 
 export default function IndividualVariants({
   item,
@@ -34,6 +26,7 @@ export default function IndividualVariants({
   toggleSidebar,
   onRemove,
 }) {
+  const { isEditable, id } = useContext(ProductDataContext);
   const {
     combinations,
     sku,
@@ -71,7 +64,7 @@ export default function IndividualVariants({
     return (
       <Fragment>
         <Row className="justify-content-end mx-0">
-          <Trash2 color="red" onClick={onRemove(index)} />
+          {!isEditable && <Trash2 color="red" onClick={onRemove(index)} />}
         </Row>
         <Row>
           <Col sm="6">
@@ -83,7 +76,7 @@ export default function IndividualVariants({
                     ? urls.UPLOADED_LINK + featured_img.file_name
                     : image
                 }
-                onClick={onChange(index, "image")}
+                onClick={isEditable ? null : onChange(index, "image")}
                 alt="featured img"
                 width="100"
                 height="100"
@@ -93,7 +86,12 @@ export default function IndividualVariants({
           <Col sm="6">
             <FormGroup className="mb-2">
               <Label>SKU</Label>
-              <Input onChange={onChange(index)} value={sku || ""} name="sku" />
+              <Input
+                onChange={onChange(index)}
+                value={sku || ""}
+                name="sku"
+              disabled={isEditable}
+              />
             </FormGroup>
             <CustomInput
               type="checkbox"
@@ -103,6 +101,8 @@ export default function IndividualVariants({
               value={manageStock}
               label="Manage Stock?"
               onChange={onChange(index)}
+              disabled={isEditable}
+              defaultChecked={manageStock}
             />
           </Col>
         </Row>
@@ -115,6 +115,7 @@ export default function IndividualVariants({
                 name="regular_price"
                 value={item.regular_price}
                 type="number"
+                disabled={isEditable}
               />
             </FormGroup>
           </Col>
@@ -125,6 +126,7 @@ export default function IndividualVariants({
                 type="number"
                 onChange={onChange(index)}
                 name={`discount_price`}
+                disabled={isEditable}
                 value={discount_price}
               />
             </FormGroup>
@@ -141,6 +143,7 @@ export default function IndividualVariants({
                   name={`quantity`}
                   placeholder="Amount"
                   value={quantity}
+                  disabled={isEditable}
                 />
               </Col>
               <Col sm="6">
@@ -151,6 +154,7 @@ export default function IndividualVariants({
                   value={stock_threshold}
                   name="stock_threshold"
                   onChange={onChange(index)}
+                  disabled={isEditable}
                 />
               </Col>
             </Row>
@@ -166,6 +170,7 @@ export default function IndividualVariants({
                   onChange={onChange(index, "select", "allowBackOrders")}
                   options={backOrdersOptions}
                   isClearable
+                  isDisabled={isEditable}
                 />
               </Col>
             </Row>
@@ -183,6 +188,7 @@ export default function IndividualVariants({
               options={stockOptions}
               onChange={onChange(index, "select", "inventory_status")}
               isClearable
+              isDisabled={isEditable}
             />
           </Col>
         </Row>

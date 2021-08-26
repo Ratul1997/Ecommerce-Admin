@@ -8,42 +8,50 @@ import Select from "react-select";
 import { selectThemeColors } from "@utils";
 import { findItemInArray } from "@utils";
 import { ProductDataContext } from "../../..";
-
+import axiosInstance from "../../../../../../../configs/axiosInstance";
 export default function Attributes({ stepper }) {
   const { productData, setProductData, isEditable, id, attributeListForData } =
     useContext(ProductDataContext);
 
+
   const [attributesList, setAttributesList] = useState([]);
   const [selectedAttributeOptions, setSelectedAttributeOptions] = useState([]);
   const [selectedAttribute, setSelectedAttribute] = useState([]);
+  const [productAttributeOptions, setProductAttributeOptions] = useState([]);
   const getOptions = () => {
     return attributesList.map(item => {
       return { value: item.attribute_id, label: item.attribute_name };
     });
   };
-
-  console.log(id);
   useEffect(() => {
     loadAttributes();
-    if (id) {
-      console.log("asas", attributeListForData);
-    }
   }, []);
 
+  const loadProductAttributes = async (id, attribute) => {
+    try {
+      const res = await axiosInstance().get(
+        urls.GET_PRODUCT_ATTRIBUTES_BY_ID + id
+      );
+      setProductAttributeOptions(res.data.results);
+
+      setSelectedAttributeOptions(res.data.results.attributes);
+      res.data.results.attributes && onGetAttributeOptions(res.data.results, attribute);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const loadAttributes = async () => {
     try {
       const res = await axios.get(urls.GET_ATTRIBUTES);
       setAttributesList(res.data.results);
       if (id) {
-        setSelectedAttributeOptions(attributeListForData.attributes);
-        onGetAttributeOptions(attributeListForData, res.data.results);
+        loadProductAttributes(id, res.data.results);
       }
     } catch (error) {
       console.warn(error);
     }
   };
   const onSave = () => {
-    console.table(selectedAttribute);
     setProductData({ ...productData, attributesList: [...selectedAttribute] });
     stepper.next();
   };
@@ -74,7 +82,12 @@ export default function Attributes({ stepper }) {
       }
       return { ...attribute[0], selectedOptions: selectOptions };
     });
-    console.log(attributes);
+    attribute &&
+      setProductData({
+        ...productData,
+        attributesList: [...attributes],
+      });
+    // setProductData({ ...productData, attributesList: [...attributes] });
     setSelectedAttribute(attributes || []);
   };
   const onGo = e => {
@@ -97,12 +110,15 @@ export default function Attributes({ stepper }) {
             isMulti
             classNamePrefix="select"
             onChange={onChange}
+            isDisabled={isEditable}
           />
         </Col>
         <Col sm="2">
-          <Button color="primary" onClick={onGo}>
-            Go
-          </Button>
+          {!isEditable && (
+            <Button color="primary" onClick={onGo}>
+              Go
+            </Button>
+          )}
         </Col>
       </FormGroup>
       {selectedAttribute.length > 0 && (
@@ -111,9 +127,11 @@ export default function Attributes({ stepper }) {
             attributesList={selectedAttribute}
             setAttributesList={setSelectedAttribute}
           />
-          <Button.Ripple color="primary" className="ml-3" onClick={onSave}>
-            Save
-          </Button.Ripple>
+          {!isEditable && (
+            <Button.Ripple color="primary" className="ml-3" onClick={onSave}>
+              Save
+            </Button.Ripple>
+          )}
         </>
       )}
     </>

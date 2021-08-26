@@ -111,7 +111,7 @@ export default function ProductBasicInfo({
                       isClearable={false}
                       theme={selectThemeColors}
                       value={productData.product_status_id}
-                      options={getOptionsForStatus()}
+                      options={getOptionsForStatus}
                       className="react-select"
                       classNamePrefix="select"
                       onChange={data =>

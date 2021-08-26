@@ -46,7 +46,9 @@ export default function FMediaView({ titles, fileType }) {
     return () => cleanUp();
   }, [dispatch]);
 
-  const loadFiles = () => {};
+  const loadFiles = () => {
+    
+  };
   const cleanUp = () => {
     dispatch(closeUpload());
   };
