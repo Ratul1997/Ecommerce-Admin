@@ -224,6 +224,13 @@ const AppRoutes = [
 		meta: {
 			navLink: "/apps/user/view"
 		}
+	},
+	{
+		path: "/apps/ecommerce/tag-generator",
+		component: lazy(() => import("../../views/apps/ecommerce/tagGenerator")),
+		meta: {
+			navLink: "/apps/user/view"
+		}
 	}
 ];
 
