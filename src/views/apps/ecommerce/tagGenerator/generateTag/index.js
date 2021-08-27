@@ -1,97 +1,98 @@
 /*eslint-disable*/
-import { Fragment, useState } from "react";
+import React, { useState } from "react";
 import {
-	Card,
-	CardTitle,
-	CardBody,
-	CardText,
-	Button,
-	Row,
-	Col,
-	CardHeader,
-	Input,
-	Label,
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Col,
+  Form,
+  FormGroup,
+  Input,
+  Label,
+  Spinner,
 } from "reactstrap";
-const GenerateTag = () => {
-	const [inputValues, setInputValues] = useState({});
-	const [numberOfInput, setNumberOfInput] = useState(1);
-	const [tamplateName, setTamplateName] = useState("");
-	const handleOnChange = (e) => {
-		const abc = {};
-		abc[e.target.name] = e.target.value;
-		setInputValues({ ...inputValues, ...abc });
-	};
-	const handleAddInput = () => {
-		setNumberOfInput(numberOfInput + 1);
-	};
-    const handleSave=()=>{
-        console.log(inputValues,tamplateName,numberOfInput);
-        // callApi 
-        // save in DB 
+
+import htmlToDraft from "html-to-draftjs";
+
+import "@styles/react/libs/editor/editor.scss";
+
+import { EditorState, ContentState } from "draft-js";
+import { stateToHTML } from "draft-js-export-html";
+import { Editor } from "react-draft-wysiwyg";
+import { urls } from "@urls";
+import axiosInstance from "@src/configs/axiosInstance";
+import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
+export default function GenerateTag() {
+  const initialContent = "";
+  const contentBlock = htmlToDraft(initialContent);
+  const contentState = ContentState.createFromBlockArray(
+    contentBlock.contentBlocks
+  );
+  const editorState = EditorState.createWithContent(contentState);
+
+  const [tagInput, setInput] = useState(editorState);
+  const [tagName, setTagName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const onSave = () => {
+    const tags = stateToHTML(tagInput.getCurrentContent());
+
+    onUpload(tags);
+  };
+  const onUpload = async tags => {
+    setIsLoading(true);
+    try {
+      const res = await axiosInstance().post(urls.GENERATE_TAGS, {
+        tag_name: tagName.trim(),
+        tag_descriptions: tags,
+      });
+      onSuccessToast("Success!");
+      setIsLoading(false);
+    } catch (error) {
+      onErrorToast(
+        error.data.massage !== undefined || error.data.massage
+          ? error.data.massage
+          : error.toString()
+      );
+      setIsLoading(false);
     }
-	console.log(inputValues["input_1"]);
-	return (
-		<Fragment>
-			<Row>
-				<Col sm="12">
-					<Card>
-						<CardHeader>
-							<CardTitle tag="h4">Generate Tag Template</CardTitle>
-
-							<Input
-								className="w-50"
-								placeHolder="Template Name"
-								onChange={(e) => setTamplateName(e.target.value)}
-							/>
-						</CardHeader>
-						<hr />
-						<CardBody>
-							{Array.from(Array(numberOfInput)).map((item, index) => {
-								return (
-									<Row className="mb-1">
-										<Col xl="1" md="4" sm="6">
-											<Label sm="9" for="attribute_options">
-												Name
-											</Label>
-										</Col>
-										<Col
-											xl="5"
-											md="4"
-											sm="6"
-											className="pl-0 pr-sm-0 mb-md-0 mb-1"
-										>
-											<Input
-												name={`input_${index}`}
-												onChange={handleOnChange}
-												key={item}
-												className={index}
-												type="text"
-											/>
-										</Col>
-										{numberOfInput === index + 1 ? (
-											<Col md="2" sm="12">
-												<Button.Ripple
-													color="primary"
-													className="mr-1"
-													onClick={handleAddInput}
-													outline
-												>
-													+
-												</Button.Ripple>
-											</Col>
-										) : null}
-									</Row>
-								);
-							})}
-							<Button.Ripple color="primary" className="mr-1" outline onClick={handleSave}>
-								Save
-							</Button.Ripple>
-						</CardBody>
-					</Card>
-				</Col>
-			</Row>
-		</Fragment>
-	);
-};
-
-export default GenerateTag;
+  };
+  return (
+    <Card>
+      <CardHeader>
+        {/* <CardTitle tag="h4">Write your tag</CardTitle> */}
+      </CardHeader>
+      <CardBody>
+        <Form>
+          <FormGroup row>
+            <Col sm="2">
+              <h4>Tag Name:</h4>
+            </Col>
+            <Col sm="10">
+              <Input
+                value={tagName}
+                onChange={e => setTagName(e.target.value)}
+              />
+            </Col>
+          </FormGroup>
+          <FormGroup row>
+            <Col sm="2">
+              <h4>Tag Format: </h4>
+            </Col>
+            <Col sm="10">
+              <Editor
+                editorState={tagInput}
+                onEditorStateChange={data => setInput(data)}
+              />
+            </Col>
+          </FormGroup>
+        </Form>
+      </CardBody>
+      <Button color="primary" onClick={onSave}>
+        {isLoading && <Spinner size="sm" />}
+        Save
+      </Button>
+    </Card>
+  );
+}

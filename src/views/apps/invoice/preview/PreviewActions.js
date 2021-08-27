@@ -6,11 +6,15 @@ import { Link } from "react-router-dom";
 import Pdf from "react-to-pdf";
 import { Card, CardBody, Button } from "reactstrap";
 
+const options = {
+  orientation: "portrait",
+};
 const PreviewActions = ({
   id,
   setSendSidebarOpen,
   setAddPaymentOpen,
   pdfRef,
+  onDownload,
 }) => {
   return (
     <Card className="invoice-action-wrapper">
@@ -23,7 +27,14 @@ const PreviewActions = ({
         >
           Send Invoice
         </Button.Ripple>
-        <Pdf targetRef={pdfRef} filename={`Invoice-${id}`}>
+        <Pdf
+          targetRef={pdfRef}
+          filename={`Invoice-${id}`}
+          x={0.5}
+          y={0.5}
+          scale={0.8}
+          options={options}
+        >
           {({ toPdf }) => (
             <Button.Ripple
               color="secondary"
@@ -36,6 +47,15 @@ const PreviewActions = ({
             </Button.Ripple>
           )}
         </Pdf>
+        {/* <Button.Ripple
+          color="secondary"
+          block
+          outline
+          className="mb-75"
+          onClick={onDownload}
+        >
+          Download
+        </Button.Ripple> */}
 
         {/* <Button.Ripple
           color="secondary"

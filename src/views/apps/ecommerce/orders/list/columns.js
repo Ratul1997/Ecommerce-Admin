@@ -156,7 +156,7 @@ export const columns = (orderList, setOrderList) => {
       minWidth: "250px",
       sortable: true,
       cell: row => {
-        const name =  `${row.user_fullname || ""}`,
+        const name = `${row.user_fullname || ""}`,
           email = row.user_email ? row.user_email : "johnDoe@email.com";
         return (
           <div className="d-flex justify-content-left align-items-center">

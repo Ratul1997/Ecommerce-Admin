@@ -11,6 +11,7 @@ import {
   User,
   ShoppingBag,
   Command,
+  Tag,
 } from "react-feather";
 
 export default [
@@ -41,7 +42,12 @@ export default [
     icon: <Calendar size={20} />,
     navLink: "/apps/calendar",
   },
-
+  {
+    id: "tag",
+    title: "Tags",
+    icon: <Tag size={20} />,
+    navLink: "/apps/ecommerce/taggenerator/list",
+  },
   {
     id: "invoiceApp",
     title: "Invoice",

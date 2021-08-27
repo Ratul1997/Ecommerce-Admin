@@ -13,20 +13,25 @@ import DataTable from "react-data-table-component";
 import { Button, Label, Input, CustomInput, Row, Col, Card } from "reactstrap";
 
 import { urls } from "@urls";
-import { findValueInArray } from "@utils";
 import axiosInstance from "@configs/axiosInstance.js";
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner.js";
-import ExpandableTable from "./columns.js";
+import SpinnerComponent from "../../../../../@core/components/spinner/Fallback-spinner.js";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
     <div className="invoice-list-table-header w-100 py-2">
       <Row>
         <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
-          <h4>Comments</h4>
+          <Button.Ripple
+            tag={Link}
+            to="/apps/ecommerce/taggenerator"
+            color="primary"
+            target="_blank"
+          >
+            Add Record
+          </Button.Ripple>
         </Col>
         <Col
           lg="6"
@@ -49,22 +54,22 @@ const CustomHeader = ({ handleFilter, value }) => {
   );
 };
 
-const Ratings = () => {
+const TagList = () => {
   const [value, setValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [reviewList, setReviewsList] = useState([]);
+  const [tagsList, setTagsList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    loadReviewList();
+    loadTagsList();
   }, []);
 
-  const loadReviewList = async () => {
+  const loadTagsList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_REVIEWS);
-      setReviewsList(res.data.results);
+      const res = await axiosInstance().get(urls.GET_TAGS);
+      setTagsList(res.data.results);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -76,13 +81,13 @@ const Ratings = () => {
     const value = val;
     let updatedData = [];
     if (value.length) {
-      updatedData = reviewList.filter(item => {
-        const startsWith =
-          item.user_email.toLowerCase().startsWith(val.toLowerCase()) ||
-          item.first_name.toLowerCase().startsWith(val.toLowerCase());
-        const includes =
-          item.user_email.toLowerCase().includes(val.toLowerCase()) ||
-          item.first_name.toLowerCase().startsWith(val.toLowerCase());
+      updatedData = tagsList.filter(item => {
+        const startsWith = item.tag_name
+          .toLowerCase()
+          .startsWith(val.toLowerCase());
+        const includes = item.tag_name
+          .toLowerCase()
+          .includes(val.toLowerCase());
 
         if (startsWith) {
           return startsWith;
@@ -98,22 +103,11 @@ const Ratings = () => {
     setCurrentPage(page.selected + 1);
   };
 
-  const updateCommentList = id => {
-    const reviews = reviewList;
-
-    console.log(reviews);
-    const index = findValueInArray(reviews, id, "product_review_id");
-    console.log(index);
-
-    reviews[index].isApproved = reviews[index].isApproved === 1 ? 0 : 1;
-
-    setReviewsList([...reviews]);
-  };
   const CustomPagination = () => {
     return (
       <ReactPaginate
         pageCount={
-          value.length ? filteredData.length / 25 : reviewList.length / 10 || 1
+          value.length ? filteredData.length / 25 : tagsList.length / 10 || 1
         }
         nextLabel=""
         breakLabel="..."
@@ -138,23 +132,20 @@ const Ratings = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        {reviewList.length > 0 && (
+        {tagsList.length > 0 && (
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
               pagination
               subHeader
-              expandOnRowClicked
               responsive
-              expandableRows
-              columns={columns(reviewList, setReviewsList, updateCommentList)}
+              columns={columns(tagsList, setTagsList)}
               paginationPerPage={10}
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               paginationDefaultPage={currentPage}
               paginationComponent={CustomPagination}
-              expandableRowsComponent={<ExpandableTable />}
-              data={value.length ? filteredData : reviewList}
+              data={value.length ? filteredData : tagsList}
               subHeaderComponent={
                 <CustomHeader value={value} handleFilter={handleFilter} />
               }
@@ -166,4 +157,4 @@ const Ratings = () => {
   );
 };
 
-export default Ratings;
+export default TagList;
