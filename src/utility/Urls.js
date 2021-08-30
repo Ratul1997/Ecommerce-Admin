@@ -50,4 +50,12 @@ export const urls = {
   GET_REVIEWS: `${BASE_URL}api/ratings`,
   REMOVE_REVIEWS_BY_ID: `${BASE_URL}api/ratings/`,
   GET_REVIEWS_BY_ID: `${BASE_URL}api/ratings/`,
+  GET_USERS: `${BASE_URL}api/users`,
+  GET_USERS_BY_ID: `${BASE_URL}api/users/`,
+  GET_ADMIN_INFO:`${BASE_URL}api/admin/admin-info`,
+  UPDATE_ADMIN_GENERAL_INFO:`${BASE_URL}api/admin/admin-info/general`,
+  UPDATE_ADMIN_PAYMENT_INFO:`${BASE_URL}api/admin/admin-info/paymentDetails`,
+  GET_INVENTORIES:`${BASE_URL}api/inventories`,
+  UPDATE_INVENTORIES_BY_ID:`${BASE_URL}api/inventories/`,
+  GET_INVENTORIES_VARIATIONS:`${BASE_URL}api/inventories/variations/`
 };

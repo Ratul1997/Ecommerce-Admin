@@ -25,11 +25,12 @@ export default function Products() {
     const productList = products;
     if (type === "Popular") {
       const index = findValueInArray(productList, id, "product_id");
-      productList[index].popular_product = !productList[index].popular_product;
-    }else{
-
+      productList[index].popular_product =
+        productList[index].popular_product === 0 ? 1 : 0;
+    } else {
       const index = findValueInArray(productList, id, "product_id");
-      productList[index].featured_product = !productList[index].featured_product;
+      productList[index].featured_product =
+        !productList[index].featured_product;
     }
     setProducts([...productList]);
   };

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from "react";
-import ReactDOMServer from 'react-dom/server';
+import ReactDOMServer from "react-dom/server";
 import { useEffect, useState, useRef } from "react";
 import { useParams, Link, useHistory } from "react-router-dom";
 
@@ -15,6 +15,7 @@ import "@styles/base/pages/app-invoice.scss";
 import PreviewCard from "./PreviewCard";
 import PreviewActions from "./PreviewActions";
 import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
+import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
 
 const options = [
   {
@@ -54,6 +55,7 @@ export default function Preview() {
   const [error, setError] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDataFetching, setIsDataFetching] = useState(true);
 
   // ** Get invoice on mount based on id
   useEffect(() => {
@@ -67,33 +69,43 @@ export default function Preview() {
       setSelectedOption(
         options.filter(item => item.label === res.data.results.order_status)[0]
       );
+      setIsDataFetching(false);
     } catch (error) {
       console.log(error);
+      setIsDataFetching(false);
       setError(error);
     }
   };
 
   const convertHtmlToString = () => {
-    return ReactDOMServer.renderToString(document.getElementById('order_div').innerHTML)
+    return ReactDOMServer.renderToString(
+      document.getElementById("order_div").innerHTML
+    );
   };
+  console.log(selectedOption);
   const onUpdate = async () => {
     setIsLoading(true);
-    // console.log(
-    // ReactDomServer.renderToStaticMarkup(<div>p</div>);
-    // );;
     console.log(convertHtmlToString());
     try {
       const res = await axiosInstance().patch(urls.GET_ORDERS_BY_ID + id, {
         order_status: selectedOption.label,
-        html: `<html><body>${document.getElementById('order_div').innerHTML}</body></html>`,
+        orders: data.orderedItems,
+        previous_status: data.order_status,
+        html: `<html><body>${
+          document.getElementById("order_div").innerHTML
+        }</body></html>`,
       });
       onSuccessToast("Successfully Updated!");
+      setData({ ...data, order_status: selectedOption.label });
     } catch (error) {
       console.log(error);
-      // onErrorToast(error.data.massage);
+      onErrorToast(error.data.massage);
     }
     setIsLoading(false);
   };
+  if (isDataFetching) {
+    return <SpinnerComponent />;
+  }
   return !error && data ? (
     <div className="invoice-preview-wrapper">
       {" "}
@@ -132,3 +144,5 @@ export default function Preview() {
     )
   );
 }
+
+// UPDATE `prduct_inventory` SET `quantity`= `quantity` - 2 WHERE product_id = 235

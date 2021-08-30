@@ -13,14 +13,25 @@ import { Row, Col, Alert } from "reactstrap";
 // ** User View Components
 import PlanCard from "./PlanCard";
 import UserInfoCard from "./UserInfoCard";
+import UserTimeline from "./UserTimeline";
+import InvoiceList from "../../invoice/list";
+import PermissionsTable from "./PermissionsTable";
 
 import { urls } from "@urls";
 import axiosInstance from "@configs/axiosInstance.js";
+
+// ** Styles
+import "@styles/react/apps/app-users.scss";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
-export default function UserInfo() {
+
+const UserView = props => {
+  // ** Vars
   const { id } = useParams();
-  const [userDetails, setUserDetails] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState([]);
+  // ** Get suer on mount
+  // useEffect(() => {
+  //   dispatch(getUser(parseInt(id)));
+  // }, [dispatch]);
 
   useEffect(() => {
     loadUser();
@@ -30,20 +41,18 @@ export default function UserInfo() {
     try {
       const res = await axiosInstance().get(urls.GET_USERS_BY_ID + id);
       // setUserInfo(res.data.results);
-      setUserDetails(res.data.results);
+      setUser(res.data.results);
       console.log(res.data.results);
-      setIsLoading(false);
     } catch (error) {
       console.log(error);
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
-  if (isLoading) return <SpinnerComponent />;
-  return userDetails.length > 0 ? (
+  return user.length > 0 ? (
     <div className="app-user-view">
       <Row>
         <Col xl="12" lg="12" md="12">
-          <UserInfoCard selectedUser={userDetails[0]} />
+          <UserInfoCard selectedUser={user[0]} />
         </Col>
         {/* <Col xl='3' lg='4' md='5'>
           <PlanCard selectedUser={store.selectedUser} />
@@ -72,4 +81,5 @@ export default function UserInfo() {
       </div>
     </Alert>
   );
-}
+};
+export default UserView;

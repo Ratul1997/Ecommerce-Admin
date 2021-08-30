@@ -18,6 +18,7 @@ import axiosInstance from "@configs/axiosInstance.js";
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SideBarImage from "./SideBar";
+import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -62,6 +63,7 @@ const PreOrders = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orderId, setOrderId] = useState(null);
+  const [isDataFetching,setIsDataFetching] = useState(true)
 
   useEffect(() => {
     loadorderList();
@@ -71,7 +73,9 @@ const PreOrders = () => {
     try {
       const res = await axiosInstance().get(urls.GET_PRE_ORDERS);
       setOrderList(res.data.results);
+      setIsDataFetching(false)
     } catch (error) {
+      setIsDataFetching(false)
       console.log(error);
     }
   };
@@ -102,9 +106,9 @@ const PreOrders = () => {
           item.id.toString().toLowerCase().startsWith(val.toLowerCase());
 
         const includes =
-          item.product_name.toLowerCase().startsWith(val.toLowerCase()) ||
-          item.user_phoneNumber.toLowerCase().startsWith(val.toLowerCase()) ||
-          item.user_email.toLowerCase().startsWith(val.toLowerCase()) ||
+          item.product_name.toLowerCase().includes(val.toLowerCase()) ||
+          item.user_phoneNumber.toLowerCase().includes(val.toLowerCase()) ||
+          item.user_email.toLowerCase().includes(val.toLowerCase()) ||
           item.id.toString().includes(val.toLowerCase());
 
         if (startsWith) {
@@ -146,7 +150,9 @@ const PreOrders = () => {
     );
   };
 
-  console.log(orderId);
+  if(isDataFetching){
+    return <SpinnerComponent/>
+  }
   return (
     <div className="invoice-list-wrapper">
       <Card>

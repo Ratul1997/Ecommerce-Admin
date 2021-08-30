@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 // ** Table Columns
-import { columns } from "./columns";
+import { columns } from "./columns.js";
 
 // ** Third Party Components
 import ReactPaginate from "react-paginate";
@@ -13,26 +13,20 @@ import DataTable from "react-data-table-component";
 import { Button, Label, Input, CustomInput, Row, Col, Card } from "reactstrap";
 
 import { urls } from "@urls";
+import { findValueInArray } from "@utils";
 import axiosInstance from "@configs/axiosInstance.js";
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
-import CardTitle from "reactstrap/lib/CardTitle";
+import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner.js";
+import ExpandableTable from "./ExpandableTable";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
     <div className="invoice-list-table-header w-100 py-2">
       <Row>
         <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
-          <Button.Ripple
-            tag={Link}
-            to="/apps/invoice/add"
-            color="primary"
-            target="_blank"
-          >
-            Add Record
-          </Button.Ripple>
+          <h4>Products</h4>
         </Col>
         <Col
           lg="6"
@@ -46,7 +40,7 @@ const CustomHeader = ({ handleFilter, value }) => {
               type="text"
               value={value}
               onChange={e => handleFilter(e.target.value)}
-              placeholder="Search Invoice"
+              placeholder="Search Product by name"
             />
           </div>
         </Col>
@@ -55,22 +49,22 @@ const CustomHeader = ({ handleFilter, value }) => {
   );
 };
 
-const InvoiceList = () => {
+const Ratings = () => {
   const [value, setValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [invoiceList, setInvoiceList] = useState([]);
+  const [inventoryList, setInventoryList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    loadInvoiceList();
+    loadInventoryList();
   }, []);
 
-  const loadInvoiceList = async () => {
+  const loadInventoryList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_INVOICE);
-      setInvoiceList(res.data.results);
+      const res = await axiosInstance().get(urls.GET_INVENTORIES);
+      setInventoryList(res.data.results);
       setIsLoading(false);
     } catch (error) {
       console.log(error);
@@ -82,17 +76,13 @@ const InvoiceList = () => {
     const value = val;
     let updatedData = [];
     if (value.length) {
-      updatedData = invoiceList.filter(item => {
-        const startsWith =
-          item.customer_name.toLowerCase().startsWith(val.toLowerCase()) ||
-          item.invoice_id
-            .toString()
-            .toLowerCase()
-            .startsWith(val.toLowerCase());
-
-        const includes =
-          item.customer_name.toLowerCase().includes(val.toLowerCase()) ||
-          item.invoice_id.toString().includes(val.toLowerCase());
+      updatedData = inventoryList.filter(item => {
+        const startsWith = item.product_name
+          .toLowerCase()
+          .startsWith(val.toLowerCase());
+        const includes = item.product_name
+          .toLowerCase()
+          .includes(val.toLowerCase());
 
         if (startsWith) {
           return startsWith;
@@ -108,11 +98,24 @@ const InvoiceList = () => {
     setCurrentPage(page.selected + 1);
   };
 
+  const updateInventoryList = id => {
+    const reviews = inventoryList;
+
+    console.log(reviews);
+    const index = findValueInArray(reviews, id, "product_review_id");
+    console.log(index);
+
+    reviews[index].isApproved = reviews[index].isApproved === 1 ? 0 : 1;
+
+    setInventoryList([...reviews]);
+  };
   const CustomPagination = () => {
     return (
       <ReactPaginate
         pageCount={
-          value.length ? filteredData.length / 10 : invoiceList.length / 10 || 1
+          value.length
+            ? filteredData.length / 25
+            : inventoryList.length / 10 || 1
         }
         nextLabel=""
         breakLabel="..."
@@ -137,21 +140,28 @@ const InvoiceList = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        <CardTitle className='mt-2 ml-2'>Invoices</CardTitle>
-        {invoiceList.length > 0 && (
+        {inventoryList.length > 0 && (
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
               pagination
               subHeader
+              expandOnRowClicked
               responsive
-              columns={columns(invoiceList, setInvoiceList)}
+              bordered
+              expandableRows
+              columns={columns(
+                inventoryList,
+                setInventoryList,
+                updateInventoryList
+              )}
               paginationPerPage={10}
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               paginationDefaultPage={currentPage}
               paginationComponent={CustomPagination}
-              data={value.length ? filteredData : invoiceList}
+              expandableRowsComponent={<ExpandableTable />}
+              data={value.length ? filteredData : inventoryList}
               subHeaderComponent={
                 <CustomHeader value={value} handleFilter={handleFilter} />
               }
@@ -163,4 +173,4 @@ const InvoiceList = () => {
   );
 };
 
-export default InvoiceList;
+export default Ratings;

@@ -91,8 +91,8 @@ const OrderList = () => {
 
         const includes =
           item.user_fullname.toLowerCase().includes(val.toLowerCase()) ||
-          item.pay_phoneNumber.toLowerCase().startsWith(val.toLowerCase()) ||
-          item.user_email.toLowerCase().startsWith(val.toLowerCase()) ||
+          item.pay_phoneNumber.toLowerCase().includes(val.toLowerCase()) ||
+          item.user_email.toLowerCase().includes(val.toLowerCase()) ||
           item.id.toString().includes(val.toLowerCase());
 
         if (startsWith) {

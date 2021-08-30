@@ -82,6 +82,10 @@ const AppRoutes = [
     component: lazy(() => import("../../views/apps/invoice/list")),
   },
   {
+    path: "/apps/inventory/list",
+    component: lazy(() => import("../../views/apps/ecommerce/inventory/list")),
+  },
+  {
     path: "/apps/invoice/preview/:id",
     component: lazy(() => import("../../views/apps/invoice/preview")),
     meta: {
@@ -244,6 +248,11 @@ const AppRoutes = [
     meta: {
       navLink: "/apps/user/view",
     },
+  },
+  {
+    path: "/apps/settings",
+    className: "ecommerce-application",
+    component: lazy(() => import("../../views/apps/settings")),
   },
 ];
 
