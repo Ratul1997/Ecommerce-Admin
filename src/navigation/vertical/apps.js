@@ -12,6 +12,8 @@ import {
   ShoppingBag,
   Command,
   Tag,
+  Settings,
+  Database
 } from "react-feather";
 
 export default [
@@ -124,6 +126,12 @@ export default [
     ],
   },
   {
+    id: "inventory",
+    title: "Inventory",
+    icon: <Database size={20} />,
+    navLink: "/apps/inventory/list",
+  },
+  {
     id: "productApp",
     title: "Products",
     icon: <ShoppingBag size={20} />,
@@ -191,18 +199,24 @@ export default [
         icon: <Circle size={12} />,
         navLink: "/apps/user/list",
       },
-      {
-        id: "view",
-        title: "View",
-        icon: <Circle size={12} />,
-        navLink: "/apps/user/view",
-      },
-      {
-        id: "edit",
-        title: "Edit",
-        icon: <Circle size={12} />,
-        navLink: "/apps/user/edit",
-      },
+      // {
+      //   id: "view",
+      //   title: "View",
+      //   icon: <Circle size={12} />,
+      //   navLink: "/apps/user/view",
+      // },
+      // {
+      //   id: "edit",
+      //   title: "Edit",
+      //   icon: <Circle size={12} />,
+      //   navLink: "/apps/user/edit",
+      // },
     ],
+  },
+  {
+    id: "settings",
+    title: "Settings",
+    icon: <Settings size={20} />,
+    navLink: "/apps/settings",
   },
 ];

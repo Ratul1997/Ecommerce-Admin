@@ -1,4 +1,4 @@
-/* eslint-disable semi */
+/* eslint-disable */
 // ** React Imports
 import { Link } from "react-router-dom";
 
@@ -15,7 +15,7 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem
+  DropdownItem,
 } from "reactstrap";
 import {
   Slack,
@@ -26,8 +26,9 @@ import {
   MoreVertical,
   FileText,
   Trash2,
-  Archive
+  Archive,
 } from "react-feather";
+import { roleObj } from "../userConstants";
 
 // ** Renders Client Columns
 const renderClient = row => {
@@ -38,58 +39,33 @@ const renderClient = row => {
       "light-warning",
       "light-info",
       "light-primary",
-      "light-secondary"
+      "light-secondary",
     ],
     color = states[stateNum];
 
-  if (row.avatar.length) {
-    return <Avatar className="mr-1" img={row.avatar} width="32" height="32" />;
-  } else {
-    return (
-      <Avatar
-        color={color || "primary"}
-        className="mr-1"
-        content={row.fullName || "John Doe"}
-        initials
-      />
-    );
-  }
+  return (
+    <Avatar
+      color={color || "primary"}
+      className="mr-1"
+      content={`${row.first_name} ${row.last_name || ""}`}
+      initials
+    />
+  );
 };
 
 // ** Renders Role Columns
 const renderRole = row => {
-  const roleObj = {
-    subscriber: {
-      class: "text-primary",
-      icon: User
-    },
-    maintainer: {
-      class: "text-success",
-      icon: Database
-    },
-    editor: {
-      class: "text-info",
-      icon: Edit2
-    },
-    author: {
-      class: "text-warning",
-      icon: Settings
-    },
-    admin: {
-      class: "text-danger",
-      icon: Slack
-    }
-  };
-
-  const Icon = roleObj[row.role] ? roleObj[row.role].icon : Edit2;
+  const Icon = roleObj[row.user_role] ? roleObj[row.user_role].icon : Edit2;
 
   return (
     <span className="text-truncate text-capitalize align-middle">
       <Icon
         size={18}
-        className={`${roleObj[row.role] ? roleObj[row.role].class : ""} mr-50`}
+        className={`${
+          roleObj[row.user_role] ? roleObj[row.user_role].class : ""
+        } mr-50`}
       />
-      {row.role}
+      {row.user_role}
     </span>
   );
 };
@@ -97,7 +73,7 @@ const renderRole = row => {
 const statusObj = {
   pending: "light-warning",
   active: "light-success",
-  inactive: "light-secondary"
+  inactive: "light-secondary",
 };
 
 export const columns = [
@@ -117,48 +93,48 @@ export const columns = [
               className="user-name text-truncate mb-0"
               onClick={() => store.dispatch(getUser(row.id))}
             >
-              <span className="font-weight-bold">{row.fullName}</span>
+              <span className="font-weight-bold">
+                {row.first_name} {row.last_name || ""}
+              </span>
             </Link>
-            <small className="text-truncate text-muted mb-0">
-              @{row.username}
-            </small>
+            <small >{row.email}</small>
           </div>
         </div>
       );
-    }
+    },
   },
   {
-    name: "Email",
+    name: "Contact Number",
     minWidth: "320px",
-    selector: "email",
+    selector: "phone_number",
     sortable: true,
-    cell: row => row.email
+    cell: row => row.phone_number,
   },
   {
     name: "Role",
     minWidth: "172px",
     selector: "role",
     sortable: true,
-    cell: row => renderRole(row)
+    cell: row => renderRole(row),
   },
-  {
-    name: "Plan",
-    minWidth: "138px",
-    selector: "currentPlan",
-    sortable: true,
-    cell: row => <span className="text-capitalize">{row.currentPlan}</span>
-  },
-  {
-    name: "Status",
-    minWidth: "138px",
-    selector: "status",
-    sortable: true,
-    cell: row => (
-      <Badge className="text-capitalize" color={statusObj[row.status]} pill>
-        {row.status}
-      </Badge>
-    )
-  },
+  // {
+  //   name: "Plan",
+  //   minWidth: "138px",
+  //   selector: "currentPlan",
+  //   sortable: true,
+  //   cell: row => <span className="text-capitalize">{row.currentPlan}</span>,
+  // },
+  // {
+  //   name: "Status",
+  //   minWidth: "138px",
+  //   selector: "status",
+  //   sortable: true,
+  //   cell: row => (
+  //     <Badge className="text-capitalize" color={statusObj[row.status]} pill>
+  //       {row.status}
+  //     </Badge>
+  //   ),
+  // },
   {
     name: "Actions",
     minWidth: "100px",
@@ -172,12 +148,12 @@ export const columns = [
             tag={Link}
             to={`/apps/user/view/${row.id}`}
             className="w-100"
-            onClick={() => store.dispatch(getUser(row.id))}
+            // onClick={() => store.dispatch(getUser(row.id))}
           >
             <FileText size={14} className="mr-50" />
             <span className="align-middle">Details</span>
           </DropdownItem>
-          <DropdownItem
+          {/* <DropdownItem
             tag={Link}
             to={`/apps/user/edit/${row.id}`}
             className="w-100"
@@ -185,16 +161,16 @@ export const columns = [
           >
             <Archive size={14} className="mr-50" />
             <span className="align-middle">Edit</span>
-          </DropdownItem>
-          <DropdownItem
+          </DropdownItem> */}
+          {/* <DropdownItem
             className="w-100"
             onClick={() => store.dispatch(deleteUser(row.id))}
           >
             <Trash2 size={14} className="mr-50" />
             <span className="align-middle">Delete</span>
-          </DropdownItem>
+          </DropdownItem> */}
         </DropdownMenu>
       </UncontrolledDropdown>
-    )
-  }
+    ),
+  },
 ];

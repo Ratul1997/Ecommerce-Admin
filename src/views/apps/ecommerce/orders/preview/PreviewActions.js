@@ -26,7 +26,6 @@ const PreviewActions = ({
   options,
   onUpdate,
   isLoading,
-  
 }) => {
   return (
     <Card className="invoice-action-wrapper">
@@ -47,15 +46,16 @@ const PreviewActions = ({
         <h6 className="mb-25">Name: {data.first_name || ""}</h6>
         <CardText className="mb-25">Email: {data.email || ""}</CardText>
 
-        <Button.Ripple
-          color="primary"
-          block
-          className="mb-75 mt-1"
-          onClick={isLoading ? null : onUpdate}
-        >
-          {isLoading && <Spinner size="sm" />} Update
-        </Button.Ripple>
-
+        {data.order_status !== selectedOption.label && (
+          <Button.Ripple
+            color="primary"
+            block
+            className="mb-75 mt-1"
+            onClick={isLoading ? null : onUpdate}
+          >
+            {isLoading && <Spinner size="sm" />} Update
+          </Button.Ripple>
+        )}
         {/* <Button.Ripple
           color="secondary"
           tag={Link}

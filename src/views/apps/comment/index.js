@@ -82,7 +82,7 @@ const Ratings = () => {
           item.first_name.toLowerCase().startsWith(val.toLowerCase());
         const includes =
           item.user_email.toLowerCase().includes(val.toLowerCase()) ||
-          item.first_name.toLowerCase().startsWith(val.toLowerCase());
+          item.first_name.toLowerCase().includes(val.toLowerCase());
 
         if (startsWith) {
           return startsWith;

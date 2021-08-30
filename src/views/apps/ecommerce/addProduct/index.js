@@ -95,7 +95,7 @@ const AddProduct = () => {
     product_gallery: [],
     attributesList: [],
     variations: [],
-    stock_threshold: { value: 1, label: "In Stock" },
+    stock_threshold: 0,
     allowBackOrders: { value: 1, label: "Do not allow" },
     shipping_cost: 0.0,
     inventory_status: { value: 1, label: "In Stock" },

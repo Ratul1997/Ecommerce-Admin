@@ -57,7 +57,7 @@ const renderClient = row => {
     />
   );
 };
-const CustomOptions = ({ row, tagsList, setTagsList }) => {
+const CustomOptions = ({ row, reviewList, setReviewsList }) => {
   const onDelete = async () => {
     try {
       await axiosInstance().delete(
@@ -94,13 +94,13 @@ const CustomOptions = ({ row, tagsList, setTagsList }) => {
   );
 };
 // ** Table columns
-export const columns = (tagsList, setTagsList, updateCommentList) => {
+export const columns = (reviewList, setReviewsList, updateCommentList) => {
   return [
     {
       name: "Date",
       selector: "time",
       sortable: true,
-      minWidth: "100px",
+      minWidth: "150px",
       cell: row => {
         const dates = convertTimeStampToString(row.time);
 
@@ -136,7 +136,6 @@ export const columns = (tagsList, setTagsList, updateCommentList) => {
       minWidth: "307px",
       maxWidth: "307px",
     },
-
     {
       name: "Ratings",
       minWidth: "107px",
@@ -182,8 +181,8 @@ export const columns = (tagsList, setTagsList, updateCommentList) => {
       cell: row => (
         <CustomOptions
           row={row}
-          tagsList={tagsList}
-          setTagsList={setTagsList}
+          reviewList={reviewList}
+          setReviewsList={setReviewsList}
         />
       ),
     },

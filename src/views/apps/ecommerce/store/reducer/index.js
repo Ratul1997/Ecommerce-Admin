@@ -6,7 +6,8 @@ const initialState = {
   productDetail: {},
   params: {},
   totalProducts: 0,
-  categories: []
+  categories: [],
+  attributes: [],
 };
 
 const updateCategory = (categories, data) => {
@@ -19,7 +20,7 @@ const removeACategoryItem = (categories, data) => {
   const newCategories = categories.filter(item => {
     if (item.category_id !== data.category_id) return item;
   });
-  console.log(newCategories)
+  console.log(newCategories);
   return [...newCategories];
 };
 const ecommerceReducer = (state = initialState, action) => {
@@ -29,7 +30,7 @@ const ecommerceReducer = (state = initialState, action) => {
         ...state,
         products: action.data.products,
         params: action.params,
-        totalProducts: action.data.total
+        totalProducts: action.data.total,
       };
     case "GET_WISHLIST":
       return { ...state, wishlist: action.data.products };
@@ -50,12 +51,12 @@ const ecommerceReducer = (state = initialState, action) => {
     case "UPDATE_CATEGORY":
       return {
         ...state,
-        categories: updateCategory(state.categories, action.data)
+        categories: updateCategory(state.categories, action.data),
       };
     case "REMOVE_CATEGORY_ITEM":
       return {
         ...state,
-        categories: removeACategoryItem(state.categories, action.data)
+        categories: removeACategoryItem(state.categories, action.data),
       };
     default:
       return state;
