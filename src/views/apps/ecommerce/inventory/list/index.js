@@ -136,7 +136,7 @@ const Ratings = () => {
     );
   };
 
-  if (isLoading) <SpinnerComponent />;
+  if (isLoading) return <SpinnerComponent />;
   return (
     <div className="invoice-list-wrapper">
       <Card>

@@ -7,8 +7,10 @@ import ProductTable from "./ProductTable";
 import axiosInstance from "../../../../configs/axiosInstance";
 import { onErrorToast } from "../../../common/Toaster";
 import { findItemInArray, findValueInArray } from "../../../../utility/Utils";
+import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 export default function Products() {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     loadProducts();
   }, []);
@@ -16,9 +18,11 @@ export default function Products() {
     try {
       const res = await axiosInstance().get(urls.GET_PRODUCTS);
       setProducts(res.data.products);
+      setIsLoading(false);
     } catch (error) {
       onErrorToast(error.data.massage);
       // alert(error);
+      setIsLoading(false);
     }
   };
   const updatePopular = (id, type) => {
@@ -34,6 +38,7 @@ export default function Products() {
     }
     setProducts([...productList]);
   };
+  if (isLoading) return <SpinnerComponent />;
   return (
     <Fragment>
       <Breadcrumbs

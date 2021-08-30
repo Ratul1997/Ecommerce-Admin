@@ -3,7 +3,9 @@ import axios from "axios";
 const axiosInstance = (token = null) => {
   const instance = axios.create();
 
-  instance.defaults.headers.post["Content-Type"] = "application/json";
+  instance.defaults.headers.post["Content-Type"] =
+    "application/x-www-form-urlencoded";
+  instance.defaults.headers['Accept'] ='application/json'
   instance.defaults.timeout = 5000;
   //instance.defaults.headers.common["Authorization"] = "Token " + token;
 

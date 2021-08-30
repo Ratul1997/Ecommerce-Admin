@@ -43,6 +43,7 @@ const Customers = props => {
     return data.listData.map((item, index) => {
       const IconTag = Icon[item.icon]
 
+      console.log(item)
       return (
         <div
           key={index}

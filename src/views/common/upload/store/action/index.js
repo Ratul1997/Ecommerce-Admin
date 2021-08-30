@@ -35,6 +35,9 @@ export const uploadFile = files => dispatch => {
       try {
         const res = await axios({
           baseURL: process.env.REACT_APP_BASE_URL,
+          headers:{
+            "Content-Type":'application/json'
+          },
           url: urls.UPLOAD_A_FILE,
           method: "post",
           data: formPayload,
