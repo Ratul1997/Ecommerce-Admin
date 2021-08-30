@@ -128,13 +128,16 @@ const CustomFeaturedIcon = ({ row, updatePopular }) => {
 
   return (
     <div className="text-truncate d-inline">
-      <Star
-        size={18}
-        className={classnames({
-          "text-warning fill-current": row.featured_product,
-        })}
-        onClick={onUpdate}
-      />
+      <Link>
+        {" "}
+        <Star
+          size={18}
+          className={classnames({
+            "text-warning fill-current": row.featured_product,
+          })}
+          onClick={onUpdate}
+        />
+      </Link>
     </div>
   );
 };
@@ -157,13 +160,16 @@ const CustomPopularProductIcon = ({ row, updatePopular }) => {
 
   return (
     <div className="text-truncate d-inline">
-      <Heart
-        size={18}
-        className={classnames({
-          "text-warning fill-current": row.popular_product === 0 ? false : true,
-        })}
-        onClick={onUpdate}
-      />
+      <Link>
+        <Heart
+          size={18}
+          className={classnames({
+            "text-warning fill-current":
+              row.popular_product === 0 ? false : true,
+          })}
+          onClick={onUpdate}
+        />
+      </Link>
     </div>
   );
 };
@@ -185,24 +191,33 @@ const CustomCategoryRow = ({ row }) => {
 const columns = updatePopular => {
   return [
     {
-      name: "Product Name",
-      selector: "product_name",
-      sortable: true,
-      minWidth: "250px",
+      name: "#",
+      minWidth: "107px",
+      selector: "id",
       cell: row => (
         <Link
           to={`/apps/ecommerce/product/edit/${row.product_id}`}
           target="_blank"
-        >{`${row.product_name}`}</Link>
+        >{`#${row.product_id}`}</Link>
       ),
     },
+
     {
-      name: "Last Updated",
-      selector: "updated_at",
+      name: "Product Name",
+      selector: "product_name",
       sortable: true,
-      minWidth: "100px",
-      cell: row => <CustomFileTime row={row} />,
+      minWidth: "250px",
+      // cell: row => (
+      //   <>{`${row.product_name} dsfsdfsdfsdfsdfsdfsdfsdsdsdsdsdsdsdsd`}</>
+      // ),
     },
+    // {
+    //   name: "Last Updated",
+    //   selector: "updated_at",
+    //   sortable: true,
+    //   minWidth: "100px",
+    //   cell: row => <CustomFileTime row={row} />,
+    // },
 
     {
       name: "Price",
@@ -278,7 +293,7 @@ const columns = updatePopular => {
               <DropdownToggle className="pr-1" tag="span">
                 <MoreVertical size={15} />
               </DropdownToggle>
-              <DropdownMenu right>
+              {/* <DropdownMenu right>
                 <DropdownItem
                   tag="a"
                   href="/"
@@ -306,7 +321,7 @@ const columns = updatePopular => {
                   <Trash size={15} />
                   <span className="align-middle ml-50">Delete</span>
                 </DropdownItem>
-              </DropdownMenu>
+              </DropdownMenu> */}
             </UncontrolledDropdown>
             <Edit size={15} />
           </div>
