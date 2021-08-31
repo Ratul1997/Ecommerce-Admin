@@ -1,3 +1,4 @@
+/*eslint-disable*/
 import { lazy } from 'react'
 
 const DashboardRoutes = [

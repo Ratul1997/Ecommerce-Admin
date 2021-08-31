@@ -175,7 +175,7 @@ const VerticalLayout = props => {
       ></div>
       {/* Vertical Nav Menu Overlay */}
 
-      {themeConfig.layout.customizer === true ? (
+      {/* {themeConfig.layout.customizer === true ? (
         <Customizer
           skin={skin}
           setSkin={setSkin}
@@ -199,7 +199,7 @@ const VerticalLayout = props => {
           setTransition={props.setTransition}
           themeConfig={themeConfig}
         />
-      ) : null}
+      ) : null} */}
       <footer
         className={classnames(`footer footer-light ${footerClasses[footerType] || 'footer-static'}`, {
           'd-none': footerType === 'hidden'

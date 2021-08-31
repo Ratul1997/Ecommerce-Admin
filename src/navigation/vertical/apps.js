@@ -21,29 +21,29 @@ export default [
   {
     header: "Apps & Pages",
   },
-  {
-    id: "email",
-    title: "Email",
-    icon: <Mail size={20} />,
-    navLink: "/apps/email",
-  },
-  {
-    id: "chat",
-    title: "Chat",
-    icon: <MessageSquare size={20} />,
-    navLink: "/apps/chat",
-  },
+  // {
+  //   id: "email",
+  //   title: "Email",
+  //   icon: <Mail size={20} />,
+  //   navLink: "/apps/email",
+  // },
+  // {
+  //   id: "chat",
+  //   title: "Chat",
+  //   icon: <MessageSquare size={20} />,
+  //   navLink: "/apps/chat",
+  // },
+  // {
+  //   id: "todo",
+  //   title: "Todo",
+  //   icon: <CheckSquare size={20} />,
+  //   navLink: "/apps/todo",
+  // },
   {
     id:'newAdmin',
-    title:'newAdmin',
+    title:'New Admin',
     icon:<Trello size={20}/>,
     navLink:'/add-new-admin'
-  },
-  {
-    id: "todo",
-    title: "Todo",
-    icon: <CheckSquare size={20} />,
-    navLink: "/apps/todo",
   },
   {
     id: "calendar",

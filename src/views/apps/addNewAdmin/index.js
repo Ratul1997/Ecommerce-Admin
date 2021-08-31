@@ -1,3 +1,5 @@
+
+/*eslint-disable*/
 import {Fragment} from 'react'
 import { Card, CardTitle,Col,Row } from 'reactstrap'
 import AdminForm from './AdminForm'
