@@ -13,7 +13,8 @@ import {
   Command,
   Tag,
   Settings,
-  Database
+  Database,
+  Trello
 } from "react-feather";
 
 export default [
@@ -31,6 +32,12 @@ export default [
     title: "Chat",
     icon: <MessageSquare size={20} />,
     navLink: "/apps/chat",
+  },
+  {
+    id:'newAdmin',
+    title:'newAdmin',
+    icon:<Trello size={20}/>,
+    navLink:'/add-new-admin'
   },
   {
     id: "todo",

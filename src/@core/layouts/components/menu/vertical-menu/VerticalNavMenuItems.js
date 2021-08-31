@@ -33,9 +33,9 @@ const VerticalMenuNavItems = props => {
     const TagName = Components[resolveNavItemComponent(item)]
     // console.log(resolveNavItemComponent(item), item)
     if (item.children) {
-      return canViewMenuGroup(item) && <TagName item={item} index={index} key={item.id} {...props} />
+      return  <TagName item={item} index={index} key={item.id} {...props} />
     }
-    return canViewMenuItem(item) && <TagName key={item.id || item.header} item={item} {...props} />
+    return  <TagName key={item.id || item.header} item={item} {...props} />
   })
 
   return RenderNavItems
