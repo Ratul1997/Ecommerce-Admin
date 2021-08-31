@@ -6,7 +6,7 @@ export default [
     title: 'Dashboards',
     icon: <Home size={20} />,
     badge: 'light-warning',
-    badgeText: '2',
+    // badgeText: '2',
     children: [
       // {
       //   id: 'analyticsDash',
