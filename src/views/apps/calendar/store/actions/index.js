@@ -44,7 +44,6 @@ export const addEvent = event => {
 
 // ** Update Event
 export const updateEvent = event => {
-  console.log(event);
   return dispatch => {
     axiosInstance()
       .patch(urls.UPDATE_CALENDER_EVENTS, { event })
@@ -85,7 +84,6 @@ export const updateAllFilters = value => {
 
 // ** remove Event
 export const removeEvent = id => {
-  console.log(id);
   return dispatch => {
     axiosInstance()
       .delete(urls.REMOVE_CALENDER_EVENTS + `${1}/${id}`, { id })

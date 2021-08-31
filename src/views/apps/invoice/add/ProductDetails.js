@@ -53,7 +53,7 @@ export default function ProductDetails({
       <Repeater count={invoiceItem.length}>
         {i => {
           const Tag = i === 0 ? "div" : SlideDown;
-          console.log(i);
+          
           return (
             <Tag key={i} className="repeater-wrapper">
               <Row>

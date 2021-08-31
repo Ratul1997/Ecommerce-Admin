@@ -203,7 +203,7 @@ export const columns = (orderList, setOrderList, onPreviewPreOrder) => {
       sortable: true,
       minWidth: "164px",
       cell: row => {
-        console.log(orderStatusObj[row.status]);
+        
         return (
           <Badge color={orderStatusObj[row.status].color} pill>
             {row.status}

@@ -105,7 +105,6 @@ const Calendar = props => {
     },
 
     eventClick({ event: clickedEvent }) {
-      // console.log(clickedEvent)
       dispatch(selectEvent(clickedEvent))
       handleAddEventSidebar()
 

@@ -61,7 +61,7 @@ export const convertTimeStampToString = time => {
 };
 
 export const convertRelevantFileSize = size => {
-  console.log(typeof size);
+  
 
   return size;
 };

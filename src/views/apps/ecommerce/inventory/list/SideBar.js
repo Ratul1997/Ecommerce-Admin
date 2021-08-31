@@ -53,10 +53,10 @@ const SidebarInventory = ({ open, toggleSidebar, parentProductId }) => {
       } else {
         setIsLoading(false);
       }
-      console.log(res);
+      
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      
     }
   };
 
@@ -65,11 +65,11 @@ const SidebarInventory = ({ open, toggleSidebar, parentProductId }) => {
       const res = await axiosInstance().get(
         urls.GET_PRODUCT_ATTRIBUTES_BY_ID + parentProductId
       );
-      console.log(res.data.results);
+      
       setOptions(res.data.results.options);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      
       setIsLoading(false);
     }
   };

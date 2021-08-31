@@ -19,7 +19,7 @@ export default function FileAsGrid({
   return (
     files.length > 0 &&
     files.map((file, key) => {
-      console.log(urls.UPLOADED_LINK + file.file_name)
+      
       return (
         <div
           className="img-fluid rounded m-1 shadow  bg-lighten-5 align-items-center"

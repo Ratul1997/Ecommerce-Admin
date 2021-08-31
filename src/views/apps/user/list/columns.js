@@ -83,7 +83,7 @@ export const columns = [
     selector: "fullName",
     sortable: true,
     cell: row => {
-      console.log(row);
+      
       return (
         <div className="d-flex justify-content-left align-items-center">
           {renderClient(row)}

@@ -46,7 +46,7 @@ const Attributes = () => {
       setIsLoading(false);
     } catch (error) {
       onErrorToast(error.data.massage);
-      console.log(error);
+      
       setIsLoading(false);
     }
   };

@@ -33,7 +33,7 @@ const InfoTabContent = ({ data, onChange, onCancel }) => {
       onSuccessToast("Updated!");
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      
       onErrorToast(error.data.massage);
     }
   };

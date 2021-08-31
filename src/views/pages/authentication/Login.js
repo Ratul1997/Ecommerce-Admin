@@ -12,7 +12,7 @@ import { AbilityContext } from "@src/utility/context/Can";
 import { Link, useHistory } from "react-router-dom";
 import InputPasswordToggle from "@components/input-password-toggle";
 import Select from "react-select";
-
+import { urls } from "@urls";
 import { getHomeRouteForLoggedInUser, isObjEmpty } from "@utils";
 import {
   Facebook,
@@ -35,6 +35,7 @@ import {
   CustomInput,
   Button,
   UncontrolledTooltip,
+  Spinner,
 } from "reactstrap";
 
 import axiosInstance from "../../../configs/axiosInstance";
@@ -61,6 +62,7 @@ const ToastContent = ({ name, role }) => (
 const Login = props => {
   const [skin, setSkin] = useSkin();
   const ability = useContext(AbilityContext);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
   const [email, setEmail] = useState("");
@@ -84,15 +86,18 @@ const Login = props => {
     //       { transition: Slide, hideProgressBar: true, autoClose: 2000 }
     //     )
     //   })
-    //   .catch(err => console.log(err))
+    //   .catch(err => 
 
+    setIsLoading(true);
     try {
       // const data = { role, email, password };
-      console.log("data", email, password, adminRole);
-      const res = await axiosInstance().post(
-        `http://localhost:5000/api/adminAuth/login`,
-        { email: email, role: adminRole, password: password }
-      );
+      
+
+      const res = await axiosInstance().post(urls.LOGIN_URL, {
+        email: email,
+        role: adminRole,
+        password: password,
+      });
       const data = {
         email: email,
         adminId: res.data.adminId,
@@ -101,22 +106,24 @@ const Login = props => {
         refreshToken: res.data.refreshToken,
         userName: res.data.userName,
       };
+      setIsLoading(false);
       dispatch(handleLogin(data));
       // history.push(getHomeRouteForLoggedInUser("admin"));
 
       history.push("/");
-      // console.log(res);
+      // 
     } catch (err) {
+      setIsLoading(false);
       if (err.status === 404) {
         // const arr = {};
         // arr["invalid"] = err.data.error.message;
-        console.log(err.data.error.message);
+        
         setValErrors(err.data.error.message);
-        // console.log(err.data.error.message);
+        // 
       }
     }
   };
-  console.log(valErrors);
+  
   return (
     <div className="auth-wrapper auth-v2">
       <Row className="auth-inner m-0">
@@ -158,7 +165,7 @@ const Login = props => {
 
             <Form
               className="auth-login-form mt-2"
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={isLoading ? null : handleSubmit(onSubmit)}
             >
               <FormGroup>
                 <Label for="select-basic">Select Role</Label>
@@ -225,6 +232,7 @@ const Login = props => {
                 />
               </FormGroup>
               <Button.Ripple type="submit" color="primary" block>
+                {isLoading && <Spinner size="sm" color="white" />}
                 Sign in
               </Button.Ripple>
             </Form>

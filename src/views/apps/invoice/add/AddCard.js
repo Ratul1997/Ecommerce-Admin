@@ -68,7 +68,7 @@ const AddCard = ({
   customerInfoRef,
   invoiceNumber,
 }) => {
-  console.log(invoiceNumber);
+  
   const initialCustomerInfo = {
     customer_name: "",
     customer_email: "",
@@ -113,7 +113,7 @@ const AddCard = ({
       setOptions([...arr]);
       setClients(invoices);
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -212,7 +212,7 @@ const AddCard = ({
       onSuccessToast("Successfully Inserted!");
       toggleSidebar();
     } catch (error) {
-      console.log(error);
+      
       onErrorToast(error.data.massage);
     }
   };
@@ -231,7 +231,7 @@ const AddCard = ({
     setInvoiceItem([...invoiceItem]);
   };
 
-  console.log(customerInfo);
+  
 
   return (
     <Fragment>

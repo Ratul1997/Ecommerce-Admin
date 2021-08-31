@@ -26,7 +26,6 @@ import { convertTimeStampToString } from "../media/files/utils/utils";
 // ** Third Party Components
 import classnames from "classnames";
 const ExpandableTable = ({ data }) => {
-  console.log("sd", data);
   return (
     <div className="expandable-content p-2">
       <p>

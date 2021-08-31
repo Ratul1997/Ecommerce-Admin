@@ -73,7 +73,7 @@ const ExpandableTable = ({ data, type, options }) => {
       setIsLoading(false);
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      
       setIsLoading(false);
       onErrorToast(error.data.massage);
     }

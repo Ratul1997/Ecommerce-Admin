@@ -76,7 +76,7 @@ const PreOrders = () => {
       setIsDataFetching(false)
     } catch (error) {
       setIsDataFetching(false)
-      console.log(error);
+      
     }
   };
 

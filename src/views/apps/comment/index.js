@@ -67,7 +67,6 @@ const Ratings = () => {
       setReviewsList(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
     }
   };
@@ -101,9 +100,7 @@ const Ratings = () => {
   const updateCommentList = id => {
     const reviews = reviewList;
 
-    console.log(reviews);
     const index = findValueInArray(reviews, id, "product_review_id");
-    console.log(index);
 
     reviews[index].isApproved = reviews[index].isApproved === 1 ? 0 : 1;
 

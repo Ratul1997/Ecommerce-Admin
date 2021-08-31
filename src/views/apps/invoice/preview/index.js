@@ -45,16 +45,16 @@ const InvoicePreview = () => {
       setData(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      
       setIsLoading(true);
     }
   };
 
   const onDownload = () => {
-    console.log("download");
+    
     const height = document.getElementById("generatePdf").offsetHeight;
     const width = document.getElementById("generatePdf").offsetWidth;
-    console.log(height);
+    
     // html2canvas($(".generatePdf")[0], { allowTaint: true }).then(function (
     //   canvas
     // ) {

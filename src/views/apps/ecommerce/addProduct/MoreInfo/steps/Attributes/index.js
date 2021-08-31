@@ -37,7 +37,7 @@ export default function Attributes({ stepper }) {
       setSelectedAttributeOptions(res.data.results.attributes);
       res.data.results.attributes && onGetAttributeOptions(res.data.results, attribute);
     } catch (error) {
-      console.log(error);
+      
     }
   };
   const loadAttributes = async () => {

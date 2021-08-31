@@ -50,7 +50,7 @@ export const uploadFile = files => dispatch => {
           }
         });
         
-        // console.log(res);
+        // 
         dispatch(successUploadFile(file.id));
         setTimeout(() => {
           dispatch(addMediaFiles(res.data))
@@ -58,7 +58,7 @@ export const uploadFile = files => dispatch => {
       } catch (error) {
         if (axios.isCancel(error)) {
           // Do something when user cancel upload
-          console.log("cancelled by user");
+          
         }
         dispatch(failureUploadFile(file.id));
       }

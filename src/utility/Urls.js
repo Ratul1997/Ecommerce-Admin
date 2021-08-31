@@ -61,4 +61,9 @@ export const urls = {
 
   // ANALYTICS
   GET_INVENTORY_ANALYTICS: `${BASE_URL}api/ecommerce/analytics/inventory`,
+
+
+  // Login
+  LOGIN_URL:`${BASE_URL}api/adminAuth/login`,
+  ADMIN_REGISTER:`${BASE_URL}/adminAuth/register`
 };

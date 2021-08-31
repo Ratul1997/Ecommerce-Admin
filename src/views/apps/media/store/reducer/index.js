@@ -6,10 +6,10 @@ const initialState = {
 };
 
 const mediaReducer = (state = initialState, action) => {
-  // console.log(action);
+  // 
   switch (action.type) {
     case "ADD_FILE_TO_MEDIA":
-      console.log(state.files, action.data);
+      
       const newState = { files: [...state.files, action.data] };
       return newState;
     case "ADD_FILE":

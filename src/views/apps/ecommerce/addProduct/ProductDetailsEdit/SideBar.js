@@ -69,7 +69,6 @@ const SidebarImage = ({ open, toggleSidebar }) => {
 
   const onClickOnImagesList = item => e => {
     const index = findIndexToTheArray(product_gallery, item);
-    console.log(index);
     var updatedSelectedList = [];
     if (index > IMAGE_INDEX_THRESHOLD) {
       updatedSelectedList = removeFromArray(product_gallery, index);

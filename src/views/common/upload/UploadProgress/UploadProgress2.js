@@ -16,15 +16,15 @@ const UploadProgress2 = ({ file }) => {
   const source = CancelToken.source();
 
   const cancelUpload = () => {
-    console.log(source.token);
+    
 
     // source.cancel("Cancelled by user");
   };
   useEffect(async () => {
-    console.log(file);
+    
     const formPayload = new FormData();
     formPayload.append("file", file);
-    console.log(source.token);
+    
     try {
       const res = await axios({
         baseURL: "http://localhost:5000",
@@ -39,13 +39,13 @@ const UploadProgress2 = ({ file }) => {
           setProgress(percentageProgress);
         }
       });
-      console.log(res);
+      
       // dispatch(successUploadFile(file.id));
       dispatch(addMediaFiles(res.data));
     } catch (error) {
       if (axios.isCancel(error)) {
         // Do something when user cancel upload
-        console.log("cancelled by user");
+        
       }
       // dispatch(failureUploadFile(file.id));
     }

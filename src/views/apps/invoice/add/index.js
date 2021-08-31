@@ -18,7 +18,7 @@ import axiosInstance from "@configs/axiosInstance.js";
 const InvoiceAdd = () => {
   const location = useLocation();
   const params = useParams();
-  console.log(params);
+  
 
   const initialInvoiceDate = {
     invoice_date: new Date(),
@@ -49,7 +49,7 @@ const InvoiceAdd = () => {
   }, []);
 
   const setData = data => {
-    console.log(data);
+    
     const invoicesItemsData = JSON.parse(data.invoice_data);
     setTax(invoicesItemsData.tax);
     setDiscount(invoicesItemsData.discount);
@@ -72,10 +72,10 @@ const InvoiceAdd = () => {
       setData(res.data.results)
       setIsEditedInvoice(true);
       setData(res.data.results);
-      console.log(res);
+      
     } catch (error) {
       setErrorCode(error.status);
-      console.log(error);
+      
     }
   };
 
@@ -99,7 +99,7 @@ const InvoiceAdd = () => {
 
     const percent = parseFloat(percentage(parseFloat(tax), total)) || 0.0;
 
-    console.log((total || 0.0) + percent);
+    
     return (total || 0.0) + percent;
   };
 
@@ -130,7 +130,7 @@ const InvoiceAdd = () => {
       return;
     }
     const invoiceData = formatInvoice();
-    console.log(invoiceData);
+    
     onUploadInvoice(invoiceData);
   };
 
@@ -138,9 +138,9 @@ const InvoiceAdd = () => {
     setIsLoading(true);
     try {
       const res = await axiosInstance().post(urls.ADD_INVOICE, invoiceData);
-      console.log(res.data.results.invoice_id);
+      
       invoiceIdRef.current = res.data.results.invoice_id;
-      console.log(invoiceIdRef);
+      
       onSuccessToast("Successfully Created!");
     } catch (error) {
       onErrorToast(error.data.massage);
@@ -149,7 +149,7 @@ const InvoiceAdd = () => {
   };
 
   const onUpdate = () => {
-    console.log(formatInvoice());
+    
     onUpdateInvoice(formatInvoice());
   };
   const onUpdateInvoice = async invoiceData => {
@@ -159,7 +159,7 @@ const InvoiceAdd = () => {
         urls.UPDATE_INVOICE_BY_ID + invoiceNumber,
         invoiceData
       );
-      console.log(res.data.results.invoice_id);
+      
       onSuccessToast("Successfully Updated!");
     } catch (error) {
       onErrorToast(error.data.massage);

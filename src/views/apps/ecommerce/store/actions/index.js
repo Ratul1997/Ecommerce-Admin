@@ -93,7 +93,7 @@ export const updateCategories = params => {
 
 // ** Remove A Category Item
 export const removeItemInCategory = params => {
-  console.log(params);
+  
   return dispatch => {
     return dispatch({ type: "REMOVE_CATEGORY_ITEM", data: params });
   };

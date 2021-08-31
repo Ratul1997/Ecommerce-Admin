@@ -71,7 +71,7 @@ export default function Preview() {
       );
       setIsDataFetching(false);
     } catch (error) {
-      console.log(error);
+      
       setIsDataFetching(false);
       setError(error);
     }
@@ -82,10 +82,10 @@ export default function Preview() {
       document.getElementById("order_div").innerHTML
     );
   };
-  console.log(selectedOption);
+  
   const onUpdate = async () => {
     setIsLoading(true);
-    console.log(convertHtmlToString());
+    
     try {
       const res = await axiosInstance().patch(urls.GET_ORDERS_BY_ID + id, {
         order_status: selectedOption.label,
@@ -98,7 +98,7 @@ export default function Preview() {
       onSuccessToast("Successfully Updated!");
       setData({ ...data, order_status: selectedOption.label });
     } catch (error) {
-      console.log(error);
+      
       onErrorToast(error.data.massage);
     }
     setIsLoading(false);

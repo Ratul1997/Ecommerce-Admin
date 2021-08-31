@@ -72,7 +72,7 @@ const TagList = () => {
       setTagsList(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      
       setIsLoading(false);
     }
   };

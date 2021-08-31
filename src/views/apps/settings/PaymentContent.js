@@ -36,7 +36,7 @@ export default function PaymentContent({
       onSuccessToast("Updated!");
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
+      
       setIsLoading(false);
       onErrorToast(error.data.massage);
     }

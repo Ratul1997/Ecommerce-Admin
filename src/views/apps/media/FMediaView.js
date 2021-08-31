@@ -44,13 +44,13 @@ export default function FMediaView({ titles, fileType }) {
   };
 
   const onDelete = id => async () => {
-    console.log(id);
+    
     try {
       const res = await axiosInstance().delete(urls.REMOVE_FILES_BY_ID + id);
       dispatch(removeMediaFiles(id));
       onSuccessToast("Successfully Removed!");
     } catch (error) {
-      console.log(error)
+      
       onErrorToast(error.data.massage);
     }
   };
@@ -65,7 +65,7 @@ export default function FMediaView({ titles, fileType }) {
       const res = await axiosInstance().get(urls.GET_FILES);
       dispatch(addFiles(res.data.results));
     } catch (error) {
-      console.log(error);
+      
     }
   };
   const cleanUp = () => {

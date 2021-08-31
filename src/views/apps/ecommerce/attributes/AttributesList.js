@@ -34,7 +34,7 @@ export default function AttributesList({
     setIsAdd(!isAdd);
   };
   const onSelect = item => () => {
-    console.log({ item });
+    
     const selectedList = selected;
     const idx = findItemInArray(selected, item, "option_name");
     if (idx > -1) {

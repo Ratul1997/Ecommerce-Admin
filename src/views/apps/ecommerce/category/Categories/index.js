@@ -131,14 +131,14 @@ const Categories = () => {
 
   const onDelete = category => async e => {
     e.preventDefault();
-    console.log(category);
+    
     try {
       const url = urls.REMOVE_A_CATEGORY + category.category_id;
       const res = await axiosInstance().delete(url);
       dispatch(removeItemInCategory(category));
       onSuccessToast("Successfully removed.");
     } catch (error) {
-      console.log(error);
+      
       onErrorToast(error.data.massage);
       // alert("Something Went Wrong");
     }

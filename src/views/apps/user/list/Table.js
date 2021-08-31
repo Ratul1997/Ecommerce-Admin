@@ -140,7 +140,7 @@ const UsersList = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      
     }
   };
 

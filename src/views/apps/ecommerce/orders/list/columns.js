@@ -176,7 +176,7 @@ export const columns = (orderList, setOrderList) => {
       sortable: true,
       minWidth: "164px",
       cell: row => {
-        console.log(orderStatusObj[row.order_status]);
+        
         return (
           <Badge color={orderStatusObj[row.order_status].color} pill>
             {row.order_status}

@@ -45,7 +45,7 @@ const AccountSettings = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      
     }
   };
 
@@ -56,14 +56,14 @@ const AccountSettings = () => {
   const changeStatus = id => () => {
     const paymentInfo = data.paymentDetails;
     const index = findValueInArray(paymentInfo, id, "payment_id");
-    console.log(index);
+    
     if (index > -1) {
       paymentInfo[index] = {
         ...paymentInfo[index],
         status: paymentInfo[index].status === 0 ? 1 : 0,
       };
     }
-    console.log(paymentInfo[index]);
+    
     setData({
       ...data,
       paymentDetails: [...paymentInfo],
@@ -74,7 +74,7 @@ const AccountSettings = () => {
     const { name, value } = e.target;
     const paymentInfo = data.paymentDetails;
     const index = findValueInArray(paymentInfo, id, "payment_id");
-    console.log(index);
+    
     if (index > -1) {
       paymentInfo[index] = {
         ...paymentInfo[index],

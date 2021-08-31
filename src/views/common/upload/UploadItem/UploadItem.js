@@ -6,7 +6,7 @@ import { STATUS_UPLOAD } from "../constants";
 const UploadItem = props => {
   const { file, progress, cancelSource, status } = props.file;
   const cancelUpload = () => {
-    // console.log(source.token);
+    // 
 
     cancelSource.cancel("Cancelled by user");
   };
