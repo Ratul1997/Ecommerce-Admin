@@ -10,6 +10,7 @@ import {
   checkApplicationType,
 } from "../files/utils/utils";
 import { urls } from "@urls";
+import FileItem from "./FileItem";
 export default function FileAsGrid({
   files,
   show,
@@ -19,44 +20,14 @@ export default function FileAsGrid({
   return (
     files.length > 0 &&
     files.map((file, key) => {
-      
       return (
         <div
           className="img-fluid rounded m-1 shadow  bg-lighten-5 align-items-center"
           style={{ width: 150, height: 150 }}
           key={key}
-
           onContextMenu={show}
         >
-          <LazyLoadImage
-            src={
-              checkImageTypeOrNot(file.mime_type)
-                ? urls.UPLOADED_LINK + file.file_name
-                : checkApplicationType(file.mime_type)
-            }
-            effect="blur"
-            alt={file.file_name}
-            width="150"
-            height="110"
-            className="shadow"
-            outline
-          />
-          <p
-            className="font-weight-normal pl-1"
-            style={{
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {file.file_name}
-          </p>
-          <Menu id="menu_id">
-            <Item onClick={SweetAlert(confirmDeleteText, onDelete(file.file_id))}>
-              Delete
-            </Item>
-            {/* <Item>Preview</Item> */}
-          </Menu>
+         <FileItem file={file}/>
         </div>
       );
     })

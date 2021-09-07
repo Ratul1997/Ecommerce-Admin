@@ -26,7 +26,7 @@ const CustomHeader = ({ handleFilter, value }) => {
     <div className="invoice-list-table-header w-100 py-2">
       <Row>
         <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
-          <h4>Products</h4>
+          <h4>Inventory</h4>
         </Col>
         <Col
           lg="6"
@@ -67,7 +67,6 @@ const Ratings = () => {
       setInventoryList(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      
       setIsLoading(false);
     }
   };
@@ -101,9 +100,7 @@ const Ratings = () => {
   const updateInventoryList = id => {
     const reviews = inventoryList;
 
-    
     const index = findValueInArray(reviews, id, "product_review_id");
-    
 
     reviews[index].isApproved = reviews[index].isApproved === 1 ? 0 : 1;
 
@@ -140,7 +137,7 @@ const Ratings = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        {inventoryList.length > 0 && (
+        {
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
@@ -167,7 +164,7 @@ const Ratings = () => {
               }
             />
           </div>
-        )}
+        }
       </Card>
     </div>
   );

@@ -63,7 +63,6 @@ export const columns = (
                 params: row.isApproved === 1 ? false : true,
               }
             );
-            // updatePopular(row.product_id, "Featured");
             updateInventoryList(row.product_review_id);
             onSuccessToast("Updated");
           } catch (error) {
@@ -79,7 +78,6 @@ export const columns = (
                   : "light-danger"
               }
               pill
-              // onClick={onUpdate}
             >
               {row.inventory_status}
             </Badge>

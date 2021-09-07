@@ -73,7 +73,6 @@ const InvoiceList = () => {
       setInvoiceList(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      
       setIsLoading(false);
     }
   };
@@ -137,8 +136,8 @@ const InvoiceList = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        <CardTitle className='mt-2 ml-2'>Invoices</CardTitle>
-        {invoiceList.length > 0 && (
+        <CardTitle className="mt-2 ml-2">Invoices</CardTitle>
+        {
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
@@ -157,7 +156,7 @@ const InvoiceList = () => {
               }
             />
           </div>
-        )}
+        }
       </Card>
     </div>
   );

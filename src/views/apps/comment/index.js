@@ -135,7 +135,7 @@ const Ratings = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        {reviewList.length > 0 && (
+        {
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
@@ -157,7 +157,7 @@ const Ratings = () => {
               }
             />
           </div>
-        )}
+        }
       </Card>
     </div>
   );

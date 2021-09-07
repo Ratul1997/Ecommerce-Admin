@@ -63,7 +63,7 @@ const PreOrders = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [orderId, setOrderId] = useState(null);
-  const [isDataFetching,setIsDataFetching] = useState(true)
+  const [isDataFetching, setIsDataFetching] = useState(true);
 
   useEffect(() => {
     loadorderList();
@@ -73,10 +73,9 @@ const PreOrders = () => {
     try {
       const res = await axiosInstance().get(urls.GET_PRE_ORDERS);
       setOrderList(res.data.results);
-      setIsDataFetching(false)
+      setIsDataFetching(false);
     } catch (error) {
-      setIsDataFetching(false)
-      
+      setIsDataFetching(false);
     }
   };
 
@@ -150,13 +149,13 @@ const PreOrders = () => {
     );
   };
 
-  if(isDataFetching){
-    return <SpinnerComponent/>
+  if (isDataFetching) {
+    return <SpinnerComponent />;
   }
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        {orderList.length > 0 && (
+        {
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
@@ -175,7 +174,7 @@ const PreOrders = () => {
               }
             />
           </div>
-        )}
+        }
       </Card>
     </div>
   );

@@ -1,7 +1,7 @@
 /* eslint-disable */
 // ** React Imports
-import { Fragment, useState } from "react";
-import { Plus, Trash } from "react-feather";
+import { Fragment, useRef, useState } from "react";
+import { Edit2, Plus, Trash } from "react-feather";
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
 // ** Third Party Components
@@ -31,13 +31,16 @@ import {
   SuccessToast,
 } from "../../../../common/Toaster";
 import axiosInstance from "../../../../../configs/axiosInstance";
-
+import { findValueInArray } from "@utils";
 const Categories = () => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [editModal, setEditModal] = useState(false);
+  let categoryRef = useRef();
 
   const dispatch = useDispatch();
   const store = useSelector(store => store.ecommerce);
@@ -50,6 +53,9 @@ const Categories = () => {
 
   // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
+  // ** Function to toggle sidebar
+  const toggleEditSidebar = () => setEditModal(!editModal);
 
   // ** Function to handle filter
   const handleFilter = e => {
@@ -131,28 +137,49 @@ const Categories = () => {
 
   const onDelete = category => async e => {
     e.preventDefault();
-    
+
     try {
       const url = urls.REMOVE_A_CATEGORY + category.category_id;
       const res = await axiosInstance().delete(url);
       dispatch(removeItemInCategory(category));
       onSuccessToast("Successfully removed.");
     } catch (error) {
-      
       onErrorToast(error.data.massage);
       // alert("Something Went Wrong");
     }
   };
+
+  const onEdit = category => async e => {
+    setSelectedCategory(category);
+    categoryRef = category;
+    toggleSidebar()
+  };
+
   const CustomRows = ({ category }) => {
     return (
-      <Button.Ripple
-        className="btn-icon rounded-circle"
-        color="warning"
-        onClick={onDelete(category)}
-      >
-        <Trash size={13} />
-      </Button.Ripple>
+      <>
+        <Button.Ripple
+          className="btn-icon rounded-circle mr-50"
+          color="primary"
+          onClick={onEdit(category)}
+        >
+          <Edit2 size={13} />
+        </Button.Ripple>
+        <Button.Ripple
+          className="btn-icon rounded-circle"
+          color="warning"
+          onClick={onDelete(category)}
+        >
+          <Trash size={13} />
+        </Button.Ripple>
+      </>
     );
+  };
+
+  const getParentCategory = id => {
+    if (id === null) return "";
+    const index = findValueInArray(categories, id, "category_id");
+    return categories[index].name;
   };
   const columns = [
     {
@@ -160,6 +187,15 @@ const Categories = () => {
       selector: "name",
       sortable: true,
       minWidth: "10px",
+    },
+    {
+      name: "Parent Category",
+      selector: "parent_category",
+      sortable: true,
+      minWidth: "10px",
+      cell: row => {
+        return <>{getParentCategory(row.parent_id)}</>;
+      },
     },
     {
       name: "Description",
@@ -223,7 +259,14 @@ const Categories = () => {
         paginationComponent={CustomPagination}
         data={searchValue.length ? filteredData : categories}
       />
-      <Sidebar open={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <Sidebar
+        open={sidebarOpen}
+        toggleSidebar={toggleSidebar}
+        selectedCategory={selectedCategory}
+        getParentCategory={getParentCategory}
+        categoryRef={categoryRef}
+      />
+  
     </Card>
   );
 };

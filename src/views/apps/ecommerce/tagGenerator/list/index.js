@@ -30,7 +30,7 @@ const CustomHeader = ({ handleFilter, value }) => {
             color="primary"
             target="_blank"
           >
-            Add Record
+            Add Price Tag
           </Button.Ripple>
         </Col>
         <Col
@@ -72,7 +72,6 @@ const TagList = () => {
       setTagsList(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      
       setIsLoading(false);
     }
   };
@@ -132,7 +131,7 @@ const TagList = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        {tagsList.length > 0 && (
+        {
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
@@ -151,7 +150,7 @@ const TagList = () => {
               }
             />
           </div>
-        )}
+        }
       </Card>
     </div>
   );

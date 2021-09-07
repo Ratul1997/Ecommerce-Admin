@@ -29,23 +29,47 @@ import {
   SuccessToast,
 } from "../../../../common/Toaster";
 import axiosInstance from "../../../../../configs/axiosInstance";
-const SidebarNewCategory = ({ open, toggleSidebar }) => {
+const SidebarNewCategory = ({
+  open,
+  toggleSidebar,
+  selectedCategory,
+  getParentCategory,
+}) => {
   const initialState = {
     name: "",
     description: "",
     parent_id: null,
   };
+
   // ** States
+
   const [parentCategory, setParentCategory] = useState("");
   const [categoryData, setCategoryData] = useState(initialState);
+  const [isEdit, setIsEdit] = useState(false);
+  console.log(categoryData);
+
+  useEffect(() => {
+    console.log("cjsd");
+    if (selectedCategory) {
+      setCategoryData({
+        name: selectedCategory.name,
+        description: selectedCategory.description,
+        parent_id: selectedCategory.parent_id
+          ? {
+              value: selectedCategory.parent_id,
+              label: getParentCategory(selectedCategory.parent_id),
+            }
+          : null,
+      });
+      setIsEdit(true);
+    }
+  }, [selectedCategory]);
 
   useEffect(() => {
     return () => {
       setCategoryData(initialState);
     };
   }, []);
-
-  // ** Store Vars
 
   const store = useSelector(store => store.ecommerce);
   const dispatch = useDispatch();
@@ -69,9 +93,13 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
   const { register, errors, handleSubmit } = useForm();
 
   const postData = async () => {
+    const category = {
+      ...categoryData,
+      parent_id: categoryData.parent_id.value,
+    };
     try {
       const res = await axiosInstance().post(urls.ADD_A_CATEGORY, {
-        categoryData,
+        categoryData: category,
       });
       dispatch(updateCategories(res.data));
       onSuccessToast("Successfully added.");
@@ -90,11 +118,32 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
     }
   };
 
+  const onEdit = async e => {
+    e.preventDefault();
+    const category = {
+      ...categoryData,
+      parent_id: categoryData.parent_id.value,
+    };
+    try {
+      const res = await axiosInstance().patch(
+        urls.UPDATE_A_CATEGORY + selectedCategory.category_id,
+        {
+          categoryData: category,
+        }
+      );
+      onSuccessToast("Successfully Updated.");
+      toggleSidebar();
+      window.location.reload();
+    } catch (error) {
+      onErrorToast(error.data.massage);
+    }
+  };
+
   return (
     <Sidebar
       size="lg"
       open={open}
-      title="New Category"
+      title={isEdit ? "Edit" : "New Category"}
       headerClassName="mb-1"
       contentClassName="pt-0"
       toggleSidebar={toggleSidebar}
@@ -109,6 +158,7 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
             id="category-name"
             placeholder="Bag/Watch..."
             innerRef={register({ required: true })}
+            value={categoryData.name}
             onChange={e =>
               setCategoryData({ ...categoryData, name: e.target.value })
             }
@@ -125,9 +175,8 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
             options={categoryOptions}
             className="react-select"
             classNamePrefix="select"
-            onChange={e =>
-              setCategoryData({ ...categoryData, parent_id: e.value })
-            }
+            value={categoryData.parent_id}
+            onChange={e => setCategoryData({ ...categoryData, parent_id: e })}
           />
         </FormGroup>
         <FormGroup>
@@ -151,17 +200,55 @@ const SidebarNewCategory = ({ open, toggleSidebar }) => {
             {`${categoryData.description.length}/100`}
           </span>
         </FormGroup>
-        <Button
-          type="submit"
-          className="mr-1"
-          color="primary"
-          onClick={onSubmit}
-        >
-          Submit
-        </Button>
-        <Button type="reset" color="secondary" outline onClick={toggleSidebar}>
-          Cancel
-        </Button>
+        {isEdit ? (
+          <>
+            <Button
+              type="submit"
+              className="mr-1"
+              color="primary"
+              onClick={onEdit}
+            >
+              Edit
+            </Button>
+
+            <Button
+              type="reset"
+              color="secondary"
+              outline
+              onClick={() => {
+                setCategoryData(initialState);
+                setIsEdit(false);
+                toggleSidebar();
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        ) : (
+          <>
+            {" "}
+            <Button
+              type="submit"
+              className="mr-1"
+              color="primary"
+              onClick={onSubmit}
+            >
+              Submit
+            </Button>
+            <Button
+              type="reset"
+              color="secondary"
+              outline
+              onClick={() => {
+                setCategoryData(initialState);
+                setIsEdit(false);
+                toggleSidebar();
+              }}
+            >
+              Cancel
+            </Button>
+          </>
+        )}
       </Form>
     </Sidebar>
   );

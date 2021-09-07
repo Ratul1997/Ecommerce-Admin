@@ -10,6 +10,8 @@ export const urls = {
   ADD_OPTION: `${BASE_URL}api/option`,
   REMOVE_OPTIONS: `${BASE_URL}api/options`,
   REMOVE_A_CATEGORY: `${BASE_URL}api/categories/`,
+
+  UPDATE_A_CATEGORY: `${BASE_URL}api/categories/`,
   ADD_A_CATEGORY: `${BASE_URL}api/category`,
   UPLOAD_A_FILE: `api/file-upload`,
   ADD_A_PRODUCT: `${BASE_URL}api/admin/product`,
@@ -65,5 +67,5 @@ export const urls = {
 
   // Login
   LOGIN_URL:`${BASE_URL}api/adminAuth/login`,
-  ADMIN_REGISTER:`${BASE_URL}/adminAuth/register`
+  ADMIN_REGISTER:`${BASE_URL}api/adminAuth/register`
 };

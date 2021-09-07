@@ -138,7 +138,7 @@ const OrderList = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        {orderList.length > 0 && (
+        {
           <div className="invoice-list-dataTable">
             <DataTable
               noHeader
@@ -157,7 +157,7 @@ const OrderList = () => {
               }
             />
           </div>
-        )}
+        }
       </Card>
     </div>
   );
