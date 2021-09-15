@@ -1,11 +1,41 @@
 /* eslint-disable */
 import { Fragment, useState, useRef, useContext } from "react";
 import { ArrowLeft, ArrowRight, Plus } from "react-feather";
-import { Label, FormGroup, Row, Col, Input, Form } from "reactstrap";
+import {
+  Label,
+  FormGroup,
+  Row,
+  Col,
+  Input,
+  Form,
+  Button,
+  Spinner,
+} from "reactstrap";
 import { ProductDataContext } from "../..";
+import axiosInstance from "../../../../../../configs/axiosInstance";
+import { urls } from "../../../../../../utility/Urls";
+import consoleLog from "@console";
+import { onErrorToast, onSuccessToast } from "../../../../../common/Toaster";
 const General = ({ stepper, type }) => {
-  const { productData, setProductData } = useContext(ProductDataContext);
+  const { productData, setProductData, isEditable, id } =
+    useContext(ProductDataContext);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const onUpdate = async () => {
+    setIsLoading(true);
+    try {
+      await axiosInstance().patch(urls.UPDATE_PRODUCT_PRICE + id, {
+        regular_price: productData.regular_price,
+        discount_price: productData.discount_price,
+      });
+      onSuccessToast("Updated!");
+      setIsLoading(false);
+    } catch (error) {
+      consoleLog(error);
+      onErrorToast("Internal Server Error");
+      setIsLoading(false);
+    }
+  };
   return (
     <Fragment>
       <div className="content-header">
@@ -50,6 +80,13 @@ const General = ({ stepper, type }) => {
             />
           </FormGroup>
         </Row>
+
+        {isEditable && (
+          <Button color="primary" onClick={isLoading ? null : onUpdate}>
+            {isLoading && <Spinner color="white" size="sm" />}
+            Update
+          </Button>
+        )}
       </Form>
     </Fragment>
   );

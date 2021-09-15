@@ -9,15 +9,16 @@ import { selectThemeColors } from "@utils";
 import { findItemInArray } from "@utils";
 import { ProductDataContext } from "../../..";
 import axiosInstance from "../../../../../../../configs/axiosInstance";
+import consoleLog from "@console";
 export default function Attributes({ stepper }) {
   const { productData, setProductData, isEditable, id, attributeListForData } =
     useContext(ProductDataContext);
-
 
   const [attributesList, setAttributesList] = useState([]);
   const [selectedAttributeOptions, setSelectedAttributeOptions] = useState([]);
   const [selectedAttribute, setSelectedAttribute] = useState([]);
   const [productAttributeOptions, setProductAttributeOptions] = useState([]);
+
   const getOptions = () => {
     return attributesList.map(item => {
       return { value: item.attribute_id, label: item.attribute_name };
@@ -33,22 +34,20 @@ export default function Attributes({ stepper }) {
         urls.GET_PRODUCT_ATTRIBUTES_BY_ID + id
       );
       setProductAttributeOptions(res.data.results);
-
       setSelectedAttributeOptions(res.data.results.attributes);
-      res.data.results.attributes && onGetAttributeOptions(res.data.results, attribute);
-    } catch (error) {
-      
-    }
+      res.data.results.attributes &&
+        onGetAttributeOptions(res.data.results, attribute);
+    } catch (error) {}
   };
   const loadAttributes = async () => {
     try {
-      const res = await axios.get(urls.GET_ATTRIBUTES);
+      const res = await axiosInstance().get(urls.GET_ATTRIBUTES);
       setAttributesList(res.data.results);
       if (id) {
         loadProductAttributes(id, res.data.results);
       }
     } catch (error) {
-      console.warn(error);
+      consoleLog(error);
     }
   };
   const onSave = () => {
@@ -93,6 +92,13 @@ export default function Attributes({ stepper }) {
   const onGo = e => {
     onGetAttributeOptions(selectedAttributeOptions);
   };
+
+  const onUpdate = () => {
+    consoleLog(selectedAttribute);
+    consoleLog("asd");
+    consoleLog(productAttributeOptions);
+  };
+
   return (
     <>
       <FormGroup row>
@@ -113,13 +119,13 @@ export default function Attributes({ stepper }) {
             isDisabled={isEditable}
           />
         </Col>
-        <Col sm="2">
+        {/* <Col sm="2">
           {!isEditable && (
             <Button color="primary" onClick={onGo}>
               Go
             </Button>
           )}
-        </Col>
+        </Col> */}
       </FormGroup>
       {selectedAttribute.length > 0 && (
         <>
@@ -127,9 +133,13 @@ export default function Attributes({ stepper }) {
             attributesList={selectedAttribute}
             setAttributesList={setSelectedAttribute}
           />
-          {!isEditable && (
+          {!isEditable ? (
             <Button.Ripple color="primary" className="ml-3" onClick={onSave}>
               Save
+            </Button.Ripple>
+          ) : (
+            <Button.Ripple color="primary" className="ml-3" onClick={onUpdate}>
+              Update
             </Button.Ripple>
           )}
         </>

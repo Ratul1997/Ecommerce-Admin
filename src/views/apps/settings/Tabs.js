@@ -1,6 +1,6 @@
 /*eslint-disable*/
 import { Nav, NavItem, NavLink } from "reactstrap";
-import { User, Lock, Info, Link, Bell, Bookmark } from "react-feather";
+import { User, Lock, Info, Link, Bell, Bookmark, ShoppingBag } from "react-feather";
 
 const Tabs = ({ activeTab, toggleTab }) => {
   return (
@@ -33,6 +33,12 @@ const Tabs = ({ activeTab, toggleTab }) => {
         <NavLink active={activeTab === "2"} onClick={() => toggleTab("2")}>
           <Bookmark size={18} className="mr-1" />
           <span className="font-weight-bold">Payment</span>
+        </NavLink>
+      </NavItem>
+      <NavItem>
+        <NavLink active={activeTab === "3"} onClick={() => toggleTab("3")}>
+          <ShoppingBag size={18} className="mr-1" />
+          <span className="font-weight-bold">Shipping</span>
         </NavLink>
       </NavItem>
     </Nav>

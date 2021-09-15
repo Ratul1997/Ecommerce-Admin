@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 // ** Table Columns
 import { columns } from "./columns";
 
+import { useSelector, useDispatch } from "react-redux";
+
 // ** Third Party Components
 import ReactPaginate from "react-paginate";
 import { ChevronDown } from "react-feather";
@@ -17,21 +19,18 @@ import axiosInstance from "@configs/axiosInstance.js";
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
-import CardTitle from "reactstrap/lib/CardTitle";
-
-const CustomHeader = ({ handleFilter, value }) => {
+import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
+import consoleLog from "@console";
+import SidebarShipping from "./SidebarShipping";
+import useToggle from "@hooks/useToggle";
+import { addShippingClassList } from "./store/action";
+const CustomHeader = ({ handleFilter, value, ontoggle }) => {
   return (
     <div className="invoice-list-table-header w-100 py-2">
       <Row>
         <Col lg="6" className="d-flex align-items-center px-0 px-lg-1">
-          <Button.Ripple
-            tag={Link}
-            to="/apps/invoice/add"
-            color="primary"
-            target="_blank"
-          >
-            Add Invoice
+          <Button.Ripple color="primary" onClick={ontoggle}>
+            Add Shipping Class
           </Button.Ripple>
         </Col>
         <Col
@@ -46,7 +45,7 @@ const CustomHeader = ({ handleFilter, value }) => {
               type="text"
               value={value}
               onChange={e => handleFilter(e.target.value)}
-              placeholder="Search Invoice"
+              placeholder="Search Shipping Class"
             />
           </div>
         </Col>
@@ -55,22 +54,33 @@ const CustomHeader = ({ handleFilter, value }) => {
   );
 };
 
-const InvoiceList = () => {
+const Shipping = () => {
+  const dispatch = useDispatch();
+  const shipping = useSelector(state => state.shippingReducer.shipping);
+
   const [value, setValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [invoiceList, setInvoiceList] = useState([]);
+  const [shippingList, setShippingList] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [open, setOpen] = useToggle(false);
+  const [onSelectShipping, setOnSelectShipping] = useState(null);
+  const toggleSideBar = () => {
+    setOpen(!open);
+  };
   useEffect(() => {
-    loadInvoiceList();
+    loadShippingList();
   }, []);
 
-  const loadInvoiceList = async () => {
+  useEffect(() => {
+    setShippingList(shipping);
+  }, [shipping]);
+  const loadShippingList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_INVOICE);
-      setInvoiceList(res.data.results);
+      const res = await axiosInstance().get(urls.GET_SHIPPING_CLASS);
+      setShippingList(res.data.results);
+      dispatch(addShippingClassList(res.data.results));
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
@@ -81,17 +91,14 @@ const InvoiceList = () => {
     const value = val;
     let updatedData = [];
     if (value.length) {
-      updatedData = invoiceList.filter(item => {
-        const startsWith =
-          item.customer_name.toLowerCase().startsWith(val.toLowerCase()) ||
-          item.invoice_id
-            .toString()
-            .toLowerCase()
-            .startsWith(val.toLowerCase());
+      updatedData = shippingList.filter(item => {
+        const startsWith = item.shipping_class_name
+          .toLowerCase()
+          .startsWith(val.toLowerCase());
 
-        const includes =
-          item.customer_name.toLowerCase().includes(val.toLowerCase()) ||
-          item.invoice_id.toString().includes(val.toLowerCase());
+        const includes = item.shipping_class_name
+          .toLowerCase()
+          .includes(val.toLowerCase());
 
         if (startsWith) {
           return startsWith;
@@ -111,7 +118,9 @@ const InvoiceList = () => {
     return (
       <ReactPaginate
         pageCount={
-          value.length ? filteredData.length / 10 : invoiceList.length / 10 || 1
+          value.length
+            ? filteredData.length / 10
+            : shippingList.length / 10 || 1
         }
         nextLabel=""
         breakLabel="..."
@@ -136,7 +145,6 @@ const InvoiceList = () => {
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        <CardTitle className="mt-2 ml-2">Invoices</CardTitle>
         {
           <div className="invoice-list-dataTable">
             <DataTable
@@ -144,17 +152,22 @@ const InvoiceList = () => {
               pagination
               subHeader
               responsive
-              columns={columns(invoiceList, setInvoiceList)}
+              columns={columns(setOnSelectShipping, toggleSideBar)}
               paginationPerPage={10}
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               paginationDefaultPage={currentPage}
               paginationComponent={CustomPagination}
-              data={value.length ? filteredData : invoiceList}
+              data={value.length ? filteredData : shippingList}
               subHeaderComponent={
-                <CustomHeader value={value} handleFilter={handleFilter} />
+                <CustomHeader
+                  value={value}
+                  handleFilter={handleFilter}
+                  ontoggle={toggleSideBar}
+                />
               }
             />
+            <SidebarShipping open={open} toggleSidebar={toggleSideBar} onSelectShipping={onSelectShipping} setOnSelectShipping={setOnSelectShipping}/>
           </div>
         }
       </Card>
@@ -162,4 +175,4 @@ const InvoiceList = () => {
   );
 };
 
-export default InvoiceList;
+export default Shipping;

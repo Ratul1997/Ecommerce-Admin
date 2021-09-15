@@ -253,7 +253,7 @@ const AppRoutes = [
     path: "/apps/settings",
     className: "ecommerce-application",
     component: lazy(() => import("../../views/apps/settings")),
-  },
+  }
 ];
 
 export default AppRoutes;

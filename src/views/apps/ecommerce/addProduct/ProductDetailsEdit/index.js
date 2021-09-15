@@ -5,7 +5,7 @@ import Select from "react-select";
 
 // ** Store & Actions
 import { useDispatch, useSelector } from "react-redux";
-
+import { stateToHTML } from "draft-js-export-html";
 import "@styles/react/libs/editor/editor.scss";
 import "@styles/base/plugins/forms/form-quill-editor.scss";
 import "@styles/react/libs/react-select/_react-select.scss";
@@ -14,9 +14,13 @@ import SidebarImage from "./SideBar";
 import ProductBasicInfo from "./ProductBasicInfo";
 import { ProductDataContext } from "..";
 import { getOptionsForStatus } from "../Constants";
+import consoleLog from "@console";
+import axiosInstance from "../../../../../configs/axiosInstance";
+import { urls } from "../../../../../utility/Urls";
+import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
 
 const ProductDetailsEdit = () => {
-  const { productData, setProductData, isEditable } =
+  const { productData, setProductData, isEditable, id } =
     useContext(ProductDataContext);
 
   const initialCheckBoxState = {
@@ -36,11 +40,11 @@ const ProductDetailsEdit = () => {
   const { categories } = store;
 
   const [slug, setSlug] = useState("");
-
+  const [newCategoryState, setCategoryState] = useState([]);
   const { featured_img, product_gallery } = productData;
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(initialCheckBoxState);
-
+  const [isUploading, setIsUploading] = useState(false);
   // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
@@ -93,6 +97,73 @@ const ProductDetailsEdit = () => {
     });
   };
 
+  const onUpdate = () => {
+    if (newCategoryState.length === 0) {
+      onErrorToast("Select A Category!");
+      return;
+    }
+
+    let newCategories = newCategoryState.map(item => item.value);
+    let oldCategories = productData.categories.map(item => item.value);
+    let newLyData = oldCategories
+      .filter(x => !newCategories.includes(x))
+      .concat(newCategories.filter(x => !oldCategories.includes(x)));
+
+    const deletedId = productData.categories
+      .filter(item => newLyData.findIndex(x => x === item.value) > -1)
+      .map(item => item.value);
+
+    const insertedId = newLyData.filter(
+      x => productData.categories.findIndex(item => item.value === x) === -1
+    );
+
+    const updatedData = {
+      product_name: productData.name,
+      slug: productData.slug,
+      product_gallery: productData.product_gallery
+        ? JSON.stringify(productData.product_gallery)
+        : [],
+      featured_img: productData.featured_img
+        ? JSON.stringify(productData.featured_img)
+        : null,
+      product_status_id: productData.product_status_id.value,
+      view_on_website: productData.view_on_website,
+      sku: productData.sku,
+      short_description: stateToHTML(
+        productData.short_description.getCurrentContent()
+      ),
+      long_description: stateToHTML(
+        productData.long_description.getCurrentContent()
+      ),
+      newCategories: insertedId,
+      deletedCategories: deletedId,
+    };
+
+    onUploadUpdatedData(updatedData);
+  };
+
+  const onUploadUpdatedData = async updatedData => {
+    setIsUploading(true);
+    try {
+      const response = await axiosInstance().patch(
+        urls.UPDATE_PRODUCT_DETAILS + id,
+        {
+          ...updatedData,
+        }
+      );
+      setProductData({
+        ...productData,
+        categories: newCategoryState,
+      });
+      setIsUploading(false);
+      onSuccessToast("Updated");
+    } catch (error) {
+      setIsUploading(false);
+      consoleLog(error);
+      onErrorToast("Internal Server Error");
+    }
+  };
+
   return (
     <div className="blog-edit-wrapper">
       <ProductBasicInfo
@@ -110,6 +181,10 @@ const ProductDetailsEdit = () => {
         product_gallery={product_gallery}
         getOptionsForStatus={getOptionsForStatus}
         onRemove={onRemove}
+        onUpdate={onUpdate}
+        newCategoryState={newCategoryState}
+        setCategoryState={setCategoryState}
+        isUploading={isUploading}
       />
       <SidebarImage open={sidebarOpen} toggleSidebar={toggleSidebar} />
     </div>

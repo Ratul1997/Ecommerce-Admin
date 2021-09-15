@@ -46,10 +46,9 @@ const SidebarNewCategory = ({
   const [parentCategory, setParentCategory] = useState("");
   const [categoryData, setCategoryData] = useState(initialState);
   const [isEdit, setIsEdit] = useState(false);
-  console.log(categoryData);
+
 
   useEffect(() => {
-    console.log("cjsd");
     if (selectedCategory) {
       setCategoryData({
         name: selectedCategory.name,
@@ -208,7 +207,7 @@ const SidebarNewCategory = ({
               color="primary"
               onClick={onEdit}
             >
-              Edit
+              Update
             </Button>
 
             <Button

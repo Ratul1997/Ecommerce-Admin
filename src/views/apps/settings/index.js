@@ -14,6 +14,7 @@ import { urls } from "@urls";
 import { findValueInArray } from "@utils";
 import axiosInstance from "@configs/axiosInstance.js";
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner";
+import Shipping from "./shipping";
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("1"),
@@ -45,7 +46,6 @@ const AccountSettings = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      
     }
   };
 
@@ -56,14 +56,14 @@ const AccountSettings = () => {
   const changeStatus = id => () => {
     const paymentInfo = data.paymentDetails;
     const index = findValueInArray(paymentInfo, id, "payment_id");
-    
+
     if (index > -1) {
       paymentInfo[index] = {
         ...paymentInfo[index],
         status: paymentInfo[index].status === 0 ? 1 : 0,
       };
     }
-    
+
     setData({
       ...data,
       paymentDetails: [...paymentInfo],
@@ -74,7 +74,7 @@ const AccountSettings = () => {
     const { name, value } = e.target;
     const paymentInfo = data.paymentDetails;
     const index = findValueInArray(paymentInfo, id, "payment_id");
-    
+
     if (index > -1) {
       paymentInfo[index] = {
         ...paymentInfo[index],
@@ -91,8 +91,8 @@ const AccountSettings = () => {
   return (
     <Fragment>
       <Breadcrumbs
-        breadCrumbTitle="Account Settings"
-        breadCrumbActive="Account Settings"
+        breadCrumbTitle="Admin Settings"
+        breadCrumbActive="Admin Settings"
       />
       {data !== null ? (
         <Row>
@@ -116,6 +116,14 @@ const AccountSettings = () => {
                       onChange={onChangePaymentInfo}
                       onCancel={onCancel}
                       changeStatus={changeStatus}
+                    />
+                  </TabPane>
+                  <TabPane tabId="3">
+                    <Shipping
+                    // data={data.paymentDetails}
+                    // onChange={onChangePaymentInfo}
+                    // onCancel={onCancel}
+                    // changeStatus={changeStatus}
                     />
                   </TabPane>
                 </TabContent>

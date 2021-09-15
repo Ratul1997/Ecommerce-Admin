@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { Fragment, useState, useContext } from "react";
+import { Fragment, useState, useContext, useEffect } from "react";
 
 import {
   Card,
@@ -14,15 +14,50 @@ import {
   Button,
   CustomInput,
   Label,
+  Spinner,
 } from "reactstrap";
 import { selectThemeColors } from "@utils";
 import Select from "react-select";
 import { ProductDataContext } from "../../..";
-import { backOrdersOptions,stockOptions } from "../../../Constants";
+import { backOrdersOptions, stockOptions } from "../../../Constants";
+import axiosInstance from "../../../../../../../configs/axiosInstance";
+import { urls } from "../../../../../../../utility/Urls";
+import { onErrorToast, onSuccessToast } from "../../../../../../common/Toaster";
 
 const Inventory = () => {
-  const { productData, setProductData } = useContext(ProductDataContext);
+  const { productData, setProductData, isEditable, id } =
+    useContext(ProductDataContext);
+  const [newManageStockStatus, setNewManageStockStatus] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    if (isEditable) {
+      setNewManageStockStatus(productData.manageStock);
+    }
+  }, [isEditable, productData.manageStock]);
 
+  const onUpdate = async () => {
+    setIsLoading(true);
+    try {
+      await axiosInstance().patch(urls.UPDATE_INVENTORIES_BY_ID + id, {
+        data: {
+          allowBackOrders: productData.allowBackOrders.label,
+          inventory_status: productData.inventory_status.label,
+          previousManageStock: productData.manageStock,
+          stock_threshold: productData.stock_threshold,
+          quantity: productData.quantity,
+          manageStock: newManageStockStatus,
+          sku: productData.sku,
+        },
+      });
+      setIsLoading(false);
+      setProductData({ ...productData, manageStock: newManageStockStatus });
+      onSuccessToast("Updated!");
+    } catch (error) {
+      setIsLoading(false);
+      onErrorToast("Internal Server Error");
+      consoleLog(error);
+    }
+  };
   return (
     <>
       <Fragment>
@@ -55,18 +90,23 @@ const Inventory = () => {
               <CustomInput
                 type="checkbox"
                 id="manage-stock"
-                defaultChecked={productData.manageStock}
+                checked={
+                  isEditable ? newManageStockStatus : productData.manageStock
+                }
                 onChange={e =>
-                  setProductData({
-                    ...productData,
-                    manageStock: e.target.checked,
-                  })
+                  isEditable
+                    ? setNewManageStockStatus(e.target.checked)
+                    : setProductData({
+                        ...productData,
+                        manageStock: e.target.checked,
+                      })
                 }
                 label="Enable stock management at product level"
               />
             </Col>
           </FormGroup>
-          {productData.manageStock && (
+          {((productData.manageStock && !isEditable) ||
+            (newManageStockStatus && isEditable)) && (
             <>
               <FormGroup row>
                 <Label sm="3" for="stock_quantity">
@@ -156,6 +196,11 @@ const Inventory = () => {
             </Col>
           </FormGroup>
         </Form>
+        {isEditable && (
+          <Button color="primary" onClick={isLoading ? null : onUpdate}>
+            {isLoading && <Spinner color="white" size="sm" />}Update
+          </Button>
+        )}
       </Fragment>
     </>
   );

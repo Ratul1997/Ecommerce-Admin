@@ -21,6 +21,7 @@ import {
 } from "reactstrap";
 
 import { urls } from "@urls";
+import consoleLog from "@console";
 import axiosInstance from "@src/configs/axiosInstance";
 import { Link, useHistory } from "react-router-dom";
 import {
@@ -110,7 +111,7 @@ const CustomPriceRow = ({ row }) => {
   );
 };
 
-const CustomFeaturedIcon = ({ row, updatePopular }) => {
+const CustomFeaturedIcon = ({ row, updateProductList }) => {
   const onUpdate = async () => {
     try {
       await axiosInstance().patch(
@@ -119,7 +120,7 @@ const CustomFeaturedIcon = ({ row, updatePopular }) => {
           featured: !row.featured_product,
         }
       );
-      updatePopular(row.product_id, "Featured");
+      updateProductList(row.product_id, "Featured");
       onSuccessToast("Updated");
     } catch (error) {
       onErrorToast(error.data.massage);
@@ -142,7 +143,7 @@ const CustomFeaturedIcon = ({ row, updatePopular }) => {
   );
 };
 
-const CustomPopularProductIcon = ({ row, updatePopular }) => {
+const CustomPopularProductIcon = ({ row, updateProductList }) => {
   const onUpdate = async () => {
     try {
       await axiosInstance().patch(
@@ -151,7 +152,7 @@ const CustomPopularProductIcon = ({ row, updatePopular }) => {
           popular: !row.popular_product,
         }
       );
-      updatePopular(row.product_id, "Popular");
+      updateProductList(row.product_id, "Popular");
       onSuccessToast("Updated");
     } catch (error) {
       onErrorToast(error.data.massage);
@@ -188,7 +189,7 @@ const CustomCategoryRow = ({ row }) => {
     </div>
   );
 };
-const columns = updatePopular => {
+const columns = updateProductList => {
   return [
     {
       name: "#",
@@ -211,13 +212,13 @@ const columns = updatePopular => {
       //   <>{`${row.product_name} dsfsdfsdfsdfsdfsdfsdfsdsdsdsdsdsdsdsd`}</>
       // ),
     },
-    // {
-    //   name: "Last Updated",
-    //   selector: "updated_at",
-    //   sortable: true,
-    //   minWidth: "100px",
-    //   cell: row => <CustomFileTime row={row} />,
-    // },
+    {
+      name: "Last Updated",
+      selector: "updated_at",
+      sortable: true,
+      minWidth: "100px",
+      cell: row => <CustomFileTime row={row} />,
+    },
 
     {
       name: "Price",
@@ -240,7 +241,7 @@ const columns = updatePopular => {
       sortable: true,
       minWidth: "100px",
       cell: row => (
-        <CustomFeaturedIcon row={row} updatePopular={updatePopular} />
+        <CustomFeaturedIcon row={row} updateProductList={updateProductList} />
       ),
     },
 
@@ -250,7 +251,7 @@ const columns = updatePopular => {
       sortable: true,
       minWidth: "100px",
       cell: row => (
-        <CustomPopularProductIcon row={row} updatePopular={updatePopular} />
+        <CustomPopularProductIcon row={row} updateProductList={updateProductList} />
       ),
     },
     {
@@ -287,41 +288,31 @@ const columns = updatePopular => {
       name: "Actions",
       allowOverflow: true,
       cell: row => {
+        const onDelete = async () => {
+          try {
+            await axiosInstance().delete(urls.DELETE_PRODUCT + row.product_id);
+            onSuccessToast("Deleted Successfully!");
+            updateProductList(row.product_id, "Deleted");
+          } catch (error) {
+            onErrorToast(error.data.massage);
+            consoleLog(error);
+          }
+        };
         return (
           <div className="d-flex">
             <UncontrolledDropdown>
               <DropdownToggle className="pr-1" tag="span">
                 <MoreVertical size={15} />
               </DropdownToggle>
-              {/* <DropdownMenu right>
+              <DropdownMenu right>
                 <DropdownItem
-                  tag="a"
-                  href="/"
                   className="w-100"
-                  onClick={e => e.preventDefault()}
-                >
-                  <FileText size={15} />
-                  <span className="align-middle ml-50">Details</span>
-                </DropdownItem>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={e => e.preventDefault()}
-                >
-                  <Archive size={15} />
-                  <span className="align-middle ml-50">Archive</span>
-                </DropdownItem>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={e => e.preventDefault()}
+                  onClick={onDelete}
                 >
                   <Trash size={15} />
                   <span className="align-middle ml-50">Delete</span>
                 </DropdownItem>
-              </DropdownMenu> */}
+              </DropdownMenu>
             </UncontrolledDropdown>
             <Edit size={15} />
           </div>
@@ -331,7 +322,7 @@ const columns = updatePopular => {
   ];
 };
 
-export default function ProductTable({ products, updatePopular }) {
+export default function ProductTable({ products, updateProductList }) {
   const data = products;
   // ** States
   const [modal, setModal] = useState(false);
@@ -473,7 +464,7 @@ export default function ProductTable({ products, updatePopular }) {
         pagination
         responsive
         // selectableRows
-        columns={columns(updatePopular)}
+        columns={columns(updateProductList)}
         paginationPerPage={PAGE_NUMBER}
         className="react-dataTable"
         sortIcon={<ChevronDown size={10} />}

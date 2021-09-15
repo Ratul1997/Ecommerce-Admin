@@ -135,6 +135,7 @@ const Categories = () => {
     />
   );
 
+  console.log(categories)
   const onDelete = category => async e => {
     e.preventDefault();
 
@@ -177,9 +178,9 @@ const Categories = () => {
   };
 
   const getParentCategory = id => {
-    if (id === null) return "";
+    if (id === null) return "--";
     const index = findValueInArray(categories, id, "category_id");
-    return categories[index].name;
+    return categories[index]['name'];
   };
   const columns = [
     {

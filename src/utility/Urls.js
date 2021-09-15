@@ -3,69 +3,101 @@
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
 export const urls = {
-  GET_CATEGORIES: `${BASE_URL}api/categories`,
-  GET_ATTRIBUTES: `${BASE_URL}api/attributes`,
-  REMOVE_ATTRIBUTES: `${BASE_URL}api/attributes/`,
-  ADD_ATTRIBUTE: `${BASE_URL}api/attribute`,
-  ADD_OPTION: `${BASE_URL}api/option`,
-  REMOVE_OPTIONS: `${BASE_URL}api/options`,
-  REMOVE_A_CATEGORY: `${BASE_URL}api/categories/`,
+  // Category
+  GET_CATEGORIES: `api/categories`,
+  REMOVE_A_CATEGORY: `api/categories/`,
+  UPDATE_A_CATEGORY: `api/categories/`,
+  ADD_A_CATEGORY: `api/category`,
 
-  UPDATE_A_CATEGORY: `${BASE_URL}api/categories/`,
-  ADD_A_CATEGORY: `${BASE_URL}api/category`,
+  // Attributes
+  GET_ATTRIBUTES: `api/attributes`,
+  REMOVE_ATTRIBUTES: `api/attributes/`,
+  ADD_ATTRIBUTE: `api/attribute`,
+
+  // Attribute Options
+  ADD_OPTION: `api/option`,
+  REMOVE_OPTIONS: `api/options`,
+  GET_ATTRIBUTES_OPTIONS: `api/attributes`,
+
+  // Files
   UPLOAD_A_FILE: `api/file-upload`,
-  ADD_A_PRODUCT: `${BASE_URL}api/admin/product`,
-  GET_PRODUCTS: `${BASE_URL}api/admin/products`,
-  GET_PRODUCTS_BY_ID: `${BASE_URL}api/admin/products/`,
-  GET_PRODUCTS_ADMIN_BY_ID: `${BASE_URL}api/admin/edit/products/`,
-  GET_FEATURED_PRODUCTS: `${BASE_URL}api/get-featured-product`,
-  GET_POPULAR_PRODUCTS: `${BASE_URL}api/get-popular-product`,
-  GET_ATTRIBUTES: `${BASE_URL}api/attributes`,
-  GET_ATTRIBUTES_OPTIONS: `${BASE_URL}api/attributes`,
-  GET_INVOICE_USERS: `${BASE_URL}api/invoices/clients`,
-  GET_LAST_INVOICE_ID: `${BASE_URL}api/invoices/lastId`,
-  ADD_INVOICE_CLIENT: `${BASE_URL}api/invoices/client`,
-  GET_RATINGS: `${BASE_URL}api/rating/total`,
-  ADD_INVOICE: `${BASE_URL}api/invoice`,
-  GET_INVOICE: `${BASE_URL}api/invoices`,
-  GET_INVOICE_BY_ID: `${BASE_URL}api/invoices/`,
-  REMOVE_INVOICE_BY_ID: `${BASE_URL}api/invoices/`,
-  UPDATE_INVOICE_BY_ID: `${BASE_URL}api/invoices/update/`,
-  ADD_CALENDER_EVENT: `${BASE_URL}api/calender/add-event/`,
-  GET_CALENDER_EVENTS: `${BASE_URL}api/calendar/events/`,
-  REMOVE_CALENDER_EVENTS: `${BASE_URL}api/calendar/events/`,
-  UPDATE_CALENDER_EVENTS: `${BASE_URL}api/calendar/update-event`,
-  GET_ORDERS_LIST: `${BASE_URL}api/orders`,
-  GET_ORDERS_BY_ID: `${BASE_URL}api/orders/`,
-  SEND_EMAIL: `${BASE_URL}api/send-email`,
-  GET_PRE_ORDERS: `${BASE_URL}api/pre-orders`,
-  GET_PRE_ORDERS_BY_ID: `${BASE_URL}api/pre-orders/`,
-  UPLOADED_LINK: `${BASE_URL}uploads/`,
-  GET_PRODUCT_ATTRIBUTES_BY_ID: `${BASE_URL}api/product-attributes/`,
-  GET_FILES: `${BASE_URL}api/files`,
-  REMOVE_FILES_BY_ID: `${BASE_URL}api/files/`,
-  UPDATE_POPULAR_PRODUCT_BY_ID: `${BASE_URL}api/admin/popular/`,
-  UPDATE_FEATURED_PRODUCT_BY_ID: `${BASE_URL}api/admin/featured/`,
-  GENERATE_TAGS: `${BASE_URL}api/tag`,
-  GET_TAGS: `${BASE_URL}api/tags`,
-  GET_TAGS_BY_ID: `${BASE_URL}api/tags/`,
-  GET_REVIEWS: `${BASE_URL}api/ratings`,
-  REMOVE_REVIEWS_BY_ID: `${BASE_URL}api/ratings/`,
-  GET_REVIEWS_BY_ID: `${BASE_URL}api/ratings/`,
-  GET_USERS: `${BASE_URL}api/users`,
-  GET_USERS_BY_ID: `${BASE_URL}api/users/`,
-  GET_ADMIN_INFO: `${BASE_URL}api/admin/admin-info`,
-  UPDATE_ADMIN_GENERAL_INFO: `${BASE_URL}api/admin/admin-info/general`,
-  UPDATE_ADMIN_PAYMENT_INFO: `${BASE_URL}api/admin/admin-info/paymentDetails`,
-  GET_INVENTORIES: `${BASE_URL}api/inventories`,
-  UPDATE_INVENTORIES_BY_ID: `${BASE_URL}api/inventories/`,
-  GET_INVENTORIES_VARIATIONS: `${BASE_URL}api/inventories/variations/`,
+  UPLOADED_LINK: `uploads/`,
+  GET_FILES: `api/files`,
+  REMOVE_FILES_BY_ID: `api/files/`,
+
+  // Products
+  ADD_A_PRODUCT: `api/admin/product`,
+  GET_PRODUCTS: `api/admin/products`,
+  GET_PRODUCTS_BY_ID: `api/admin/products/`,
+  GET_PRODUCTS_ADMIN_BY_ID: `api/admin/edit/products/`,
+  GET_FEATURED_PRODUCTS: `api/get-featured-product`,
+  GET_POPULAR_PRODUCTS: `api/get-popular-product`,
+  GET_PRODUCT_ATTRIBUTES_BY_ID: `api/product-attributes/`,
+  UPDATE_POPULAR_PRODUCT_BY_ID: `api/admin/popular/`,
+  UPDATE_FEATURED_PRODUCT_BY_ID: `api/admin/featured/`,
+  UPDATE_PRODUCT_SHIPPING_CLASS:`api/admin/products/shipping/`,
+  UPDATE_PRODUCT_DETAILS :`api/admin/products/basicInfo/`,
+  UPDATE_PRODUCT_PRICE:`api/admin/products/priceInfo/`,
+  DELETE_PRODUCT:`api/admin/products/`,
+
+  // Invoice
+  GET_INVOICE_USERS: `api/invoices/clients`,
+  GET_LAST_INVOICE_ID: `api/invoices/lastId`,
+  ADD_INVOICE_CLIENT: `api/invoices/client`,
+  ADD_INVOICE: `api/invoice`,
+  GET_INVOICE: `api/invoices`,
+  GET_INVOICE_BY_ID: `api/invoices/`,
+  REMOVE_INVOICE_BY_ID: `api/invoices/`,
+  UPDATE_INVOICE_BY_ID: `api/invoices/update/`,
+
+  // Reviews
+  GET_RATINGS: `api/rating/total`,
+  GET_REVIEWS: `api/ratings`,
+  REMOVE_REVIEWS_BY_ID: `api/ratings/`,
+  GET_REVIEWS_BY_ID: `api/ratings/`,
+
+  // Calender
+  ADD_CALENDER_EVENT: `api/calender/add-event/`,
+  GET_CALENDER_EVENTS: `api/calendar/events/`,
+  REMOVE_CALENDER_EVENTS: `api/calendar/events/`,
+  UPDATE_CALENDER_EVENTS: `api/calendar/update-event`,
+
+  // Orders
+  GET_ORDERS_LIST: `api/orders`,
+  GET_ORDERS_BY_ID: `api/orders/`,
+  SEND_EMAIL: `api/send-email`,
+  GET_PRE_ORDERS: `api/pre-orders`,
+  GET_PRE_ORDERS_BY_ID: `api/pre-orders/`,
+
+  // Price Tag
+  GENERATE_TAGS: `api/tag`,
+  GET_TAGS: `api/tags`,
+  GET_TAGS_BY_ID: `api/tags/`,
+
+  // Customers
+  GET_USERS: `api/users`,
+  GET_USERS_BY_ID: `api/users/`,
+
+  // Admin
+  GET_ADMIN_INFO: `api/admin/admin-info`,
+  UPDATE_ADMIN_GENERAL_INFO: `api/admin/admin-info/general`,
+  UPDATE_ADMIN_PAYMENT_INFO: `api/admin/admin-info/paymentDetails`,
+
+  // Inventories
+  GET_INVENTORIES: `api/inventories`,
+  UPDATE_INVENTORIES_BY_ID: `api/inventories/`,
+  GET_INVENTORIES_VARIATIONS: `api/inventories/variations/`,
 
   // ANALYTICS
-  GET_INVENTORY_ANALYTICS: `${BASE_URL}api/ecommerce/analytics/inventory`,
-
+  GET_INVENTORY_ANALYTICS: `api/ecommerce/analytics/inventory`,
 
   // Login
-  LOGIN_URL:`${BASE_URL}api/adminAuth/login`,
-  ADMIN_REGISTER:`${BASE_URL}api/adminAuth/register`
+  LOGIN_URL: `api/adminAuth/login`,
+  ADMIN_REGISTER: `api/adminAuth/register`,
+
+  // Shipping
+  GET_SHIPPING_CLASS: `api/shipping`,
+  POST_SHIPPING_CLASS: `api/shipping`,
+  UPDATE_SHIPPING_CLASS: `api/shipping/`,
+  REMOVE_SHIPPING_CLASS: `api/shipping/`,
 };

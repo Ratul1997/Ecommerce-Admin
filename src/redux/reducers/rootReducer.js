@@ -16,7 +16,7 @@ import ecommerce from "@src/views/apps/ecommerce/store/reducer";
 import dataTables from "@src/views/tables/data-tables/store/reducer";
 import UploadFile from "@src/views/common/upload/store/reducer";
 import mediaReducer from "@src/views/apps/media/store/reducer";
-
+import shippingReducer from "@src/views/apps/settings/shipping/store/reducer";
 const rootReducer = combineReducers({
   auth,
   todo,
@@ -30,7 +30,8 @@ const rootReducer = combineReducers({
   ecommerce,
   dataTables,
   UploadFile,
-  mediaReducer
+  mediaReducer,
+  shippingReducer,
 });
 
 export default rootReducer;

@@ -14,7 +14,8 @@ import {
   Tag,
   Settings,
   Database,
-  Trello
+  Trello,
+  Codepen
 } from "react-feather";
 
 export default [
@@ -220,10 +221,16 @@ export default [
       // },
     ],
   },
+  // {
+  //   id:"shipping",
+  //   title:'Shipping',
+  //   icon:<Codepen size={20}/>,
+  //   navLink: '/apps/shipping'
+  // },
   {
     id: "settings",
     title: "Settings",
     icon: <Settings size={20} />,
     navLink: "/apps/settings",
-  },
+  }
 ];

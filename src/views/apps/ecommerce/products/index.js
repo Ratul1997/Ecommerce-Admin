@@ -25,16 +25,21 @@ export default function Products() {
       setIsLoading(false);
     }
   };
-  const updatePopular = (id, type) => {
+
+  const onDeleteProducts = async () => {};
+  const updateProductList = (id, type) => {
     const productList = products;
     if (type === "Popular") {
       const index = findValueInArray(productList, id, "product_id");
       productList[index].popular_product =
         productList[index].popular_product === 0 ? 1 : 0;
-    } else {
+    } else if (type === "Featured") {
       const index = findValueInArray(productList, id, "product_id");
       productList[index].featured_product =
         !productList[index].featured_product;
+    } else if (type === "Deleted") {
+      const index = findValueInArray(productList, id, "product_id");
+      productList.splice(index, 1);
     }
     setProducts([...productList]);
   };
@@ -46,7 +51,7 @@ export default function Products() {
         breadCrumbParent="eCommerce"
         breadCrumbActive="Products"
       />
-      <ProductTable products={products} updatePopular={updatePopular} />
+      <ProductTable products={products} updateProductList={updateProductList} />
     </Fragment>
   );
 }

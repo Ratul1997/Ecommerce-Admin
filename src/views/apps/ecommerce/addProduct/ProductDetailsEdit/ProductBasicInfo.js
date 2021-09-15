@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import Select from "react-select";
 
@@ -31,6 +31,8 @@ import "@styles/react/libs/react-select/_react-select.scss";
 import "@styles/base/pages/page-blog.scss";
 
 import defaultFeaturedImage from "@src/assets/images/icons/image.png";
+import { ProductDataContext } from "..";
+import Spinner from "reactstrap/lib/Spinner";
 export default function ProductBasicInfo({
   productData,
   setProductData,
@@ -45,10 +47,21 @@ export default function ProductBasicInfo({
   product_gallery,
   getOptionsForStatus,
   onRemove,
+  onUpdate,
+  newCategoryState,
+  setCategoryState,
+  isUploading,
 }) {
   const slugFormat = slug => {
     return slug.replace(/\s/g, "-");
   };
+
+  const { isEditable } = useContext(ProductDataContext);
+  useEffect(() => {
+    if (isEditable) {
+      setCategoryState(productData.categories);
+    }
+  }, [isEditable, productData.categories]);
   return (
     <Row>
       <Col sm="12">
@@ -78,13 +91,17 @@ export default function ProductBasicInfo({
                     <Select
                       isClearable={false}
                       theme={selectThemeColors}
-                      value={productData.categories}
+                      value={
+                        isEditable ? newCategoryState : productData.categories
+                      }
                       isMulti
                       options={getOptions()}
                       className="react-select"
                       classNamePrefix="select"
                       onChange={data =>
-                        setProductData({ ...productData, categories: data })
+                        isEditable
+                          ? setCategoryState(data)
+                          : setProductData({ ...productData, categories: data })
                       }
                     />
                   </FormGroup>
@@ -151,7 +168,7 @@ export default function ProductBasicInfo({
                             ? urls.UPLOADED_LINK + featured_img.file_name
                             : defaultFeaturedImage
                         }
-                        alt='featured image'
+                        alt="featured image"
                         width="180"
                         height="180"
                       />
@@ -263,6 +280,12 @@ export default function ProductBasicInfo({
               </Row>
             </Form>
           </CardBody>
+          {isEditable && (
+            <Button color="primary" onClick={isUploading ? null : onUpdate}>
+              {isUploading && <Spinner color="white" size="sm" />}
+              Update
+            </Button>
+          )}
         </Card>
       </Col>
     </Row>

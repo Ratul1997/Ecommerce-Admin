@@ -8,7 +8,7 @@ import dashboards from './dashboards'
 import uiElements from './ui-elements'
 import chartsAndMaps from './charts-maps'
 
-// export default [...dashboards, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...chartsAndMaps, ...others]
+export default [...dashboards, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...chartsAndMaps, ...others]
 
 // ** Merge & Export
-export default [...dashboards, ...apps]
+// export default [...dashboards, ...apps]

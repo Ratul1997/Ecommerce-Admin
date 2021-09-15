@@ -45,7 +45,7 @@ import {
   backOrdersOptions,
   getOptionsForStatus,
 } from "./Constants";
-
+import consoleLog from "@console";
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
   const initialContent = ``;
@@ -97,7 +97,7 @@ const AddProduct = () => {
     variations: [],
     stock_threshold: 0,
     allowBackOrders: { value: 1, label: "Do not allow" },
-    shipping_cost: 0.0,
+    shipping_cost: [],
     inventory_status: { value: 1, label: "In Stock" },
     productType: getOptionsForProductType[0],
   };
@@ -146,6 +146,7 @@ const AddProduct = () => {
     return stockOptions.filter(item => item.label === stock);
   };
   const setStateForProduct = data => {
+    consoleLog(data);
     setIsEditable(true);
     setProductData({
       ...productData,
@@ -159,7 +160,7 @@ const AddProduct = () => {
       discount_price: data.discount_price,
       quantity: data.manageStock === 1 ? data.inventory.quantity : 0,
       manageStock: data.manageStock === 1 ? true : false,
-      hasFreeShipping: data.hasFreeShipping,
+      hasFreeShipping: data.hasFreeShipping === 1 ? true : false,
       view_on_website: data.view_on_website,
       featured_img: data.featured_img ? JSON.parse(data.featured_img) : null,
       categories: data.categories.map(item => {
@@ -173,13 +174,12 @@ const AddProduct = () => {
         ? data.variants.map(item => VariantsModel(item))
         : [],
       stock_threshold:
-        data.hasFreeShipping === 1 ? null : data.inventory.stock_threshold,
+        data.manageStock === 0 ? null : data.inventory.stock_threshold,
       allowBackOrders:
         data.manageStock === 0
           ? { value: 1, label: "Do not allow" }
-          : getAllowBackOrders(data.shipping.allowBackOrders),
-      shipping_cost:
-        data.hasFreeShipping === 1 ? 0.0 : data.shipping.shipping_cost,
+          : getAllowBackOrders(data.inventory.allowBackOrders),
+      shipping_cost: data.hasFreeShipping === 1 ? [] : data.shipping,
       inventory_status: getStockStatus(data.inventory_status),
       productType: getProductTypeOptionForEdit(data.productType),
     });
@@ -237,7 +237,6 @@ const AddProduct = () => {
         optionsAndAttributes.options.length > 0
           ? optionsAndAttributes.options
           : null,
-
       attributesList:
         optionsAndAttributes.attributes.length > 0
           ? optionsAndAttributes.attributes
@@ -249,6 +248,7 @@ const AddProduct = () => {
       inventory_status: productData.inventory_status.value,
       product_status_id: productData.product_status_id.value,
       allowBackOrders: productData.allowBackOrders.value,
+      shipping_cost: productData.shipping_cost.map(item => item.value),
     };
     uploadProduct(dataOfProduct);
   };
@@ -272,9 +272,9 @@ const AddProduct = () => {
     <ProductDataContext.Provider value={productContextValue}>
       <Fragment>
         <Breadcrumbs
-          breadCrumbTitle={isEditable ? "Product" : "Add Product"}
+          breadCrumbTitle={isEditable ? "Edit Product" : "Add Product"}
           breadCrumbParent="eCommerce"
-          breadCrumbActive={isEditable ? "Product" : "Add Product"}
+          breadCrumbActive={isEditable ? productData.name : "Add Product"}
         />
 
         <Row>
