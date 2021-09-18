@@ -9,14 +9,17 @@ import {
   checkApplicationType,
 } from "../files/utils/utils";
 import { urls } from "@urls";
-export default function FileItem({file}) {
-
-  const onDeleteClick = (file_id)=>() => {
-    console.log(file_id)
-    // return SweetAlert(confirmDeleteText, onDelete(file_id));
-  };
+import { X } from "react-feather";
+export default function FileItem({ file, onDelete, confirmDeleteText }) {
+ 
   return (
     <>
+      <X
+        className="float-right bg-primary"
+        color="white"
+        size={15}
+        onClick={SweetAlert(confirmDeleteText, onDelete(file.file_id))}
+      ></X>
       <LazyLoadImage
         src={
           checkImageTypeOrNot(file.mime_type)
@@ -40,10 +43,6 @@ export default function FileItem({file}) {
       >
         {file.file_name}
       </p>
-      <Menu id="menu_id">
-        <Item onClick={onDeleteClick(file.file_id)}>Delete</Item>
-        {/* <Item>Preview</Item> */}
-      </Menu>
     </>
   );
 }

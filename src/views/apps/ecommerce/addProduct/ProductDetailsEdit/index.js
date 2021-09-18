@@ -51,10 +51,12 @@ const ProductDetailsEdit = () => {
   //`${stateToHTML(productData.description.getCurrentContent())}`
 
   const getOptions = () => {
-    const options =
-      categories &&
-      categories.map(item => {
-        return { value: item.category_id, label: item.name };
+    const options = [];
+    categories &&
+      categories.filter(item => {
+        if (item.parent_id) {
+          options.push({ value: item.category_id, label: item.name });
+        }
       });
 
     return options;

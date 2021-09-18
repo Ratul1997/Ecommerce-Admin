@@ -12,7 +12,7 @@ const initialState = {
 
 const updateCategory = (categories, data) => {
   categories.push(data);
-  
+
   return [...categories];
 };
 
@@ -20,7 +20,7 @@ const removeACategoryItem = (categories, data) => {
   const newCategories = categories.filter(item => {
     if (item.category_id !== data.category_id) return item;
   });
-  
+
   return [...newCategories];
 };
 const ecommerceReducer = (state = initialState, action) => {
@@ -57,6 +57,10 @@ const ecommerceReducer = (state = initialState, action) => {
       return {
         ...state,
         categories: removeACategoryItem(state.categories, action.data),
+      };
+    case "CLEAR_ECOMMERCE":
+      return {
+        ...initialState,
       };
     default:
       return state;

@@ -27,7 +27,7 @@ export default function FileAsGrid({
           key={key}
           onContextMenu={show}
         >
-         <FileItem file={file}/>
+         <FileItem file={file} onDelete={onDelete} confirmDeleteText={confirmDeleteText}/>
         </div>
       );
     })

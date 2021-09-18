@@ -23,11 +23,7 @@ const addShippingClass = (previousList, data) => {
 };
 
 const deleteShippingClass = (previousList, id) => {
-  const index = findValueInArray(
-    previousList,
-    id,
-    "shipping_class_id"
-  );
+  const index = findValueInArray(previousList, id, "shipping_class_id");
   if (index > -1) {
     previousList.splice(index, 1);
   }
@@ -55,6 +51,10 @@ const shippingReducer = (state = initialState, action) => {
       return {
         ...state,
         shipping: deleteShippingClass(state.shipping, action.id),
+      };
+    case "CLEAR_SHIPPING":
+      return {
+        ...initialState,
       };
     default:
       return state;

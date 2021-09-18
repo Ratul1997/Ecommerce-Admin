@@ -41,6 +41,11 @@ import {
 import axiosInstance from "../../../configs/axiosInstance";
 
 import "@styles/base/pages/page-auth.scss";
+import {
+  getAllCategories,
+  getAllMedia,
+  getAllShipping,
+} from "../../../redux/actions/ecommerce";
 
 const ToastContent = ({ name, role }) => (
   <Fragment>
@@ -86,12 +91,11 @@ const Login = props => {
     //       { transition: Slide, hideProgressBar: true, autoClose: 2000 }
     //     )
     //   })
-    //   .catch(err => 
+    //   .catch(err =>
 
     setIsLoading(true);
     try {
       // const data = { role, email, password };
-      
 
       const res = await axiosInstance().post(urls.LOGIN_URL, {
         email: email,
@@ -110,20 +114,24 @@ const Login = props => {
       dispatch(handleLogin(data));
       // history.push(getHomeRouteForLoggedInUser("admin"));
 
+      dispatch(getAllCategories());
+      dispatch(getAllMedia());
+      dispatch(getAllShipping());
+
       history.push("/");
-      // 
+      //
     } catch (err) {
       setIsLoading(false);
       if (err.status === 404) {
         // const arr = {};
         // arr["invalid"] = err.data.error.message;
-        
+
         setValErrors(err.data.error.message);
-        // 
+        //
       }
     }
   };
-  
+
   return (
     <div className="auth-wrapper auth-v2">
       <Row className="auth-inner m-0">

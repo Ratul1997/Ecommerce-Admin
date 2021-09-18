@@ -135,7 +135,7 @@ const Categories = () => {
     />
   );
 
-  console.log(categories)
+  console.log(categories);
   const onDelete = category => async e => {
     e.preventDefault();
 
@@ -153,7 +153,7 @@ const Categories = () => {
   const onEdit = category => async e => {
     setSelectedCategory(category);
     categoryRef = category;
-    toggleSidebar()
+    toggleSidebar();
   };
 
   const CustomRows = ({ category }) => {
@@ -180,7 +180,7 @@ const Categories = () => {
   const getParentCategory = id => {
     if (id === null) return "--";
     const index = findValueInArray(categories, id, "category_id");
-    return categories[index]['name'];
+    return index > -1 ? categories[index]["name"] : "";
   };
   const columns = [
     {
@@ -267,7 +267,6 @@ const Categories = () => {
         getParentCategory={getParentCategory}
         categoryRef={categoryRef}
       />
-  
     </Card>
   );
 };

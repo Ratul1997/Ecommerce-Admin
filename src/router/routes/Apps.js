@@ -253,7 +253,12 @@ const AppRoutes = [
     path: "/apps/settings",
     className: "ecommerce-application",
     component: lazy(() => import("../../views/apps/settings")),
-  }
+  },
+  {
+    path: "/apps/marketing/facebook-pixel",
+    exact: true,
+    component: lazy(() => import("../../views/apps/marketing/facebookPixel")),
+  },
 ];
 
 export default AppRoutes;

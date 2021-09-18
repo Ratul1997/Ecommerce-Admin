@@ -15,7 +15,8 @@ import {
   Settings,
   Database,
   Trello,
-  Codepen
+  Codepen,
+  Target,
 } from "react-feather";
 
 export default [
@@ -41,10 +42,10 @@ export default [
   //   navLink: "/apps/todo",
   // },
   {
-    id:'newAdmin',
-    title:'New Admin',
-    icon:<Trello size={20}/>,
-    navLink:'/add-new-admin'
+    id: "newAdmin",
+    title: "New Admin",
+    icon: <Trello size={20} />,
+    navLink: "/add-new-admin",
   },
   {
     id: "calendar",
@@ -54,7 +55,7 @@ export default [
   },
   {
     id: "tag",
-    title: "Tags",
+    title: "Price Tags",
     icon: <Tag size={20} />,
     navLink: "/apps/ecommerce/taggenerator/list",
   },
@@ -232,5 +233,18 @@ export default [
     title: "Settings",
     icon: <Settings size={20} />,
     navLink: "/apps/settings",
-  }
+  },
+  {
+    id: "marketing",
+    title: "Marketing",
+    icon: <Target size={20} />,
+    children: [
+      {
+        id: "pixel",
+        title: "Facebook Pixel",
+        icon: <Circle size={12} />,
+        navLink: "/apps/marketing/facebook-pixel",
+      },
+    ],
+  },
 ];

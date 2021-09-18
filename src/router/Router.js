@@ -1,6 +1,6 @@
 /*eslint-disable*/
 // ** React Imports
-import { Suspense, useContext, lazy } from 'react'
+import { Suspense, useContext, lazy,useEffect } from 'react'
 
 // ** Utils
 import { isUserLoggedIn } from '@utils'
@@ -22,11 +22,13 @@ import { DefaultRoute, Routes } from './routes'
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
 import HorizontalLayout from '@src/layouts/HorizontalLayout'
+import { getAllCategories, getAllMedia } from '../redux/actions/ecommerce'
 
 const Router = () => {
   // ** Hooks
   const [layout, setLayout] = useLayout()
   const [transition, setTransition] = useRouterTransition()
+
 
   // ** ACL Ability Context
   const ability = useContext(AbilityContext)
@@ -184,7 +186,6 @@ const Router = () => {
     })
   }
 
-  
   return (
     <AppRouter basename={process.env.REACT_APP_BASENAME}>
       <Switch>

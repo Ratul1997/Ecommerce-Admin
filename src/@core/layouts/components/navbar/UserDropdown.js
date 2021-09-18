@@ -33,6 +33,7 @@ import {
 
 // ** Default Avatar Image
 import defaultAvatar from "@src/assets/images/portrait/small/avatar-s-11.jpg";
+import { clearEcommerce, clearMedia } from "../../../../redux/actions/ecommerce";
 
 const UserDropdown = () => {
   // ** Store Vars
@@ -106,7 +107,11 @@ const UserDropdown = () => {
         <DropdownItem
           tag={Link}
           to="/login"
-          onClick={() => dispatch(handleLogout())}
+          onClick={() => {
+            dispatch(handleLogout())
+            dispatch(clearMedia())
+            dispatch(clearEcommerce())
+          }}
         >
           <Power size={14} className="mr-75" />
           <span className="align-middle">Logout</span>

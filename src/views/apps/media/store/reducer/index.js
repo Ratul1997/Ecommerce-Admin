@@ -6,10 +6,9 @@ const initialState = {
 };
 
 const mediaReducer = (state = initialState, action) => {
-  // 
+  //
   switch (action.type) {
     case "ADD_FILE_TO_MEDIA":
-      
       const newState = { files: [...state.files, action.data] };
       return newState;
     case "ADD_FILE":
@@ -20,6 +19,8 @@ const mediaReducer = (state = initialState, action) => {
 
       if (idx > -1) files.splice(idx, 1);
       return { files: [...files] };
+    case "CLEAR_MEDIA":
+      return { ...initialState };
     default:
       return state;
   }

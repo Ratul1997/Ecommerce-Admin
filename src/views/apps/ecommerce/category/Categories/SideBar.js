@@ -47,7 +47,6 @@ const SidebarNewCategory = ({
   const [categoryData, setCategoryData] = useState(initialState);
   const [isEdit, setIsEdit] = useState(false);
 
-
   useEffect(() => {
     if (selectedCategory) {
       setCategoryData({
@@ -94,7 +93,7 @@ const SidebarNewCategory = ({
   const postData = async () => {
     const category = {
       ...categoryData,
-      parent_id: categoryData.parent_id.value,
+      parent_id: categoryData.parent_id ? categoryData.parent_id.value : null,
     };
     try {
       const res = await axiosInstance().post(urls.ADD_A_CATEGORY, {

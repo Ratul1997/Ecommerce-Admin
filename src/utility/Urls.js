@@ -35,10 +35,10 @@ export const urls = {
   GET_PRODUCT_ATTRIBUTES_BY_ID: `api/product-attributes/`,
   UPDATE_POPULAR_PRODUCT_BY_ID: `api/admin/popular/`,
   UPDATE_FEATURED_PRODUCT_BY_ID: `api/admin/featured/`,
-  UPDATE_PRODUCT_SHIPPING_CLASS:`api/admin/products/shipping/`,
-  UPDATE_PRODUCT_DETAILS :`api/admin/products/basicInfo/`,
-  UPDATE_PRODUCT_PRICE:`api/admin/products/priceInfo/`,
-  DELETE_PRODUCT:`api/admin/products/`,
+  UPDATE_PRODUCT_SHIPPING_CLASS: `api/admin/products/shipping/`,
+  UPDATE_PRODUCT_DETAILS: `api/admin/products/basicInfo/`,
+  UPDATE_PRODUCT_PRICE: `api/admin/products/priceInfo/`,
+  DELETE_PRODUCT: `api/admin/products/`,
 
   // Invoice
   GET_INVOICE_USERS: `api/invoices/clients`,
@@ -100,4 +100,7 @@ export const urls = {
   POST_SHIPPING_CLASS: `api/shipping`,
   UPDATE_SHIPPING_CLASS: `api/shipping/`,
   REMOVE_SHIPPING_CLASS: `api/shipping/`,
+
+  // Facebook Pixel
+  FACEBOOK_PIXEL: `api/marketing/fb-pixel`,
 };
