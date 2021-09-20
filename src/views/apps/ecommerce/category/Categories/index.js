@@ -135,7 +135,6 @@ const Categories = () => {
     />
   );
 
-  console.log(categories);
   const onDelete = category => async e => {
     e.preventDefault();
 

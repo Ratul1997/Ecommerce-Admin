@@ -83,7 +83,6 @@ export default function SliderImage() {
         image: item.file_name,
       };
     });
-    console.log(sliders);
     consoleLog(sliders);
     onUpdate(sliders);
   };

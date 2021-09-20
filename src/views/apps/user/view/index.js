@@ -31,10 +31,8 @@ export default function UserInfo() {
       const res = await axiosInstance().get(urls.GET_USERS_BY_ID + id);
       // setUserInfo(res.data.results);
       setUserDetails(res.data.results);
-      console.log(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      console.log(error);
       setIsLoading(false);
     }
   };

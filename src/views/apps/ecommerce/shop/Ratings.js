@@ -18,7 +18,6 @@ export default function Ratings() {
       const res = await axiosInstance().get(urls.GET_RATINGS);
       setRatings(res.data.results);
     } catch (error) {
-      console.log(error);
     }
   };
 
