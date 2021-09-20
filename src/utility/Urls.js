@@ -103,4 +103,8 @@ export const urls = {
 
   // Facebook Pixel
   FACEBOOK_PIXEL: `api/marketing/fb-pixel`,
+
+  // Theme Config
+  UPDATE_SLIDER:`api/themeConfig/slider-image`,
+  GET_SLIDER:`api/themeConfig/slider-image`
 };

@@ -15,6 +15,7 @@ import { findValueInArray } from "@utils";
 import axiosInstance from "@configs/axiosInstance.js";
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner";
 import Shipping from "./shipping";
+import SliderImage from "./sliderImage/SliderImage";
 
 const AccountSettings = () => {
   const [activeTab, setActiveTab] = useState("1"),
@@ -126,7 +127,16 @@ const AccountSettings = () => {
                     // changeStatus={changeStatus}
                     />
                   </TabPane>
+                  <TabPane tabId="4">
+                    <SliderImage
+                    // data={data.paymentDetails}
+                    // onChange={onChangePaymentInfo}
+                    // onCancel={onCancel}
+                    // changeStatus={changeStatus}
+                    />
+                  </TabPane>
                 </TabContent>
+                
               </CardBody>
             </Card>
           </Col>
