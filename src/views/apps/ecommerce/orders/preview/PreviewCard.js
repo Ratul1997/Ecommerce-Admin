@@ -86,7 +86,7 @@ const PreviewCard = ({ data }) => {
                   <td className="pr-1">Total:</td>
                   <td>
                     <span className="font-weight-bolder">
-                      {data.total_price} BDT
+                      {data.total_price + data.shipping_cost} BDT
                     </span>
                   </td>
                 </tr>

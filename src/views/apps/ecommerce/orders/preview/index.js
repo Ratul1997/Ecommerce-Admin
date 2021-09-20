@@ -16,7 +16,7 @@ import PreviewCard from "./PreviewCard";
 import PreviewActions from "./PreviewActions";
 import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
 import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
-
+import consoleLog from '@console'
 const options = [
   {
     value: 1,
@@ -65,6 +65,7 @@ export default function Preview() {
   const loadOrder = async () => {
     try {
       const res = await axiosInstance().get(urls.GET_ORDERS_BY_ID + id);
+      consoleLog(res.data.results)
       setData(res.data.results);
       setSelectedOption(
         options.filter(item => item.label === res.data.results.order_status)[0]

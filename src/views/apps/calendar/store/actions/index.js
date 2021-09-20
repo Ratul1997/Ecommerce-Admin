@@ -11,7 +11,7 @@ export const fetchEvents = calendars => {
     ? urls.GET_CALENDER_EVENTS + `1?calendar=${JSON.stringify(calendars)}`
     : urls.GET_CALENDER_EVENTS + "1";
   return dispatch => {
-    axios
+    axiosInstance()
       .get(url, {
         calendars,
       })
@@ -27,7 +27,7 @@ export const fetchEvents = calendars => {
 // ** Add Event
 export const addEvent = event => {
   return (dispatch, getState) => {
-    axios
+    axiosInstance()
       .post(urls.ADD_CALENDER_EVENT + "1", { event })
       .then(() => {
         dispatch({

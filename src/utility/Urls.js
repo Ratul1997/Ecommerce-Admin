@@ -21,7 +21,7 @@ export const urls = {
 
   // Files
   UPLOAD_A_FILE: `api/file-upload`,
-  UPLOADED_LINK: `uploads/`,
+  UPLOADED_LINK: `${BASE_URL}uploads/`,
   GET_FILES: `api/files`,
   REMOVE_FILES_BY_ID: `api/files/`,
 

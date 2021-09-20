@@ -128,7 +128,8 @@ const ProductDetailsEdit = () => {
       featured_img: productData.featured_img
         ? JSON.stringify(productData.featured_img)
         : null,
-      product_status_id: productData.product_status_id.value,
+      product_status_id:
+      productData.product_status_id.value,
       view_on_website: productData.view_on_website,
       sku: productData.sku,
       short_description: stateToHTML(
@@ -141,6 +142,7 @@ const ProductDetailsEdit = () => {
       deletedCategories: deletedId,
     };
 
+    consoleLog(updatedData.product_status_id);
     onUploadUpdatedData(updatedData);
   };
 

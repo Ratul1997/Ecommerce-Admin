@@ -127,6 +127,7 @@ const AddProduct = () => {
   const loadProduct = async id => {
     try {
       const res = await axiosInstance().get(urls.GET_PRODUCTS_ADMIN_BY_ID + id);
+      // console.log(res.data.results);
       setStateForProduct(res.data.results);
     } catch (error) {
       onErrorToast(error.toString());
@@ -137,7 +138,7 @@ const AddProduct = () => {
   };
 
   const getStatus = status => {
-    return getOptionsForStatus.filter(item => item.value === status);
+    return getOptionsForStatus.filter(item => item.value === status)[0];
   };
   const getAllowBackOrders = allowBackOrders => {
     return backOrdersOptions.filter(item => item.label === allowBackOrders);
@@ -158,7 +159,12 @@ const AddProduct = () => {
       product_status_id: getStatus(data.product_status_id),
       regular_price: data.regular_price,
       discount_price: data.discount_price,
-      quantity: data.manageStock === 1 ? data.inventory.quantity : 0,
+      quantity:
+        data.manageStock === 1
+          ? data.inventory
+            ? data.inventory.quantity
+            : 0
+          : 0,
       manageStock: data.manageStock === 1 ? true : false,
       hasFreeShipping: data.hasFreeShipping === 1 ? true : false,
       view_on_website: data.view_on_website,
@@ -174,13 +180,21 @@ const AddProduct = () => {
         ? data.variants.map(item => VariantsModel(item))
         : [],
       stock_threshold:
-        data.manageStock === 0 ? null : data.inventory.stock_threshold,
+        data.manageStock === 0
+          ? null
+          : data.inventory
+          ? data.inventory.stock_threshold
+          : null,
       allowBackOrders:
         data.manageStock === 0
           ? { value: 1, label: "Do not allow" }
-          : getAllowBackOrders(data.inventory.allowBackOrders),
+          : data.inventory
+          ? getAllowBackOrders(data.inventory.allowBackOrders)
+          : null,
       shipping_cost: data.hasFreeShipping === 1 ? [] : data.shipping,
-      inventory_status: getStockStatus(data.inventory_status),
+      inventory_status: data.inventory
+        ? getStockStatus(data.inventory_status)
+        : null,
       productType: getProductTypeOptionForEdit(data.productType),
     });
 

@@ -40,8 +40,12 @@ const Inventory = () => {
     try {
       await axiosInstance().patch(urls.UPDATE_INVENTORIES_BY_ID + id, {
         data: {
-          allowBackOrders: productData.allowBackOrders.label,
-          inventory_status: productData.inventory_status.label,
+          allowBackOrders: productData.allowBackOrders
+            ? productData.allowBackOrders.label
+            : null,
+          inventory_status: productData.inventory_status
+            ? productData.inventory_status.label
+            : null,
           previousManageStock: productData.manageStock,
           stock_threshold: productData.stock_threshold,
           quantity: productData.quantity,
@@ -54,8 +58,11 @@ const Inventory = () => {
       onSuccessToast("Updated!");
     } catch (error) {
       setIsLoading(false);
-      onErrorToast("Internal Server Error");
-      consoleLog(error);
+      if (error.status && error.status === 404) {
+        onErrorToast(error.data.massage);
+      } else {
+        onErrorToast("Internal Server Error");
+      }
     }
   };
   return (

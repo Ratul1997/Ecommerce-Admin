@@ -13,7 +13,7 @@ import { useRouterTransition } from '@hooks/useRouterTransition'
 import LayoutWrapper from '@layouts/components/layout-wrapper'
 
 // ** Router Components
-import { BrowserRouter as AppRouter, Route, Switch, Redirect } from 'react-router-dom'
+import { BrowserRouter as AppRouter, Route, Switch, Redirect,useLocation } from 'react-router-dom'
 
 // ** Routes & Default Routes
 import { DefaultRoute, Routes } from './routes'
@@ -22,7 +22,10 @@ import { DefaultRoute, Routes } from './routes'
 import BlankLayout from '@layouts/BlankLayout'
 import VerticalLayout from '@src/layouts/VerticalLayout'
 import HorizontalLayout from '@src/layouts/HorizontalLayout'
-import { getAllCategories, getAllMedia } from '../redux/actions/ecommerce'
+import { getAllCategories, getAllMedia, getAllShipping } from '../redux/actions/ecommerce'
+
+// store and actions
+import {useDispatch,useSelector} from 'react-redux'
 
 const Router = () => {
   // ** Hooks
@@ -104,6 +107,14 @@ const Router = () => {
 
   // ** Return Route to Render
   const ResolveRoutes = () => {
+    
+    const dispatch = useDispatch()
+    useEffect(()=>{
+      dispatch(getAllCategories())
+      dispatch(getAllMedia())
+      dispatch(getAllShipping())
+
+    },[])
     return Object.keys(Layouts).map((layout, index) => {
       // ** Convert Layout parameter to Layout Component
       // ? Note: make sure to keep layout and component name equal
@@ -133,6 +144,7 @@ const Router = () => {
           >
             <Switch>
               {LayoutRoutes.map(route => {
+            
                 return (
                   <Route
                     key={route.path}

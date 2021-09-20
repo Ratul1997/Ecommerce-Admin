@@ -8,6 +8,7 @@ import axiosInstance from "../../../../configs/axiosInstance";
 import { onErrorToast } from "../../../common/Toaster";
 import { findItemInArray, findValueInArray } from "../../../../utility/Utils";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
+import consoleLog from '@console'
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +19,9 @@ export default function Products() {
     try {
       const res = await axiosInstance().get(urls.GET_PRODUCTS);
       setProducts(res.data.products);
+
+      
+      consoleLog(res.data.products)
       setIsLoading(false);
     } catch (error) {
       onErrorToast(error.data.massage);

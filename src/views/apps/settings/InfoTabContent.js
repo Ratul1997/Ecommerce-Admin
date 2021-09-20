@@ -33,7 +33,7 @@ const InfoTabContent = ({ data, onChange, onCancel }) => {
       onSuccessToast("Updated!");
     } catch (error) {
       setIsLoading(false);
-      
+
       onErrorToast(error.data.massage);
     }
   };
@@ -41,6 +41,19 @@ const InfoTabContent = ({ data, onChange, onCancel }) => {
   return (
     <Form>
       <Row>
+        <Col sm="12">
+          <FormGroup>
+            <Label for="bio">About Us</Label>
+            <Input
+              type="textarea"
+              name="about_us"
+              defaultValue={data.about_us || ""}
+              value={data.about_us}
+              placeholder="Your Address  here..."
+              onChange={onChange}
+            />
+          </FormGroup>
+        </Col>
         <Col sm="12">
           <FormGroup>
             <Label for="bio">Address</Label>

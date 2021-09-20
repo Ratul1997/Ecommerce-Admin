@@ -23,7 +23,7 @@ import {
 import { urls } from "@urls";
 import consoleLog from "@console";
 import axiosInstance from "@src/configs/axiosInstance";
-import { Link, useHistory } from "react-router-dom";
+import { Link, Redirect, useHistory } from "react-router-dom";
 import {
   ChevronDown,
   Share,
@@ -213,6 +213,10 @@ const columns = updateProductList => {
       // ),
     },
     {
+      name:'SKU',
+      selector:'sku',
+    },
+    {
       name: "Last Updated",
       selector: "updated_at",
       sortable: true,
@@ -251,7 +255,10 @@ const columns = updateProductList => {
       sortable: true,
       minWidth: "100px",
       cell: row => (
-        <CustomPopularProductIcon row={row} updateProductList={updateProductList} />
+        <CustomPopularProductIcon
+          row={row}
+          updateProductList={updateProductList}
+        />
       ),
     },
     {
@@ -305,16 +312,19 @@ const columns = updateProductList => {
                 <MoreVertical size={15} />
               </DropdownToggle>
               <DropdownMenu right>
-                <DropdownItem
-                  className="w-100"
-                  onClick={onDelete}
-                >
+                <DropdownItem className="w-100" onClick={onDelete}>
                   <Trash size={15} />
                   <span className="align-middle ml-50">Delete</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
-            <Edit size={15} />
+
+            <Link
+              to={`/apps/ecommerce/product/edit/${row.product_id}`}
+              target="_blank"
+            >
+              <Edit size={15} />
+            </Link>
           </div>
         );
       },
@@ -459,7 +469,7 @@ export default function ProductTable({ products, updateProductList }) {
           />
         </Col>
       </Row>
-      <DataTable
+       <DataTable
         noHeader
         pagination
         responsive
@@ -471,8 +481,8 @@ export default function ProductTable({ products, updateProductList }) {
         paginationDefaultPage={currentPage + 1}
         paginationComponent={CustomPagination}
         data={searchValue.length ? filteredData : data}
-        selectableRowsComponent={BootstrapCheckbox}
-      />
+        selectableRowsComponent={BootstrapCheckbox} 
+      /> 
     </Card>
   );
 }

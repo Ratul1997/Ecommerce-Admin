@@ -24,8 +24,8 @@ export default function Category() {
     setIsLoading(true);
     try {
       const url = urls.GET_CATEGORIES;
-      
-      console.log(url)
+
+      // console.log(url)
       const res = await axiosInstance().get(url);
       dispatch(addCategories(res.data.data));
       setIsLoading(false);
