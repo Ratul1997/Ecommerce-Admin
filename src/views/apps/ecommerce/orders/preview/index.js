@@ -16,7 +16,8 @@ import PreviewCard from "./PreviewCard";
 import PreviewActions from "./PreviewActions";
 import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
 import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
-import consoleLog from '@console'
+import consoleLog from "@console";
+import { htmlData } from "./htmlData";
 const options = [
   {
     value: 1,
@@ -65,14 +66,13 @@ export default function Preview() {
   const loadOrder = async () => {
     try {
       const res = await axiosInstance().get(urls.GET_ORDERS_BY_ID + id);
-      consoleLog(res.data.results)
+      consoleLog(res.data.results);
       setData(res.data.results);
       setSelectedOption(
         options.filter(item => item.label === res.data.results.order_status)[0]
       );
       setIsDataFetching(false);
     } catch (error) {
-      
       setIsDataFetching(false);
       setError(error);
     }
@@ -83,23 +83,23 @@ export default function Preview() {
       document.getElementById("order_div").innerHTML
     );
   };
-  
+
   const onUpdate = async () => {
     setIsLoading(true);
-    
+
     try {
       const res = await axiosInstance().patch(urls.GET_ORDERS_BY_ID + id, {
         order_status: selectedOption.label,
         orders: data.orderedItems,
         previous_status: data.order_status,
-        html: `<html><body>${
-          document.getElementById("order_div").innerHTML
-        }</body></html>`,
+        html: `<html><body>${ReactDOMServer.renderToString(
+          htmlData(data, selectedOption)
+        )}</body></html>`,
+        user_email: data.user_email,
       });
       onSuccessToast("Successfully Updated!");
       setData({ ...data, order_status: selectedOption.label });
     } catch (error) {
-      
       onErrorToast(error.data.massage);
     }
     setIsLoading(false);
