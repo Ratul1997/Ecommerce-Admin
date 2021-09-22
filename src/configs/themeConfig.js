@@ -3,12 +3,12 @@
 //Template config options
 const themeConfig = {
   app: {
-    appName: 'Bay of Style',
+    appName: 'Notlens',
     appLogoImage: require('@src/assets/images/logo/logos.png').default
   },
   layout: {
     isRTL: false,
-    skin: 'semi-dark', // light, dark, bordered, semi-dark
+    skin: 'light', // light, dark, bordered, semi-dark
     routerTransition: 'fadeIn', // fadeIn, fadeInLeft, zoomIn, none or check this for more transition https://animate.style/
     type: 'vertical', // vertical, horizontal
     contentWidth: 'full', // full, boxed

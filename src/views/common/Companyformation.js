@@ -23,7 +23,7 @@ export default function Companyformation() {
       <div>
         <div className="logo-wrapper">
           <img src={logo} style={{ height: 40, width: 40 }} />
-          <h3 className="text-primary invoice-logo">Bay of Style</h3>
+          <h3 className="text-primary invoice-logo">Notlens</h3>
         </div>
         <CardText className="mb-25">{companyInfo.info.address}</CardText>
         <CardText className="mb-25">{companyInfo.info.email}</CardText>
