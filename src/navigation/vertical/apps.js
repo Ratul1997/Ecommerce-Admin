@@ -199,7 +199,7 @@ export default [
   },
   {
     id: "users",
-    title: "User",
+    title: "Customers",
     icon: <User size={20} />,
     children: [
       {
@@ -244,6 +244,23 @@ export default [
         title: "Facebook Pixel",
         icon: <Circle size={12} />,
         navLink: "/apps/marketing/facebook-pixel",
+      },
+      {
+        id: "email-marketing",
+        title: "Email Marketing",
+        icon: <Mail size={12} />,
+        children: [
+          {
+            id: "email-marketing-upload",
+            title: "Send Emails",
+            navLink: "/apps/marketing/email-marketing",
+          },
+          {
+            id: "emailTemplates",
+            title: "Email Template",
+            navLink: "/apps/marketing/email-marketing/email-templates",
+          },
+        ],
       },
     ],
   },

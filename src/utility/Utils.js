@@ -111,6 +111,18 @@ export const generateId = (startNumber, index) => {
 
 }
 
+export const splitStringByCharacter = (str, char) => {
+  return str.split(char)
+}
+
+export const convertArrayToString = (array, key) => {
+  let string = ''
+  array.map(item => {
+    string += `${item[key]},`
+  })
+  return string
+}
+
 export const totalSumFromArray = (array, key) => {
   let sum = 0.0
   array.map(item => {

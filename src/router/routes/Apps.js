@@ -259,6 +259,19 @@ const AppRoutes = [
     exact: true,
     component: lazy(() => import("../../views/apps/marketing/facebookPixel")),
   },
+  {
+    path:'/apps/marketing/email-marketing',
+    exact: true,
+    component: lazy(() => import("../../views/apps/marketing/email")),
+  },{
+    path:'/apps/marketing/email-marketing/email-templates',
+    exact: true,
+    component: lazy(()=> import('../../views/apps/marketing/email/templateList'))
+  },{
+    path:'/apps/marketing/email-marketing/email-templates/edit/:id',
+    exact:true,
+    component: lazy(()=>import('../../views/apps/marketing/email'))
+  }
 ];
 
 export default AppRoutes;

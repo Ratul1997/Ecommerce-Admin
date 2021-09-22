@@ -65,7 +65,6 @@ export const urls = {
   // Orders
   GET_ORDERS_LIST: `api/orders`,
   GET_ORDERS_BY_ID: `api/orders/`,
-  SEND_EMAIL: `api/send-email`,
   GET_PRE_ORDERS: `api/pre-orders`,
   GET_PRE_ORDERS_BY_ID: `api/pre-orders/`,
 
@@ -105,6 +104,14 @@ export const urls = {
   FACEBOOK_PIXEL: `api/marketing/fb-pixel`,
 
   // Theme Config
-  UPDATE_SLIDER:`api/themeConfig/slider-image`,
-  GET_SLIDER:`api/themeConfig/slider-image`
+  UPDATE_SLIDER: `api/themeConfig/slider-image`,
+  GET_SLIDER: `api/themeConfig/slider-image`,
+
+  //Emails
+  GET_EMAIL_TEMPLATES: `api/email-templates`,
+  SEND_EMAIL: `api/send-email`,
+  SAVE_EMAIL_TEMPLATES:`api/email-templates`,
+  DELETE_EMAIL_TEMPLATES:`api/email-templates/`,
+  UPDATE_EMAIL_TEMPLATES:`api/email-templates/`,
+  GET_EMAIL_TEMPLATES_BY_ID:`api/email-templates/`,
 };
