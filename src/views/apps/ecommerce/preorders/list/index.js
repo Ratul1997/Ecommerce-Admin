@@ -19,6 +19,7 @@ import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SideBarImage from "./SideBar";
 import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
+import preOrderServices from "../../../../../services/preorderServices";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -71,7 +72,7 @@ const PreOrders = () => {
 
   const loadorderList = async () => {
     try {
-      const res = await axiosInstance().get(urls.GET_PRE_ORDERS);
+      const res = await preOrderServices.getAllPreOrders();
       setOrderList(res.data.results);
       setIsDataFetching(false);
     } catch (error) {

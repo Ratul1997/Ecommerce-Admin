@@ -18,6 +18,7 @@ import axiosInstance from "@configs/axiosInstance.js";
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SpinnerComponent from "../../../../../@core/components/spinner/Fallback-spinner.js";
+import priceTagServices from "../../../../../services/priceTagServices.js";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -68,10 +69,12 @@ const TagList = () => {
   const loadTagsList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_TAGS);
+      const res = await priceTagServices.getAllPriceTags();
       setTagsList(res.data.results);
-      setIsLoading(false);
+      
     } catch (error) {
+    }finally{
+
       setIsLoading(false);
     }
   };

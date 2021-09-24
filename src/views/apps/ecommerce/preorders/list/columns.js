@@ -40,6 +40,7 @@ import { convertTimeStampToString } from "../../../media/files/utils/utils";
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SideBarImage from "./SideBar";
+import preOrderServices from "../../../../../services/preorderServices";
 
 // ** Vars
 const orderStatusObj = {
@@ -70,7 +71,7 @@ const renderClient = row => {
     <Avatar
       color={color}
       className="mr-50"
-      content={row.user_email ? row.user_email: "John Doe"}
+      content={row.user_email ? row.user_email : "John Doe"}
       initials
     />
   );
@@ -85,32 +86,32 @@ const CustomOptions = ({ row, orderList, setOrderList, onPreviewPreOrder }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const res = await axiosInstance().patch(
-        urls.GET_PRE_ORDERS_BY_ID + row.id,
-        { status: status }
-      );
+      const res = await preOrderServices.updatePreOrderById(row.id, {
+        status: status,
+      });
       onSuccessToast("Successfully Updated!");
       toggleSidebar();
       window.location.reload();
     } catch (error) {
       onErrorToast(error.data.massage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
   const onDelete = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().delete(
-        urls.GET_PRE_ORDERS_BY_ID + row.id,
-        { status: status }
-      );
+      const res = await preOrderServices.deletePreOrderById(row.id, {
+        status: status,
+      });
       onSuccessToast("Successfully Updated!");
       toggleSidebar();
       window.location.reload();
     } catch (error) {
       onErrorToast(error.data.massage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
   return (
     <div className="column-action d-flex align-items-center">
@@ -139,9 +140,7 @@ export const columns = (orderList, setOrderList, onPreviewPreOrder) => {
       name: "#",
       minWidth: "107px",
       selector: "id",
-      cell: row => (
-        <h6>{`#${row.id}`}</h6>
-      ),
+      cell: row => <h6>{`#${row.id}`}</h6>,
     },
 
     {
@@ -203,9 +202,8 @@ export const columns = (orderList, setOrderList, onPreviewPreOrder) => {
       sortable: true,
       minWidth: "164px",
       cell: row => {
-        
         return (
-          <Badge color={orderStatusObj[row.status].color} pill>
+          <Badge color={row.status && orderStatusObj[row.status].color} pill>
             {row.status}
           </Badge>
         );

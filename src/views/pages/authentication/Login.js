@@ -13,6 +13,7 @@ import { Link, useHistory } from "react-router-dom";
 import InputPasswordToggle from "@components/input-password-toggle";
 import Select from "react-select";
 import { urls } from "@urls";
+import authServices from "@services/authServices";
 import { getHomeRouteForLoggedInUser, isObjEmpty } from "@utils";
 import {
   Facebook,
@@ -96,8 +97,9 @@ const Login = props => {
     setIsLoading(true);
     try {
       // const data = { role, email, password };
+      
 
-      const res = await axiosInstance().post(urls.LOGIN_URL, {
+      const res = await authServices.userLogin({
         email: email,
         role: adminRole,
         password: password,

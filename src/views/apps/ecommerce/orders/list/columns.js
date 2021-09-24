@@ -74,19 +74,7 @@ const renderClient = row => {
 };
 
 const CustomOptions = ({ row, orderList, setOrderList }) => {
-  const onDelete = async () => {
-    try {
-      await axiosInstance().delete(urls.REMOVE_INVOICE_BY_ID + row.invoice_id);
-      // const updatedList = orderList
-      // updatedList.splice(row.invoice_id,1)
-      // setOrderList([...updatedList])
-
-      onSuccessToast("Successfully Removed!");
-      window.location.reload();
-    } catch (error) {
-      onErrorToast(error.data.massage);
-    }
-  };
+ 
   return (
     <div className="column-action d-flex align-items-center">
       {/* <Send size={17} id={`send-tooltip-${row.invoice_id}`} />

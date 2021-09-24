@@ -24,6 +24,7 @@ import { Editor } from "react-draft-wysiwyg";
 import { urls } from "@urls";
 import axiosInstance from "@src/configs/axiosInstance";
 import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
+import priceTagServices from "../../../../../services/priceTagServices";
 export default function GenerateTag() {
   const initialContent = "";
   const contentBlock = htmlToDraft(initialContent);
@@ -43,18 +44,18 @@ export default function GenerateTag() {
   const onUpload = async tags => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().post(urls.GENERATE_TAGS, {
+      const res = await priceTagServices.addPriceTagTemplate({
         tag_name: tagName.trim(),
         tag_descriptions: tags,
       });
       onSuccessToast("Success!");
-      setIsLoading(false);
     } catch (error) {
       onErrorToast(
         error.data.massage !== undefined || error.data.massage
           ? error.data.massage
           : error.toString()
       );
+    } finally {
       setIsLoading(false);
     }
   };

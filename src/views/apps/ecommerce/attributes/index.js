@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { ErrorToast, onErrorToast } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
+import attributeServices from "../../../../services/attributeServices";
 
 const Attributes = () => {
   // ** State
@@ -40,13 +41,12 @@ const Attributes = () => {
 
   const loadAttributes = async () => {
     try {
-      const res = await axiosInstance().get(urls.GET_ATTRIBUTES);
+      const res = await attributeServices.getAttributes();
 
       setAttributeList(res.data.results);
-      setIsLoading(false);
     } catch (error) {
       onErrorToast(error.data.massage);
-      
+    } finally {
       setIsLoading(false);
     }
   };

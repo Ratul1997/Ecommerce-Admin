@@ -40,6 +40,7 @@ import {
 import { convertTimeStampToString } from "../../media/files/utils/utils";
 import { generateId } from "@utils";
 import { onErrorToast, onSuccessToast } from "../../../common/Toaster";
+import invoiceServices from "../../../../services/invoiceServices";
 const START_INDEX_OF_INVOICE = "5";
 // ** Vars
 const invoiceStatusObj = {
@@ -74,85 +75,86 @@ const renderClient = row => {
   );
 };
 
-const CustomOptions = ({row,invoiceList,setInvoiceList}) =>{
-  const onDelete = async() =>{
-    try{
-      await axiosInstance().delete(urls.REMOVE_INVOICE_BY_ID+row.invoice_id)
+const CustomOptions = ({ row, invoiceList, setInvoiceList }) => {
+  const onDelete = async () => {
+    try {
+      await invoiceServices.deleteInvoiceById(id);
       // const updatedList = invoiceList
       // updatedList.splice(row.invoice_id,1)
       // setInvoiceList([...updatedList])
 
-      onSuccessToast("Successfully Removed!")
+      onSuccessToast("Successfully Removed!");
       window.location.reload();
-    }catch(error){
-      onErrorToast(error.data.massage)
+    } catch (error) {
+      onErrorToast(error.data.massage);
     }
-  }
-  return(
+  };
+  return (
     <div className="column-action d-flex align-items-center">
-        {/* <Send size={17} id={`send-tooltip-${row.invoice_id}`} />
+      {/* <Send size={17} id={`send-tooltip-${row.invoice_id}`} />
         <UncontrolledTooltip
           placement="top"
           target={`send-tooltip-${row.invoice_id}`}
         >
           Send Mail
         </UncontrolledTooltip> */}
-        <Link
-          to={`/apps/invoice/preview/${row.invoice_id}`}
-          id={`pw-tooltip-${row.invoice_id}`}
-        >
-          <Eye size={17} className="mx-1" />
-        </Link>
-        <UncontrolledTooltip
-          placement="top"
-          target={`pw-tooltip-${row.invoice_id}`}
-        >
-          Preview Invoice
-        </UncontrolledTooltip>
-        <UncontrolledDropdown>
-          <DropdownToggle tag="span">
-            <MoreVertical size={17} className="cursor-pointer" />
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem
-              tag={Link}
-              to={`/apps/invoice/edit/${row.invoice_id}`}
-              className="w-100"
-            >
-              <Edit size={14} className="mr-50" />
-              <span className="align-middle">Edit</span>
-            </DropdownItem>
-            <DropdownItem
-              tag="a"
-              href="/"
-              className="w-100"
-              onClick={e => {
-                e.preventDefault();
-                onDelete();
-              }}
-            >
-              <Trash size={14} className="mr-50" />
-              <span className="align-middle">Delete</span>
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown>
-      </div>
-  )
-}
+      <Link
+        to={`/apps/invoice/preview/${row.invoice_id}`}
+        id={`pw-tooltip-${row.invoice_id}`}
+      >
+        <Eye size={17} className="mx-1" />
+      </Link>
+      <UncontrolledTooltip
+        placement="top"
+        target={`pw-tooltip-${row.invoice_id}`}
+      >
+        Preview Invoice
+      </UncontrolledTooltip>
+      <UncontrolledDropdown>
+        <DropdownToggle tag="span">
+          <MoreVertical size={17} className="cursor-pointer" />
+        </DropdownToggle>
+        <DropdownMenu right>
+          <DropdownItem
+            tag={Link}
+            to={`/apps/invoice/edit/${row.invoice_id}`}
+            className="w-100"
+          >
+            <Edit size={14} className="mr-50" />
+            <span className="align-middle">Edit</span>
+          </DropdownItem>
+          <DropdownItem
+            tag="a"
+            href="/"
+            className="w-100"
+            onClick={e => {
+              e.preventDefault();
+              onDelete();
+            }}
+          >
+            <Trash size={14} className="mr-50" />
+            <span className="align-middle">Delete</span>
+          </DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
+    </div>
+  );
+};
 // ** Table columns
-export const columns =(invoiceList,setInvoiceList) => {
+export const columns = (invoiceList, setInvoiceList) => {
   return [
     {
       name: "#",
       minWidth: "107px",
       selector: "invoice_id",
       cell: row => (
-        <Link
-          to={`/apps/invoice/preview/${row.invoice_id}`}
-        >{`#${generateId(START_INDEX_OF_INVOICE, row.invoice_id)}`}</Link>
+        <Link to={`/apps/invoice/preview/${row.invoice_id}`}>{`#${generateId(
+          START_INDEX_OF_INVOICE,
+          row.invoice_id
+        )}`}</Link>
       ),
     },
-  
+
     {
       name: "Client",
       minWidth: "250px",
@@ -186,7 +188,7 @@ export const columns =(invoiceList,setInvoiceList) => {
       minWidth: "200px",
       cell: row => {
         const dates = convertTimeStampToString(row.invoice_date);
-  
+
         return (
           <div className="text-truncate">
             <span className="d-block  text-truncate">{dates.stringDate}</span>
@@ -212,7 +214,13 @@ export const columns =(invoiceList,setInvoiceList) => {
       minWidth: "110px",
       selector: "",
       sortable: true,
-      cell: row => <CustomOptions row={row} invoiceList={invoiceList} setInvoiceList ={setInvoiceList}/>
+      cell: row => (
+        <CustomOptions
+          row={row}
+          invoiceList={invoiceList}
+          setInvoiceList={setInvoiceList}
+        />
+      ),
     },
   ];
-}
+};

@@ -30,6 +30,7 @@ import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
 import SpinnerComponent from "../../../../../@core/components/spinner/Fallback-spinner";
 import TagFile from "./TagFile";
 import CardFooter from "reactstrap/lib/CardFooter";
+import priceTagServices from "../../../../../services/priceTagServices";
 
 const options = {
   orientation: "portrait",
@@ -57,7 +58,7 @@ export default function GenerateTagPreview() {
   const onGenerate = () => {};
   const loadTag = async () => {
     try {
-      const res = await axiosInstance().get(urls.GET_TAGS_BY_ID + id);
+      const res = await priceTagServices.getPriceTagDetailsById(id);
       const results = res.data.results;
       setTagName(results.tag_name);
       setInput(convertHtmlToState(results.tag_descriptions));

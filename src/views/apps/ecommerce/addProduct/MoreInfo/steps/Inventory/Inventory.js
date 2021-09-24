@@ -23,6 +23,7 @@ import { backOrdersOptions, stockOptions } from "../../../Constants";
 import axiosInstance from "../../../../../../../configs/axiosInstance";
 import { urls } from "../../../../../../../utility/Urls";
 import { onErrorToast, onSuccessToast } from "../../../../../../common/Toaster";
+import productServices from "../../../../../../../services/productServices";
 
 const Inventory = () => {
   const { productData, setProductData, isEditable, id } =
@@ -38,7 +39,7 @@ const Inventory = () => {
   const onUpdate = async () => {
     setIsLoading(true);
     try {
-      await axiosInstance().patch(urls.UPDATE_INVENTORIES_BY_ID + id, {
+      await productServices.updateProductInventory(id, {
         data: {
           allowBackOrders: productData.allowBackOrders
             ? productData.allowBackOrders.label

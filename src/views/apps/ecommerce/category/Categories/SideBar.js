@@ -29,6 +29,7 @@ import {
   SuccessToast,
 } from "../../../../common/Toaster";
 import axiosInstance from "../../../../../configs/axiosInstance";
+import productServices from "../../../../../services/productServices";
 const SidebarNewCategory = ({
   open,
   toggleSidebar,
@@ -96,7 +97,7 @@ const SidebarNewCategory = ({
       parent_id: categoryData.parent_id ? categoryData.parent_id.value : null,
     };
     try {
-      const res = await axiosInstance().post(urls.ADD_A_CATEGORY, {
+      const res = await productServices.addCategory({
         categoryData: category,
       });
       dispatch(updateCategories(res.data));
@@ -123,8 +124,8 @@ const SidebarNewCategory = ({
       parent_id: categoryData.parent_id.value,
     };
     try {
-      const res = await axiosInstance().patch(
-        urls.UPDATE_A_CATEGORY + selectedCategory.category_id,
+      const res = await productServices.updateCategoryById(
+        selectedCategory.category_id,
         {
           categoryData: category,
         }

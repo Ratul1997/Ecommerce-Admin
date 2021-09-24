@@ -15,10 +15,10 @@ import { onErrorToast, onSuccessToast } from "../../../common/Toaster";
 import { generateId } from "@utils";
 import { urls } from "@urls";
 import axiosInstance from "@configs/axiosInstance.js";
+import invoiceServices from "../../../../services/invoiceServices";
 const InvoiceAdd = () => {
   const location = useLocation();
   const params = useParams();
-  
 
   const initialInvoiceDate = {
     invoice_date: new Date(),
@@ -49,7 +49,6 @@ const InvoiceAdd = () => {
   }, []);
 
   const setData = data => {
-    
     const invoicesItemsData = JSON.parse(data.invoice_data);
     setTax(invoicesItemsData.tax);
     setDiscount(invoicesItemsData.discount);
@@ -68,14 +67,12 @@ const InvoiceAdd = () => {
   };
   const loadInvoice = async id => {
     try {
-      const res = await axiosInstance().get(urls.GET_INVOICE_BY_ID + id);
-      setData(res.data.results)
+      const res = await invoiceServices.getInvoiceDetailsById(id);
+      setData(res.data.results);
       setIsEditedInvoice(true);
       setData(res.data.results);
-      
     } catch (error) {
       setErrorCode(error.status);
-      
     }
   };
 
@@ -99,7 +96,6 @@ const InvoiceAdd = () => {
 
     const percent = parseFloat(percentage(parseFloat(tax), total)) || 0.0;
 
-    
     return (total || 0.0) + percent;
   };
 
@@ -130,36 +126,36 @@ const InvoiceAdd = () => {
       return;
     }
     const invoiceData = formatInvoice();
-    
+
     onUploadInvoice(invoiceData);
   };
 
   const onUploadInvoice = async invoiceData => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().post(urls.ADD_INVOICE, invoiceData);
-      
+      const res = await invoiceServices.addInvoice(invoiceData);
+
       invoiceIdRef.current = res.data.results.invoice_id;
-      
+
       onSuccessToast("Successfully Created!");
     } catch (error) {
       onErrorToast(error.data.massage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const onUpdate = () => {
-    
     onUpdateInvoice(formatInvoice());
   };
   const onUpdateInvoice = async invoiceData => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().put(
-        urls.UPDATE_INVOICE_BY_ID + invoiceNumber,
+      const res = await invoiceServices.updateInvoiceItemsById(
+        invoiceNumber,
         invoiceData
       );
-      
+
       onSuccessToast("Successfully Updated!");
     } catch (error) {
       onErrorToast(error.data.massage);
@@ -211,8 +207,8 @@ const InvoiceAdd = () => {
         <Alert color="danger">
           <h4 className="alert-heading">Invoice not found</h4>
           <div className="alert-body">
-            Invoice with id: {params.id} doesn't exist. Check list of all invoices:{" "}
-            <Link to="/apps/invoice/list">Invoice List</Link>
+            Invoice with id: {params.id} doesn't exist. Check list of all
+            invoices: <Link to="/apps/invoice/list">Invoice List</Link>
           </div>
         </Alert>
       )}

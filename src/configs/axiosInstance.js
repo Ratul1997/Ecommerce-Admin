@@ -6,7 +6,8 @@ const axiosInstance = (token = null) => {
 
   instance.defaults.headers.post["Content-Type"] =
     "application/x-www-form-urlencoded; charset=utf-8" == "application/json";
-  instance.defaults.headers['Accept'] ='application/json; charset=utf-8" == "application/json'
+  instance.defaults.headers["Accept"] =
+    'application/json; charset=utf-8" == "application/json';
   instance.defaults.timeout = 5000;
   instance.defaults.baseURL = BASE_URL;
   //instance.defaults.headers.common["Authorization"] = "Token " + token;
@@ -38,8 +39,11 @@ const axiosInstance = (token = null) => {
       // Do something with response error
       // console.log(error.response)
       const errorObject = {
-        status: error.response.status,
-        data: error.response.data,
+        status: error.response === undefined ? 500 : error.response.status,
+        data:
+          error.response === undefined
+            ? "Network Error"
+            : error.response.status,
       };
       return Promise.reject(errorObject);
     }

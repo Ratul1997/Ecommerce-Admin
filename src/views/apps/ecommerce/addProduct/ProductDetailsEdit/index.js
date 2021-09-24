@@ -18,6 +18,7 @@ import consoleLog from "@console";
 import axiosInstance from "../../../../../configs/axiosInstance";
 import { urls } from "../../../../../utility/Urls";
 import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
+import productServices from "../../../../../services/productServices";
 
 const ProductDetailsEdit = () => {
   const { productData, setProductData, isEditable, id } =
@@ -128,8 +129,7 @@ const ProductDetailsEdit = () => {
       featured_img: productData.featured_img
         ? JSON.stringify(productData.featured_img)
         : null,
-      product_status_id:
-      productData.product_status_id.value,
+      product_status_id: productData.product_status_id.value,
       view_on_website: productData.view_on_website,
       sku: productData.sku,
       short_description: stateToHTML(
@@ -149,22 +149,19 @@ const ProductDetailsEdit = () => {
   const onUploadUpdatedData = async updatedData => {
     setIsUploading(true);
     try {
-      const response = await axiosInstance().patch(
-        urls.UPDATE_PRODUCT_DETAILS + id,
-        {
-          ...updatedData,
-        }
-      );
+      const response = await productServices.updateProductDetailsById(id, {
+        ...updatedData,
+      });
       setProductData({
         ...productData,
         categories: newCategoryState,
       });
-      setIsUploading(false);
       onSuccessToast("Updated");
     } catch (error) {
-      setIsUploading(false);
       consoleLog(error);
       onErrorToast("Internal Server Error");
+    } finally {
+      setIsUploading(false);
     }
   };
 

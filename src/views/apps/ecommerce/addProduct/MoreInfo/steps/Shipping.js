@@ -24,6 +24,7 @@ import consoleLog from "@console";
 import axiosInstance from "../../../../../../configs/axiosInstance";
 import { urls } from "../../../../../../utility/Urls";
 import { onErrorToast, onSuccessToast } from "../../../../../common/Toaster";
+import productServices from "../../../../../../services/productServices";
 export default function Shipping() {
   const { productData, setProductData, isEditable, id } =
     useContext(ProductDataContext);
@@ -76,15 +77,12 @@ export default function Shipping() {
   const updateShipping = async (deletedId, insertedId) => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().patch(
-        urls.UPDATE_PRODUCT_SHIPPING_CLASS + id,
-        {
-          deletedProductShipping: deletedId,
-          insertedProductShipping: insertedId,
-          newHasFreeShipping: newShippingStatus,
-          previousHasFreeShipping: productData.hasFreeShipping,
-        }
-      );
+      const res = await productServices.updateProductShippingById(id, {
+        deletedProductShipping: deletedId,
+        insertedProductShipping: insertedId,
+        newHasFreeShipping: newShippingStatus,
+        previousHasFreeShipping: productData.hasFreeShipping,
+      });
       onSuccessToast("Updated!");
       setIsLoading(false);
       if (newShippingStatus === true && productData.hasFreeShipping === false) {

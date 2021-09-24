@@ -20,6 +20,7 @@ import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner.js";
 import ExpandableTable from "./columns.js";
+import commentServices from "../../../services/commentServices.js";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -63,7 +64,7 @@ const Ratings = () => {
   const loadReviewList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_REVIEWS);
+      const res = await commentServices.getAllComments();
       setReviewsList(res.data.results);
       setIsLoading(false);
     } catch (error) {

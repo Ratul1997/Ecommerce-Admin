@@ -20,6 +20,7 @@ module.exports = function override(config, env) {
     '@urls': path.resolve(__dirname, 'src/utility/Urls'),
     '@hooks': path.resolve(__dirname, 'src/utility/hooks'),
     '@console': path.resolve(__dirname, 'src/utility/consoleLog'),
+    '@services':path.resolve(__dirname, 'src/services')
     
   })(config, env)
 

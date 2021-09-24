@@ -16,6 +16,7 @@ import axiosInstance from "../../../../../../configs/axiosInstance";
 import { urls } from "../../../../../../utility/Urls";
 import consoleLog from "@console";
 import { onErrorToast, onSuccessToast } from "../../../../../common/Toaster";
+import productServices from "../../../../../../services/productServices";
 const General = ({ stepper, type }) => {
   const { productData, setProductData, isEditable, id } =
     useContext(ProductDataContext);
@@ -24,7 +25,7 @@ const General = ({ stepper, type }) => {
   const onUpdate = async () => {
     setIsLoading(true);
     try {
-      await axiosInstance().patch(urls.UPDATE_PRODUCT_PRICE + id, {
+      await productServices.updateProductPriceById(id, {
         regular_price: productData.regular_price,
         discount_price: productData.discount_price,
       });
