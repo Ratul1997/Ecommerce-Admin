@@ -7,6 +7,7 @@ import { selectThemeColors } from '@utils'
 import { Editor } from 'react-draft-wysiwyg'
 import Breadcrumbs from '@components/breadcrumbs'
 import { EditorState, ContentState } from 'draft-js'
+import { useDispatch, useSelector } from "react-redux"
 import {
   Row,
   Col,
@@ -37,7 +38,7 @@ const BlogEdit = () => {
   const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks)
   const editorState = EditorState.createWithContent(contentState)
 
-  const [data, setData] = useState(null),
+  const [data, setData] = useState([]),
     [title, setTitle] = useState(''),
     [slug, setSlug] = useState(''),
     [status, setStatus] = useState(''),
@@ -48,22 +49,29 @@ const BlogEdit = () => {
 
   useEffect(() => {
     axios.get('/blog/list/data/edit').then(res => {
-      setData(res.data)
-      setTitle(res.data.blogTitle)
-      setSlug(res.data.slug)
-      setBlogCategories(res.data.blogCategories)
-      setFeaturedImg(res.data.featuredImage)
-      setStatus(res.data.status)
+      //setData(res.data)
+      //setTitle(res.data.blogTitle)
+      //setSlug(res.data.slug)
+      //setBlogCategories(res.data.blogCategories)
+      //setFeaturedImg(res.data.featuredImage)
+      //setStatus(res.data.status)
     })
   }, [])
 
-  const categories = [
-    { value: 'fashion', label: 'Fashion' },
-    { value: 'gaming', label: 'Gaming' },
-    { value: 'quote', label: 'Quote' },
-    { value: 'video', label: 'Video' },
-    { value: 'food', label: 'Food' }
-  ]
+  const store = useSelector(store => store.blog)
+  const { categories } = store
+
+  const getOptions = () => {
+    const options = []
+    categories.filter(item => {
+        if (item.parent_id) {
+          options.push({ value: item.category_id, label: item.name })
+        }
+      })
+
+    return options
+  }
+
 
   const onChange = e => {
     const reader = new FileReader(),
@@ -75,6 +83,13 @@ const BlogEdit = () => {
     reader.readAsDataURL(files[0])
   }
 
+  const onchangeCatagory = (e) => {
+    setBlogCategories(e)
+    setNewBlogDetails({...newBlogDetails, catagory : blogCategories })
+  }
+
+  console.log(blogCategories)
+
   return (
     <div className='blog-edit-wrapper'>
       <Breadcrumbs
@@ -82,16 +97,15 @@ const BlogEdit = () => {
         breadCrumbParent='Pages'
         breadCrumbParent2='Blog'
         breadCrumbActive='Edit'
-      />
-      {data !== null ? (
+      />      
         <Row>
           <Col sm='12'>
             <Card>
               <CardBody>
                 <Media>
-                  <Avatar className='mr-75' img={data.avatar} width='38' height='38' />
+                 {/* <Avatar className='mr-75' img={data.avatar} width='38' height='38' /> */}
                   <Media body>
-                    <h6 className='mb-25'>{data.userFullName}</h6>
+                    <h6 className='mb-25'>{data.userName}</h6>
                     <CardText>{data.createdTime}</CardText>
                   </Media>
                 </Media>
@@ -100,7 +114,9 @@ const BlogEdit = () => {
                     <Col md='6'>
                       <FormGroup className='mb-2'>
                         <Label for='blog-edit-title'>Title</Label>
-                        <Input id='blog-edit-title' value={title} onChange={e => setTitle(e.target.value)} />
+                        <Input id='blog-edit-title' 
+                                value={title} 
+                                onChange={e => setNewBlogDetails({...newBlogDetails, blog_title : e.target.value })} />
                       </FormGroup>
                     </Col>
                     <Col md='6'>
@@ -113,10 +129,10 @@ const BlogEdit = () => {
                           value={blogCategories}
                           isMulti
                           name='colors'
-                          options={categories}
+                          options={getOptions()}
                           className='react-select'
                           classNamePrefix='select'
-                          onChange={data => setBlogCategories(data)}
+                          onChange={onchangeCatagory}
                         />
                       </FormGroup>
                     </Col>
@@ -183,7 +199,7 @@ const BlogEdit = () => {
                     </Col>
                     <Col className='mt-50'>
                       <Button.Ripple color='primary' className='mr-1'>
-                        Save Changes
+                        Save
                       </Button.Ripple>
                       <Button.Ripple color='secondary' outline>
                         Cancel
@@ -195,7 +211,6 @@ const BlogEdit = () => {
             </Card>
           </Col>
         </Row>
-      ) : null}
     </div>
   )
 }

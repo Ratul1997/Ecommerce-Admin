@@ -44,6 +44,7 @@ import ProductDetails from "./ProductDetails";
 import countryJson from "@src/assets/data/country.json";
 import ClientInfoForm from "./ClientInfoForm";
 import Companyformation from "../../../common/Companyformation";
+import invoiceServices from "../../../../services/invoiceServices";
 const START_INDEX_OF_INVOICE = "5";
 
 const AddCard = ({
@@ -102,7 +103,7 @@ const AddCard = ({
 
   const loadInvoiceClient = async () => {
     try {
-      const res = await axiosInstance().get(urls.GET_INVOICE_USERS);
+      const res = await invoiceServices.getInvoiceUsers();
       const invoices = res.data.results;
 
       const arr = options;
@@ -198,7 +199,7 @@ const AddCard = ({
       customer_country: customerInfo.customer_country.label,
     };
     try {
-      const res = await axiosInstance().post(urls.ADD_INVOICE_CLIENT, data);
+      const res = await invoiceServices.addInvoiceUser( data);
       const oldClient = clients;
       oldClient.push(res.data.result);
       setClients([...oldClient]);
@@ -325,11 +326,11 @@ const AddCard = ({
                 ) : null}
                 {isEditedInvoice && (
                   <div className="customer-details mt-1">
-                    <p className="mb-25">{customerInfo.customer_name}</p>
-                    <p className="mb-25">{customerInfo.customer_email}</p>
-                    <p className="mb-25">{customerInfo.customer_address}</p>
-                    <p className="mb-25">{customerInfo.customer_country}</p>
-                    <p className="mb-0">{customerInfo.customer_contact}</p>
+                    <p className="mb-25">{customerInfoRef.customer_name}</p>
+                    <p className="mb-25">{customerInfoRef.customer_email}</p>
+                    <p className="mb-25">{customerInfoRef.customer_address}</p>
+                    <p className="mb-25">{customerInfoRef.customer_country}</p>
+                    <p className="mb-0">{customerInfoRef.customer_contact}</p>
                   </div>
                 )}
               </div>

@@ -8,8 +8,8 @@ import Select from "react-select";
 import { selectThemeColors } from "@utils";
 import { findItemInArray } from "@utils";
 import { ProductDataContext } from "../../..";
-import axiosInstance from "../../../../../../../configs/axiosInstance";
 import consoleLog from "@console";
+import productServices from "../../../../../../../services/productServices";
 export default function Attributes({ stepper }) {
   const { productData, setProductData, isEditable, id, attributeListForData } =
     useContext(ProductDataContext);
@@ -30,9 +30,7 @@ export default function Attributes({ stepper }) {
 
   const loadProductAttributes = async (id, attribute) => {
     try {
-      const res = await axiosInstance().get(
-        urls.GET_PRODUCT_ATTRIBUTES_BY_ID + id
-      );
+      const res = await productServices.getProductAttributeById(id);
       setProductAttributeOptions(res.data.results);
       setSelectedAttributeOptions(res.data.results.attributes);
       res.data.results.attributes &&
@@ -41,7 +39,7 @@ export default function Attributes({ stepper }) {
   };
   const loadAttributes = async () => {
     try {
-      const res = await axiosInstance().get(urls.GET_ATTRIBUTES);
+      const res = await productServices.getAllAttributes();
       setAttributesList(res.data.results);
       if (id) {
         loadProductAttributes(id, res.data.results);

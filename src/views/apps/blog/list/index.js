@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import Sidebar from '../BlogSidebar'
 import Avatar from '@components/avatar'
 import { Link } from 'react-router-dom'
-import { MessageSquare } from 'react-feather'
+import { MessageSquare, Plus } from 'react-feather'
 import Breadcrumbs from '@components/breadcrumbs'
 import {
   Row,
@@ -15,6 +15,7 @@ import {
   CardTitle,
   CardImg,
   Badge,
+  Button,
   Media,
   Pagination,
   PaginationItem,
@@ -22,13 +23,18 @@ import {
 } from 'reactstrap'
 
 import '@styles/base/pages/page-blog.scss'
+import {blogData} from './blogData'
 
 const BlogList = () => {
-  const [data, setData] = useState(null)
+  const [data, setData] = useState(blogData)
 
   useEffect(() => {
-    axios.get('/blog/list/data').then(res => setData(res.data))
+    //axios.get('/blog/list/data').then(res => setData(res.data))
   }, [])
+
+  const onclickAddBlogHandler = () => {
+    
+  }
 
   const badgeColorsArr = {
     Quote: 'light-info',
@@ -40,12 +46,12 @@ const BlogList = () => {
   const renderRenderList = () => {
     return data.map(item => {
       const renderTags = () => {
-        return item.tags.map((tag, index) => {
+        return item.catagory.map((tag, index) => {
           return (
             <a key={index} href='/' onClick={e => e.preventDefault()}>
               <Badge
                 className={classnames({
-                  'mr-50': index !== item.tags.length - 1
+                  'mr-50': index !== item.catagory.length - 1
                 })}
                 color={badgeColorsArr[tag]}
                 pill
@@ -109,6 +115,7 @@ const BlogList = () => {
         breadCrumbParent2='Blog'
         breadCrumbActive='List'
       />
+
       <div className='blog-wrapper'>
         <div className='content-detached content-left'>
           <div className='content-body'>

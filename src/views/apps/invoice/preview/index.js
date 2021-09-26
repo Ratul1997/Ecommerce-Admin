@@ -18,6 +18,7 @@ import axiosInstance from "@configs/axiosInstance.js";
 // ** Styles
 import "@styles/base/pages/app-invoice.scss";
 import SpinnerComponent from "@src/@core/components/spinner/Fallback-spinner";
+import invoiceServices from "../../../../services/invoiceServices";
 
 const InvoicePreview = () => {
   // ** Vars
@@ -41,20 +42,18 @@ const InvoicePreview = () => {
 
   const loadInvoice = async () => {
     try {
-      const res = await axiosInstance().get(urls.GET_INVOICE_BY_ID + id);
+      const res = await invoiceServices.getInvoiceDetailsById(id);
       setData(res.data.results);
       setIsLoading(false);
     } catch (error) {
-      
       setIsLoading(true);
     }
   };
 
   const onDownload = () => {
-    
     const height = document.getElementById("generatePdf").offsetHeight;
     const width = document.getElementById("generatePdf").offsetWidth;
-    
+
     // html2canvas($(".generatePdf")[0], { allowTaint: true }).then(function (
     //   canvas
     // ) {

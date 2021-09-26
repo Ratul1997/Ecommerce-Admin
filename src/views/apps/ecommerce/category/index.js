@@ -14,6 +14,7 @@ import { urls } from "@urls";
 import axiosInstance from "../../../../configs/axiosInstance";
 import { onErrorToast } from "../../../common/Toaster";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
+import productServices from "../../../../services/productServices";
 
 export default function Category() {
   const store = useSelector(store => store.ecommerce);
@@ -26,11 +27,11 @@ export default function Category() {
       const url = urls.GET_CATEGORIES;
 
       // console.log(url)
-      const res = await axiosInstance().get(url);
+      const res = await productServices.getAllCategories();
       dispatch(addCategories(res.data.data));
-      setIsLoading(false);
     } catch (err) {
       onErrorToast(err.data.massage);
+    } finally {
       setIsLoading(false);
     }
   };

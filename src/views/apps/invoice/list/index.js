@@ -19,6 +19,7 @@ import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 import CardTitle from "reactstrap/lib/CardTitle";
+import invoiceServices from "../../../../services/invoiceServices";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -69,10 +70,10 @@ const InvoiceList = () => {
   const loadInvoiceList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_INVOICE);
+      const res = await invoiceServices.getInvoices();
       setInvoiceList(res.data.results);
-      setIsLoading(false);
     } catch (error) {
+    } finally {
       setIsLoading(false);
     }
   };

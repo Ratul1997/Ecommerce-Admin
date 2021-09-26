@@ -11,8 +11,8 @@ import {
 } from "reactstrap";
 // ** Custom Components
 import Breadcrumbs from "@components/breadcrumbs";
-import BlogSidebar from "../../../pages/blog/BlogSidebar";
-import ProductDetailsForm from "../../../pages/blog/edit";
+import BlogSidebar from "../../../apps/blog/BlogSidebar";
+import ProductDetailsForm from "../../../apps/blog/edit";
 import ProductDetailsEdit from "./ProductDetailsEdit";
 import WizardVertical from "../../../forms/wizard/WizardVertical";
 import MoreInfo from "./MoreInfo";
@@ -46,6 +46,7 @@ import {
   getOptionsForStatus,
 } from "./Constants";
 import consoleLog from "@console";
+import productServices from "../../../../services/productServices";
 export const ProductDataContext = React.createContext();
 const AddProduct = () => {
   const initialContent = ``;
@@ -126,7 +127,7 @@ const AddProduct = () => {
 
   const loadProduct = async id => {
     try {
-      const res = await axiosInstance().get(urls.GET_PRODUCTS_ADMIN_BY_ID + id);
+      const res = await productServices.getProductDetailsById(id);
       // console.log(res.data.results);
       setStateForProduct(res.data.results);
     } catch (error) {
@@ -269,7 +270,7 @@ const AddProduct = () => {
   const uploadProduct = async product => {
     try {
       const url = urls.ADD_A_PRODUCT;
-      const res = await axiosInstance().post(url, { product });
+      const res = await productServices.addNewProduct(product);
 
       onSuccessToast("Successfully Inserted A Product");
 

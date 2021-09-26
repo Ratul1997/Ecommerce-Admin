@@ -35,13 +35,12 @@ import {
 } from "react-feather";
 import { generateId } from "@utils";
 import { onErrorToast, onSuccessToast } from "../../../../common/Toaster";
+import priceTagServices from "../../../../../services/priceTagServices";
 
 const CustomOptions = ({ row, tagsList, setTagsList }) => {
   const onDelete = async () => {
     try {
-      await axiosInstance().delete(
-        urls.GET_TAGS_BY_ID + row.prduct_info_price_tag_id
-      );
+      await priceTagServices.deletePriceTagById(row.prduct_info_price_tag_id);
       onSuccessToast("Successfully Removed!");
       window.location.reload();
     } catch (error) {

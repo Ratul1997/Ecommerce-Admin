@@ -172,6 +172,38 @@ export default [
     ],
   },
   {
+    id: 'blog',
+    title: 'Blog',
+    icon: <Circle size={12} />,
+    children: [
+      {
+        id: 'blogList',
+        title: 'List',
+        icon: <Circle size={12} />,
+        permissions: ['admin', 'editor'],
+        navLink: '/apps/blog/list'
+      },
+      {
+        id: "blogList-category",
+        title: "Category",
+        icon: <Circle size={12} />,
+        navLink: "/apps/blog/blogCategory",
+      },
+      {
+        id: 'blogDetail',
+        title: 'Detail',
+        permissions: ['admin', 'editor'],
+        navLink: '/apps/blog/detail'
+      },
+      {
+        id: 'blogEdit',
+        title: 'Edit',
+        permissions: ['admin', 'editor'],
+        navLink: '/apps/blog/edit'
+      }
+    ]
+  },
+  {
     id: "comment",
     title: "Comments",
     icon: <Command size={20} />,

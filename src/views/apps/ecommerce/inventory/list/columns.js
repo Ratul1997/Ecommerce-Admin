@@ -55,20 +55,7 @@ export const columns = (
       name: "Status",
       minWidth: "100px",
       cell: row => {
-        const onUpdate = async () => {
-          try {
-            await axiosInstance().patch(
-              urls.GET_REVIEWS_BY_ID + row.product_review_id,
-              {
-                params: row.isApproved === 1 ? false : true,
-              }
-            );
-            updateInventoryList(row.product_review_id);
-            onSuccessToast("Updated");
-          } catch (error) {
-            onErrorToast(error.data.massage);
-          }
-        };
+     
         return (
           <div className="text-truncate d-inline">
             <Badge

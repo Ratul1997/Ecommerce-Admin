@@ -32,6 +32,7 @@ import {
 } from "../../../../common/Toaster";
 import axiosInstance from "../../../../../configs/axiosInstance";
 import { findValueInArray } from "@utils";
+import productServices from "../../../../../services/productServices";
 const Categories = () => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0);
@@ -140,7 +141,7 @@ const Categories = () => {
 
     try {
       const url = urls.REMOVE_A_CATEGORY + category.category_id;
-      const res = await axiosInstance().delete(url);
+      const res = await productServices.removeCategory(category.category_id);
       dispatch(removeItemInCategory(category));
       onSuccessToast("Successfully removed.");
     } catch (error) {

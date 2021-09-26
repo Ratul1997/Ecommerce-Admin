@@ -33,6 +33,7 @@ import {
   SuccessToast,
 } from "../../../common/Toaster";
 import axiosInstance from "../../../../configs/axiosInstance";
+import attributeServices from "../../../../services/attributeServices";
 const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
   const initialState = {
     attribute_name: "",
@@ -52,7 +53,7 @@ const SideBarNewAttribute = ({ open, toggleSidebar, onAddAttribute }) => {
   const postData = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().post(urls.ADD_ATTRIBUTE, {
+      const res = await attributeServices.addAttribute({
         attribute_name: attributeData.attribute_name.trim(),
       });
 

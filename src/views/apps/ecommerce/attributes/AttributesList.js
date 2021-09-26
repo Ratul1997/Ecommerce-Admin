@@ -14,6 +14,7 @@ import {
 } from "../../../common/Toaster";
 import axios from "axios";
 import axiosInstance from "../../../../configs/axiosInstance";
+import attributeServices from "@services/attributeServices";
 export default function AttributesList({
   attribute,
   index,
@@ -34,7 +35,6 @@ export default function AttributesList({
     setIsAdd(!isAdd);
   };
   const onSelect = item => () => {
-    
     const selectedList = selected;
     const idx = findItemInArray(selected, item, "option_name");
     if (idx > -1) {
@@ -54,7 +54,7 @@ export default function AttributesList({
   const onSaveOption = async () => {
     setIsLoading(true);
     try {
-      const response = await axiosInstance().post(urls.ADD_OPTION, {
+      const response = await attributeServices.saveAttributeOptions({
         option_name: option_name,
         attribute_id: attribute.attribute_id,
       });
@@ -78,7 +78,7 @@ export default function AttributesList({
     const selectedOptions = selected.map(item => item.option_id);
 
     try {
-      const response = await axiosInstance().delete(urls.REMOVE_OPTIONS, {
+      const response = await attributeServices.removeAttributeOptions({
         params: {
           option_ids: selectedOptions,
         },
@@ -86,10 +86,12 @@ export default function AttributesList({
       onSuccessToast("Successfully Deleted");
       onUpdateAttributeList(null, index, selectedOptions);
     } catch (error) {
+      console.log(error);
       onErrorToast(error.data.massage);
+    } finally {
+      setIsLoading(false);
+      onCancelDelete();
     }
-    setIsLoading(false);
-    onCancelDelete();
   };
 
   const onCancelAdd = () => {
@@ -203,15 +205,16 @@ export default function AttributesList({
   const onRemove = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().delete(
-        urls.REMOVE_ATTRIBUTES + attribute.attribute_id
+      const res = await attributeServices.removeAttributeById(
+        attribute.attribute_id
       );
       onSuccessToast("Successfully Deleted");
       onRemoveAttribute(index);
     } catch (error) {
       onErrorToast(error.data.massage);
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
   const renderTitle = title => {
     return (

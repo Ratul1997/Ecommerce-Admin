@@ -25,6 +25,7 @@ import InputPasswordToggle from "@components/input-password-toggle";
 import classnames from "classnames";
 import axiosInstance from "../../../configs/axiosInstance";
 import { urls } from "@urls";
+import adminServices from "@services/adminServices";
 const SuccessToast = () => (
   <Fragment>
     <div className="toastify-header">
@@ -63,7 +64,7 @@ const HorizontalForm = () => {
         const adminData = JSON.parse(localStorage.getItem("userData"));
         const adminEmail = adminData.email;
         const adminRole = adminData.role;
-        const resData = await axiosInstance().post(urls.ADMIN_REGISTER, {
+        const resData = await adminServices.createAdmin({
           adminRole: adminRole,
           adminEmail: adminEmail,
           newStaffUsername: username,

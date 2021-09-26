@@ -63,6 +63,7 @@ import {
   convertTimeStampToString,
 } from "../../media/files/utils/utils";
 import { onErrorToast, onSuccessToast } from "../../../common/Toaster";
+import productServices from "../../../../services/productServices";
 
 // ** Vars
 const states = [
@@ -114,12 +115,9 @@ const CustomPriceRow = ({ row }) => {
 const CustomFeaturedIcon = ({ row, updateProductList }) => {
   const onUpdate = async () => {
     try {
-      await axiosInstance().patch(
-        urls.UPDATE_FEATURED_PRODUCT_BY_ID + row.product_id,
-        {
-          featured: !row.featured_product,
-        }
-      );
+      await productServices.updateFeaturedProductById(row.product_id, {
+        featured: !row.featured_product,
+      });
       updateProductList(row.product_id, "Featured");
       onSuccessToast("Updated");
     } catch (error) {
@@ -146,12 +144,9 @@ const CustomFeaturedIcon = ({ row, updateProductList }) => {
 const CustomPopularProductIcon = ({ row, updateProductList }) => {
   const onUpdate = async () => {
     try {
-      await axiosInstance().patch(
-        urls.UPDATE_POPULAR_PRODUCT_BY_ID + row.product_id,
-        {
-          popular: !row.popular_product,
-        }
-      );
+      await productServices.updatePopularProductById(row.product_id, {
+        popular: !row.popular_product,
+      });
       updateProductList(row.product_id, "Popular");
       onSuccessToast("Updated");
     } catch (error) {
@@ -213,8 +208,8 @@ const columns = updateProductList => {
       // ),
     },
     {
-      name:'SKU',
-      selector:'sku',
+      name: "SKU",
+      selector: "sku",
     },
     {
       name: "Last Updated",
@@ -297,7 +292,7 @@ const columns = updateProductList => {
       cell: row => {
         const onDelete = async () => {
           try {
-            await axiosInstance().delete(urls.DELETE_PRODUCT + row.product_id);
+            await productServices(id);
             onSuccessToast("Deleted Successfully!");
             updateProductList(row.product_id, "Deleted");
           } catch (error) {
@@ -469,7 +464,7 @@ export default function ProductTable({ products, updateProductList }) {
           />
         </Col>
       </Row>
-       <DataTable
+      <DataTable
         noHeader
         pagination
         responsive
@@ -481,8 +476,8 @@ export default function ProductTable({ products, updateProductList }) {
         paginationDefaultPage={currentPage + 1}
         paginationComponent={CustomPagination}
         data={searchValue.length ? filteredData : data}
-        selectableRowsComponent={BootstrapCheckbox} 
-      /> 
+        selectableRowsComponent={BootstrapCheckbox}
+      />
     </Card>
   );
 }

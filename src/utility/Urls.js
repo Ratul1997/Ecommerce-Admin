@@ -114,4 +114,11 @@ export const urls = {
   DELETE_EMAIL_TEMPLATES:`api/email-templates/`,
   UPDATE_EMAIL_TEMPLATES:`api/email-templates/`,
   GET_EMAIL_TEMPLATES_BY_ID:`api/email-templates/`,
+
+  //BlogCatagory
+  GET_BLOG_CATEGORIES: `api/categories`,
+  ADD_A_BLOG_CATEGORY: `api/category`,
+  REMOVE_A_BLOG_CATEGORY: `api/categories/`,
+  UPDATE_A_BLOG_CATEGORY: `api/categories/`,
+
 };

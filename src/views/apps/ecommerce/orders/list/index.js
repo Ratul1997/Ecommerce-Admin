@@ -18,6 +18,7 @@ import axiosInstance from "@configs/axiosInstance.js";
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import SpinnerComponent from "../../../../../@core/components/spinner/Fallback-spinner";
+import orderServices from "../../../../../services/orderServices";
 
 const CustomHeader = ({ handleFilter, value }) => {
   return (
@@ -68,13 +69,12 @@ const OrderList = () => {
   const loadorderList = async () => {
     setIsLoading(true);
     try {
-      const res = await axiosInstance().get(urls.GET_ORDERS_LIST);
+      const res = await orderServices.getAllOrders();
       setOrderList(res.data.results);
-      setIsLoading(false);
     } catch (error) {
+     }finally{
       setIsLoading(false);
-
-      console.log(error);
+    
     }
   };
   const handleFilter = val => {
