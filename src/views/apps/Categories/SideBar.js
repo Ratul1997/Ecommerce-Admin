@@ -18,7 +18,8 @@ import { Button, FormGroup, Label, FormText, Form, Input } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaCounter from "@src/views/forms/form-elements/textarea/TextareaCounter";
 import axios from "axios";
-import { updateBlogCategories } from "../../store/actions";
+import { updateBlogCategories } from "../../apps/blog/store/actions";
+import { updateCategories } from "../../apps/ecommerce/store/actions";
 import { urls } from "@urls";
 
 import { toast } from "react-toastify";
@@ -27,14 +28,18 @@ import {
   onErrorToast,
   onSuccessToast,
   SuccessToast,
-} from "../../../../common/Toaster";
-import axiosInstance from "../../../../../configs/axiosInstance";
-import blogServices from "../../../../../services/blogServices";
+} from "../../common/Toaster";
+import blogServices from "../../../services/blogServices";
+
+
 const SidebarNewCategory = ({
   open,
   toggleSidebar,
   selectedCategory,
   getParentCategory,
+  services,
+  prevPath,
+  categories
 }) => {
   const initialState = {
     name: "",
@@ -70,9 +75,9 @@ const SidebarNewCategory = ({
     };
   }, []);
 
-  const store = useSelector(store => store.ecommerce);
   const dispatch = useDispatch();
-  const { categories } = store;
+
+  const update_category_action = prevPath === "/apps/ecommerce/category" ? updateCategories : updateBlogCategories;
 
   const getOptions = () => {
     const options = [];
@@ -97,10 +102,10 @@ const SidebarNewCategory = ({
       parent_id: categoryData.parent_id ? categoryData.parent_id.value : null,
     };
     try {
-      const res = await blogServices.addBlogCategory({
+      const res = await services.addCategory({
         categoryData: category,
       });
-      dispatch(updateBlogCategories(res.data));
+      dispatch(update_category_action(res.data));
       onSuccessToast("Successfully added.");
       toggleSidebar();
     } catch (error) {
@@ -124,7 +129,7 @@ const SidebarNewCategory = ({
       parent_id: categoryData.parent_id.value,
     };
     try {
-      const res = await blogServices.updateBlogCategoryById(
+      const res = await services.updateCategoryById(
         selectedCategory.category_id,
         {
           categoryData: category,

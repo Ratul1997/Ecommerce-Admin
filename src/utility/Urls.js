@@ -116,9 +116,8 @@ export const urls = {
   GET_EMAIL_TEMPLATES_BY_ID:`api/email-templates/`,
 
   //BlogCatagory
-  GET_BLOG_CATEGORIES: `api/categories`,
-  ADD_A_BLOG_CATEGORY: `api/category`,
-  REMOVE_A_BLOG_CATEGORY: `api/categories/`,
-  UPDATE_A_BLOG_CATEGORY: `api/categories/`,
-
+  GET_BLOG_CATEGORIES: `api/category/categories`,
+  ADD_A_BLOG_CATEGORY: `api/category/new-category`,
+  REMOVE_A_BLOG_CATEGORY: `api/category/category`,
+  UPDATE_A_BLOG_CATEGORY: `api/category/category`,
 };

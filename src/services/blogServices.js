@@ -2,23 +2,23 @@
 import { urls } from "@urls";
 import axiosInstance from "@configs/axiosInstance";
 
-const addBlogCategory = async categoryData => {
-  return await axiosInstance().post(urls.ADD_A_BLOG_CATEGORY, {
+const addCategory = async categoryData => {
+  return await axiosInstance().post(urls.ADD_A_CATEGORY, {
     ...categoryData,
   });
 };
 
-const getAllBlogCategories = async () => {
-  return await axiosInstance().get(urls.GET_BLOG_CATEGORIES);
+const getAllCategories = async () => {
+  return await axiosInstance().get(urls.GET_CATEGORIES);
 };
 
-const removeBlogCategory = async id => {
-  return await axiosInstance().delete(urls.REMOVE_A_BLOG_CATEGORY + id);
+const removeCategory = async id => {
+  return await axiosInstance().delete(urls.REMOVE_A_CATEGORY + id);
 };
 
-const updateBlogCategoryById = async (id, categoryData) => {
+const updateCategoryById = async (id, categoryData) => {
   return await axiosInstance().patch(
-    urls.UPDATE_A_BLOG_CATEGORY + id,
+    urls.UPDATE_A_CATEGORY + id,
     {
       ...categoryData
     }
@@ -26,10 +26,10 @@ const updateBlogCategoryById = async (id, categoryData) => {
 };
 
 const blogServices = {
-    addBlogCategory,
-    getAllBlogCategories,
-    removeBlogCategory,
-    updateBlogCategoryById
+    addCategory,
+    getAllCategories,
+    removeCategory,
+    updateCategoryById
 };
 
 export default blogServices;

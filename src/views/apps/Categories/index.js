@@ -21,7 +21,8 @@ import {
 } from "reactstrap";
 import Sidebar from "./SideBar";
 import axios from "axios";
-import { removeItemInBlogCategory } from "../../store/actions";
+import { removeItemInBlogCategory } from "../../apps/blog/store/actions";
+import { removeItemInCategory } from "../../apps/ecommerce/store/actions";
 import { urls } from "@urls";
 import { toast } from "react-toastify";
 import {
@@ -29,10 +30,12 @@ import {
   onErrorToast,
   onSuccessToast,
   SuccessToast,
-} from "../../../../common/Toaster";
-import axiosInstance from "../../../../../configs/axiosInstance";
+} from "../../common/Toaster";
 import { findValueInArray } from "@utils";
-import blogServices from "../../../../../services/blogServices";
+import blogServices from "../../../services/blogServices";
+import productServices from "../../../services/productServices";
+import {useLocation} from 'react-router-dom';
+
 const Categories = () => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0);
@@ -43,9 +46,16 @@ const Categories = () => {
   const [editModal, setEditModal] = useState(false);
   let categoryRef = useRef();
 
+  let location = useLocation()
+  const prevPath = location.pathname;
+
   const dispatch = useDispatch();
-  const store = useSelector(store => store.ecommerce);
+  const store = useSelector(store => prevPath === "/apps/ecommerce/category" ? store.ecommerce: store.blog);
   const { categories } = store;
+
+  console.log(prevPath)
+  const services = prevPath === "/apps/ecommerce/category" ? productServices : blogServices;
+  const remove_category_action = prevPath === "/apps/ecommerce/category" ? removeItemInCategory : removeItemInBlogCategory;
 
   // ** Function to handle pagination
   const handlePagination = page => {
@@ -141,8 +151,8 @@ const Categories = () => {
 
     try {
       const url = urls.REMOVE_A_CATEGORY + category.category_id;
-      const res = await blogServices.removeBlogCategory(category.category_id);
-      dispatch(removeItemInBlogCategory(category));
+      const res = await services.removeCategory(category.category_id);
+      dispatch(remove_category_action(category));
       onSuccessToast("Successfully removed.");
     } catch (error) {
       onErrorToast(error.data.massage);
@@ -220,7 +230,11 @@ const Categories = () => {
   return (
     <Card>
       <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">
-        <CardTitle tag="h4">Blog Categories</CardTitle>
+        {
+          prevPath === "/apps/ecommerce/category" ? 
+          <CardTitle tag="h4">Product Categories</CardTitle> :
+          <CardTitle tag="h4">Blog Categories</CardTitle>
+        }
         <div className="d-flex mt-md-0 mt-1">
           <Button className="ml-2" color="primary" onClick={toggleSidebar}>
             <Plus size={15} />
@@ -266,6 +280,9 @@ const Categories = () => {
         selectedCategory={selectedCategory}
         getParentCategory={getParentCategory}
         categoryRef={categoryRef}
+        services={services}
+        prevPath={prevPath}
+        categories={categories}
       />
     </Card>
   );

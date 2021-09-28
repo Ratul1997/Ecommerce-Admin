@@ -11,6 +11,7 @@ import {
   User,
   ShoppingBag,
   Command,
+  Book,
   Tag,
   Settings,
   Database,
@@ -174,7 +175,7 @@ export default [
   {
     id: 'blog',
     title: 'Blog',
-    icon: <Circle size={12} />,
+    icon: <Book size={12} />,
     children: [
       {
         id: 'blogList',
@@ -192,12 +193,14 @@ export default [
       {
         id: 'blogDetail',
         title: 'Detail',
+        icon: <Circle size={12} />,
         permissions: ['admin', 'editor'],
         navLink: '/apps/blog/detail'
       },
       {
         id: 'blogEdit',
         title: 'Edit',
+        icon: <Circle size={12} />,
         permissions: ['admin', 'editor'],
         navLink: '/apps/blog/edit'
       }
