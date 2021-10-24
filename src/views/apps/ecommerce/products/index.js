@@ -10,8 +10,15 @@ import { findItemInArray, findValueInArray } from "../../../../utility/Utils";
 import SpinnerComponent from "../../../../@core/components/spinner/Fallback-spinner";
 import consoleLog from '@console'
 import productServices from "../../../../services/productServices";
+import { useDispatch, useSelector } from "react-redux";
+import { addProducts } from '../store/actions';
+
 export default function Products() {
-  const [products, setProducts] = useState([]);
+  const dispatch = useDispatch()
+  
+  const store = useSelector(store => store.ecommerce);
+    
+  const [products, setProducts] = useState(store.products);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     loadProducts();
@@ -20,6 +27,7 @@ export default function Products() {
     try {
       const res = await productServices.getAllProducts();
       setProducts(res.data.products);
+      dispatch(addProducts(res.data.products));
 
       
       consoleLog(res.data.products)
@@ -32,7 +40,7 @@ export default function Products() {
       setIsLoading(false);
     }
   };
-
+  
   const onDeleteProducts = async () => {};
   const updateProductList = (id, type) => {
     const productList = products;

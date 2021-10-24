@@ -1,10 +1,14 @@
 // ** React Imports
 import { Link } from 'react-router-dom'
-
+import { Fragment, useState, useEffect } from 'react'
 // ** Third Party Components
 import classnames from 'classnames'
 import { Star, ShoppingCart, Heart } from 'react-feather'
 import { Card, CardBody, CardText, Button, Badge } from 'reactstrap'
+import { addToCart, getAllCart } from '../store/actions'
+import { useDispatch, useSelector } from 'react-redux'
+import { onErrorToast, onSuccessToast } from '../../../common/Toaster'
+import { findValueInArray } from "@utils"
 
 const ProductCards = props => {
   // ** Props
@@ -12,33 +16,31 @@ const ProductCards = props => {
     store,
     products,
     activeView,
-    addToCart,
-    dispatch,
     getProducts,
     getCartItems,
-    addToWishlist,
-    deleteWishlistItem
+    selected
   } = props
 
+  const dispatch = useDispatch()
+  const item_quantity = 1
+  
   // ** Handle Move/Add to cart
-  const handleCartBtn = (id, val) => {
-    if (val === false) {
-      dispatch(addToCart(id))
+  const handleCartBtn = (item) => {
+    try {
+      const index = findValueInArray(store.cart, item.product_id, "product_id")
+      if (index === -1) {
+        store.cart.push({...item, quantity: item_quantity})
+        dispatch(addToCart(store.cart))
+        onSuccessToast("Succesfully added")
+      } else {
+        onErrorToast("Already added to cart")
+      }
+    } catch (error) {
+      console.log(error)
+      onErrorToast("")
     }
-    dispatch(getCartItems())
-    dispatch(getProducts(store.params))
   }
-
-  // ** Handle Wishlist item toggle
-  const handleWishlistClick = (id, val) => {
-    if (val) {
-      dispatch(deleteWishlistItem(id))
-    } else {
-      dispatch(addToWishlist(id))
-    }
-    dispatch(getProducts(store.params))
-  }
-
+  
   // ** Renders products
   const renderProducts = () => {
     if (products.length) {
@@ -48,49 +50,22 @@ const ProductCards = props => {
         return (
           <Card className='ecommerce-card' key={item.name}>
             <div className='item-img text-center mx-auto'>
-              <Link to={`/apps/ecommerce/product-detail/${item.slug}`}>
-                <img className='img-fluid card-img-top' src={item.image} alt={item.name} />
-              </Link>
+              <img className='img-fluid card-img-top' src={item.featured_img} alt={item.product_name} />
             </div>
             <CardBody>
-              <div className='item-wrapper'>
-                <div className='item-rating'>
-                  <ul className='unstyled-list list-inline'>
-                    {new Array(5).fill().map((listItem, index) => {
-                      return (
-                        <li key={index} className='ratings-list-item mr-25'>
-                          <Star
-                            className={classnames({
-                              'filled-star': index + 1 <= item.rating,
-                              'unfilled-star': index + 1 > item.rating
-                            })}
-                          />
-                        </li>
-                      )
-                    })}
-                  </ul>
-                </div>
                 <div className='item-cost'>
-                  <h6 className='item-price'>${item.price}</h6>
+                  <h6 className='item-price'>{item.discount_price} BDT</h6>
                 </div>
-              </div>
               <h6 className='item-name'>
                 <Link className='text-body' to={`/apps/ecommerce/product-detail/${item.slug}`}>
-                  {item.name}
+                  {item.product_name}
                 </Link>
-                <CardText tag='span' className='item-company'>
-                  By{' '}
-                  <a className='company-name' href='/' onClick={e => e.preventDefault()}>
-                    {item.brand}
-                  </a>
-                </CardText>
               </h6>
-              <CardText className='item-description'>{item.description}</CardText>
             </CardBody>
             <div className='item-options text-center'>
               <div className='item-wrapper'>
                 <div className='item-cost'>
-                  <h4 className='item-price'>${item.price}</h4>
+                  <h4 className='item-price'>${item.discount_price}</h4>
                   {item.hasFreeShipping ? (
                     <CardText className='shipping'>
                       <Badge color='light-success'>Free Shipping</Badge>
@@ -99,33 +74,12 @@ const ProductCards = props => {
                 </div>
               </div>
               <Button
-                className='btn-wishlist'
-                color='light'
-                onClick={() => handleWishlistClick(item.id, item.isInWishlist)}
-              >
-                <Heart
-                  className={classnames('mr-50', {
-                    'text-danger': item.isInWishlist
-                  })}
-                  size={14}
-                />
-                <span>Wishlist</span>
-              </Button>
-              <Button
                 color='primary'
                 tag={CartBtnTag}
                 className='btn-cart move-cart'
-                onClick={() => handleCartBtn(item.id, item.isInCart)}
-                /*eslint-disable */
-                {...(item.isInCart
-                  ? {
-                      to: '/apps/ecommerce/checkout'
-                    }
-                  : {})}
-                /*eslint-enable */
-              >
+                onClick={() => handleCartBtn(item)} >
                 <ShoppingCart className='mr-50' size={14} />
-                <span>{item.isInCart ? 'View In Cart' : 'Add To Cart'}</span>
+                <span>Add To Cart</span>
               </Button>
             </div>
           </Card>

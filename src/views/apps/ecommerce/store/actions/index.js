@@ -1,22 +1,24 @@
 /* eslint-disable semi */
 import axios from "axios";
 
-// ** GET Products
-export const getProducts = params => {
+// ** Add products
+export const addProducts = params => {
   return dispatch => {
-    return axios.get("/apps/ecommerce/products", { params }).then(res => {
-      dispatch({ type: "GET_PRODUCTS", data: res.data, params });
-    });
+    return dispatch({ type: "ADD_PRODUCT", data: params });
   };
 };
 
 // ** Add Item to Cart
-export const addToCart = id => {
-  return (dispatch, getState) => {
-    return axios.post("/apps/ecommerce/cart", { productId: id }).then(res => {
-      dispatch({ type: "ADD_TO_CART", data: res.data });
-      dispatch(getProducts(getState().ecommerce.params));
-    });
+export const addToCart = params => {
+  return dispatch => {
+    return dispatch({ type: "ADD_TO_CART", data: params });
+  };
+};
+
+// ** Get all Cart items
+export const getAllCart = () => {
+  return dispatch => {
+    return dispatch({ type: "GET_CART"});
   };
 };
 
@@ -71,10 +73,14 @@ export const addToWishlist = id => {
 // ** DELETE Cart Items
 export const deleteCartItem = id => {
   return dispatch => {
-    return axios.delete(`/apps/ecommerce/cart/${id}`).then(res => {
-      dispatch({ type: "DELETE_CART_ITEM", data: res.data });
-      dispatch(getCartItems());
-    });
+      dispatch({ type: "DELETE_CART_ITEM", data: id });
+  };
+};
+
+// ** Update cart item
+export const updateCartItem = params => {
+  return dispatch => {
+    return dispatch({ type: "UPDATE_CART_ITEM", data: params });
   };
 };
 

@@ -11,8 +11,8 @@ import {
 } from "reactstrap";
 // ** Custom Components
 import Breadcrumbs from "@components/breadcrumbs";
-import BlogSidebar from "../../../pages/blog/BlogSidebar";
-import ProductDetailsForm from "../../../pages/blog/edit";
+import BlogSidebar from "../../../apps/blog/BlogSidebar";
+import ProductDetailsForm from "../../../apps/blog/edit";
 import ProductDetailsEdit from "./ProductDetailsEdit";
 import WizardVertical from "../../../forms/wizard/WizardVertical";
 import MoreInfo from "./MoreInfo";
@@ -268,6 +268,7 @@ const AddProduct = () => {
     uploadProduct(dataOfProduct);
   };
   const uploadProduct = async product => {
+    console.log(product);
     try {
       const url = urls.ADD_A_PRODUCT;
       const res = await productServices.addNewProduct(product);

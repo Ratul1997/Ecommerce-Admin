@@ -18,7 +18,8 @@ import { Button, FormGroup, Label, FormText, Form, Input } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
 import TextareaCounter from "@src/views/forms/form-elements/textarea/TextareaCounter";
 import axios from "axios";
-import { addCategories, updateCategories } from "../../store/actions";
+import { updateBlogCategories } from "../../apps/blog/store/actions";
+import { updateCategories } from "../../apps/ecommerce/store/actions";
 import { urls } from "@urls";
 
 import { toast } from "react-toastify";
@@ -27,14 +28,19 @@ import {
   onErrorToast,
   onSuccessToast,
   SuccessToast,
-} from "../../../../common/Toaster";
-import axiosInstance from "../../../../../configs/axiosInstance";
-import productServices from "../../../../../services/productServices";
+} from "../../common/Toaster";
+import blogServices from "../../../services/blogServices";
+import Categories from ".";
+
+
 const SidebarNewCategory = ({
   open,
   toggleSidebar,
   selectedCategory,
   getParentCategory,
+  services,
+  categories,
+  type
 }) => {
   const initialState = {
     name: "",
@@ -51,12 +57,12 @@ const SidebarNewCategory = ({
   useEffect(() => {
     if (selectedCategory) {
       setCategoryData({
-        name: selectedCategory.name,
+        name: selectedCategory.name || selectedCategory.category_name,
         description: selectedCategory.description,
-        parent_id: selectedCategory.parent_id
+        parent_id: selectedCategory.parent_id || selectedCategory.parent_category
           ? {
-              value: selectedCategory.parent_id,
-              label: getParentCategory(selectedCategory.parent_id),
+              value: selectedCategory.parent_id || selectedCategory.parent_category,
+              label: getParentCategory(selectedCategory.parent_id || selectedCategory.parent_category),
             }
           : null,
       });
@@ -70,15 +76,17 @@ const SidebarNewCategory = ({
     };
   }, []);
 
-  const store = useSelector(store => store.ecommerce);
   const dispatch = useDispatch();
-  const { categories } = store;
-
+  // const store = useSelector(store => type === "Product" ? store.ecommerce: store.blog);
+  // const { categories } = store;
+  
+  const update_category_action = type === "Product" ? updateCategories : updateBlogCategories;
+  
   const getOptions = () => {
     const options = [];
     categories &&
       categories.map(item => {
-        options.push({ value: item.category_id, label: item.name });
+        options.push({ value: item.category_id, label: item.name || item.category_name});
       });
     return options;
   };
@@ -97,10 +105,10 @@ const SidebarNewCategory = ({
       parent_id: categoryData.parent_id ? categoryData.parent_id.value : null,
     };
     try {
-      const res = await productServices.addCategory({
+      const res = await services.addCategory({
         categoryData: category,
       });
-      dispatch(updateCategories(res.data));
+      dispatch(update_category_action(res.data));
       onSuccessToast("Successfully added.");
       toggleSidebar();
     } catch (error) {
@@ -124,7 +132,7 @@ const SidebarNewCategory = ({
       parent_id: categoryData.parent_id.value,
     };
     try {
-      const res = await productServices.updateCategoryById(
+      const res = await services.updateCategoryById(
         selectedCategory.category_id,
         {
           categoryData: category,
@@ -196,7 +204,7 @@ const SidebarNewCategory = ({
               "bg-danger": categoryData.description.length > 100,
             })}
           >
-            {`${categoryData.description.length}/100`}
+            {`${categoryData.description}/100`}
           </span>
         </FormGroup>
         {isEdit ? (

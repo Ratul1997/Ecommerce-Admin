@@ -13,6 +13,7 @@ import email from "@src/views/apps/email/store/reducer";
 import invoice from "@src/views/apps/invoice/store/reducer";
 import calendar from "@src/views/apps/calendar/store/reducer";
 import ecommerce from "@src/views/apps/ecommerce/store/reducer";
+import blog from "@src/views/apps/blog/store/reducer";
 import dataTables from "@src/views/tables/data-tables/store/reducer";
 import UploadFile from "@src/views/common/upload/store/reducer";
 import mediaReducer from "@src/views/apps/media/store/reducer";
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
   invoice,
   calendar,
   ecommerce,
+  blog,
   dataTables,
   UploadFile,
   mediaReducer,

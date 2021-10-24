@@ -1,0 +1,68 @@
+//response of both get and post method
+blogData = [
+    {
+        blog_id: 1,
+        title: 'The Features Coming to iOS and Web design',
+        slug: 'the-features-coming-to-iOS-and-web-design',
+        images: '@src/assets/images/slider/02.jpg',
+        content: 'Donut fruitcake soufflé apple pie candy canes jujubes croissant chocolate bar ice cream.',
+        inserted_at: 'Jan 10, 2020',
+        updated_at: 'Jan 10, 2020',
+        catagory: [
+            {
+                value: 1,
+                label: "Food",
+            },
+            {
+                value: 2
+                label: "fashion",
+            }
+        ],
+        status: 1,
+        userId: 1,
+        username: 'admin',
+        userAvatar: '@src/assets/images/slider/02.jpg'
+    },
+    {
+        blog_id: 2,
+        title: 'something new',
+        slug: 'something-new',
+        images: '@src/assets/images/slider/02.jpg',
+        content: 'Donut fruitcake soufflé apple pie candy canes jujubes croissant chocolate bar ice cream.',
+        inserted_at: 'Jan 10, 2020',
+        updated_at: 'Jan 10, 2020',
+        catagory: [
+            {
+                value: 1,
+                label: "Food",
+            },
+            {
+                value: 2
+                label: "fashion",
+            }
+        ],        
+        status: 1,
+        userId: 1,
+        username: 'admin',
+        userAvatar: '@src/assets/images/slider/02.jpg'
+    },
+]
+
+//data sent for the post method
+blogData = {
+    title: 'The Features Coming to iOS and Web design',
+    slug: 'the-features-coming-to-iOS-and-web-design',
+    images: '@src/assets/images/slider/02.jpg',
+    content: 'Donut fruitcake soufflé apple pie candy canes jujubes croissant chocolate bar ice cream.',
+    catagory: [
+        {
+            value: 1,
+            label: "Food",
+        },
+        {
+            value: 2
+            label: "fashion",
+        }
+    ],
+    status: 1,
+}

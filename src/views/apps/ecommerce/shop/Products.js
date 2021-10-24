@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
 
 // ** Product components
 import ProductCards from './ProductCards'
@@ -9,6 +9,8 @@ import ProductsSearchbar from './ProductsSearchbar'
 // ** Third Party Components
 import classnames from 'classnames'
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap'
+import { findValueInArray } from "@utils"
+
 
 const ProductsPage = props => {
   // ** Props
@@ -24,7 +26,8 @@ const ProductsPage = props => {
     getCartItems,
     deleteWishlistItem,
     deleteCartItem,
-    setSidebarOpen
+    setSidebarOpen,
+    selected
   } = props
 
   // ** Handles pagination
@@ -58,12 +61,35 @@ const ProductsPage = props => {
     })
   }
 
+  const getSelectedProducts = () => {
+    const selected_Products = []
+    if (selected === "All") {
+      store.products.map(item => {
+        if (item.product_status_id !== 2 && item.product_status_id !== 4) {
+          selected_Products.push(item)
+        }
+      })
+    } else {
+      store.products.map(item => {
+      const index = findValueInArray(item.categories, selected, "category_name")
+        if (index > -1) {
+          selected_Products.push(item)
+        }
+      })
+    }
+    return selected_Products
+  }
+
   // ** handle next page click
   const handleNext = () => {
     if (store.params.page !== Number(store.totalProducts) / store.products.length) {
       handlePageChange('next')
     }
   }
+
+  useEffect(() => {
+    getSelectedProducts()
+  }, [selected])
 
   return (
     <div className='content-detached content-right'>
@@ -87,15 +113,11 @@ const ProductsPage = props => {
           <Fragment>
             <ProductCards
               store={store}
-              dispatch={dispatch}
-              addToCart={addToCart}
               activeView={activeView}
-              products={store.products}
+              products={getSelectedProducts()}
               getProducts={getProducts}
               getCartItems={getCartItems}
-              addToWishlist={addToWishlist}
-              deleteCartItem={deleteCartItem}
-              deleteWishlistItem={deleteWishlistItem}
+              selected={selected}
             />
             <Pagination className='d-flex justify-content-center'>
               <PaginationItem

@@ -24,15 +24,33 @@ const Checkout = () => {
   // ** Ref & State
   const ref = useRef(null)
   const [stepper, setStepper] = useState(null)
+  const [customerDetails, setCustomerDetails] = useState()
+  const [shippingCost, setShippingCost] = useState(0)
+  const [paymentSelectedMethod, setPaymentSelectedMethod] = useState()
+  const [paymentMethodInfo, setPaymentMethodInfo] = useState()
+  const [onlinePaymentMethod, setOnlinePaymentMethod] = useState()
+  const [payPhnNumber, setPayPhnNumber] = useState()
+  const [payTransaction, setPayTransaction] = useState(null)
+  const [message, setMessage] = useState("")
 
   // ** Store Vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.ecommerce)
 
   // ** Get Cart Items on mount
-  useEffect(() => {
-    dispatch(getCartItems())
-  }, [])
+  // useEffect(() => {
+  //   dispatch(getCartItems())
+  // }, [])
+
+  const countTotalPrice = () => {
+    let total = 0
+    if (store.cart) {
+      store.cart.map(item => {
+        total += (item.discount_price)
+      })
+    }
+    return total
+  }
 
   const steps = [
     {
@@ -44,11 +62,14 @@ const Checkout = () => {
         <Cart
           stepper={stepper}
           dispatch={dispatch}
+          store={store}
           products={store.cart}
           getCartItems={getCartItems}
           addToWishlist={addToWishlist}
           deleteCartItem={deleteCartItem}
           deleteWishlistItem={deleteWishlistItem}
+          shippingCost={shippingCost}
+          countTotalPrice={countTotalPrice}
         />
       )
     },
@@ -57,14 +78,44 @@ const Checkout = () => {
       title: 'Address',
       subtitle: 'Enter Your Address',
       icon: <Home size={18} />,
-      content: <Address stepper={stepper} />
+      content: (
+          <Address 
+            stepper={stepper}
+            store={store} 
+            customerDetails={customerDetails}
+            setCustomerDetails={setCustomerDetails}
+            shippingCost={shippingCost}
+            setShippingCost={setShippingCost}
+            countTotalPrice={countTotalPrice}
+          />
+      )
     },
     {
       id: 'payment',
       title: 'Payment',
       subtitle: 'Select Payment Method',
       icon: <CreditCard size={18} />,
-      content: <Payment stepper={stepper} />
+      content: (
+          <Payment 
+            store={store}
+            stepper={stepper}
+            customerDetails={customerDetails}
+            paymentSelectedMethod={paymentSelectedMethod}
+            setPaymentSelectedMethod={setPaymentSelectedMethod}
+            paymentMethodInfo={paymentMethodInfo}
+            setPaymentMethodInfo={setPaymentMethodInfo}
+            onlinePaymentMethod={onlinePaymentMethod}
+            setOnlinePaymentMethod={setOnlinePaymentMethod}
+            countTotalPrice={countTotalPrice}
+            shippingCost={shippingCost}
+            payPhnNumber={payPhnNumber}
+            setPayPhnNumber={setPayPhnNumber}
+            payTransaction={payTransaction}
+            setPayTransaction={setPayTransaction}
+            message={message}
+            setMessage={setMessage}
+          />
+      )
     }
   ]
 

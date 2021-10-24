@@ -271,6 +271,47 @@ const AppRoutes = [
     path:'/apps/marketing/email-marketing/email-templates/edit/:id',
     exact:true,
     component: lazy(()=>import('../../views/apps/marketing/email'))
+  },
+  {
+    path: "/apps/blog/edit",
+    className: "ecommerce-application",
+    component: lazy(() => import("../../views/apps/blog/edit")),
+  },
+  {
+    path: '/apps/blog/list',
+    exact: true,
+    component: lazy(() => import('../../views/apps/blog/list'))
+  },
+  {
+    path: "/apps/blog/blogCategory",
+    className: "ecommerce-application",
+    component: lazy(() => import("../../views/apps/blog/blogCategory")),
+  },
+  {
+    path: '/apps/blog/detail/:id',
+    exact: true,
+    component: lazy(() => import('../../views/apps/blog/details')),
+    meta: {
+      navLink: '/pages/blog/detail'
+    }
+  },
+  {
+    path: '/apps/blog/detail',
+    exact: true,
+    component: () => <Redirect to='/apps/blog/detail/1' />
+  },
+  {
+    path: '/apps/blog/edit/:id',
+    exact: true,
+    component: lazy(() => import('../../views/apps/blog/edit')),
+    meta: {
+      navLink: '/pages/blog/edit'
+    }
+  },
+  {
+    path: '/apps/blog/edit',
+    exact: true,
+    component: () => <Redirect to='/apps/blog/edit/1' />
   }
 ];
 

@@ -8,7 +8,7 @@ import AccountTab from './Account'
 import InfoTab from './Information'
 
 // ** Store & Actions
-import { getUser } from '../store/action'
+//import { getUser } from '../store/action'
 import { useSelector, useDispatch } from 'react-redux'
 
 // ** Third Party Components

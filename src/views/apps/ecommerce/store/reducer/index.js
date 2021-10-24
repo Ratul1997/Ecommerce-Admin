@@ -23,26 +23,44 @@ const removeACategoryItem = (categories, data) => {
 
   return [...newCategories];
 };
+
+const removeACartItem = (cart, data) => {
+  const newCart = cart.filter(item => {
+    if (item.product_id !== data) return item;
+  });
+
+  return [...newCart];
+};
+
+const updateCart = (cart, data) => {
+  cart.push(data);
+
+  return [...cart];
+};
+
 const ecommerceReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "GET_PRODUCTS":
-      return {
-        ...state,
-        products: action.data.products,
-        params: action.params,
-        totalProducts: action.data.total,
-      };
+    case "ADD_PRODUCT":
+      return { ...state, products: action.data };
+    case "ADD_TO_CART":
+      return { ...state, cart: action.data};
+    case "GET_CART":
+      return { ...state };
     case "GET_WISHLIST":
       return { ...state, wishlist: action.data.products };
     case "DELETE_WISHLIST_ITEM":
       return { ...state };
-    case "GET_CART":
-      return { ...state, cart: action.data.products };
     case "DELETE_CART_ITEM":
-      return { ...state };
+      return {
+        ...state,
+        cart: removeACartItem(state.cart, action.data),
+      };
+    case "UPDATE_CART_ITEM":
+      return {
+        ...state,
+        cart: updateCart(state.cart, action.data),
+      };
     case "ADD_TO_WISHLIST":
-      return { ...state };
-    case "ADD_TO_CART":
       return { ...state };
     case "GET_PRODUCT":
       return { ...state, productDetail: action.data.product };

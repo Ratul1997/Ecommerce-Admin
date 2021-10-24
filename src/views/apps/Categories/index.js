@@ -21,7 +21,8 @@ import {
 } from "reactstrap";
 import Sidebar from "./SideBar";
 import axios from "axios";
-import { removeItemInCategory } from "../../store/actions";
+import { removeItemInBlogCategory } from "../../apps/blog/store/actions";
+import { removeItemInCategory } from "../../apps/ecommerce/store/actions";
 import { urls } from "@urls";
 import { toast } from "react-toastify";
 import {
@@ -29,11 +30,13 @@ import {
   onErrorToast,
   onSuccessToast,
   SuccessToast,
-} from "../../../../common/Toaster";
-import axiosInstance from "../../../../../configs/axiosInstance";
+} from "../../common/Toaster";
 import { findValueInArray } from "@utils";
-import productServices from "../../../../../services/productServices";
-const Categories = () => {
+import blogServices from "../../../services/blogServices";
+import productServices from "../../../services/productServices";
+import {useLocation} from 'react-router-dom';
+
+const Categories = ({type}) => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0);
   const [searchValue, setSearchValue] = useState("");
@@ -44,9 +47,12 @@ const Categories = () => {
   let categoryRef = useRef();
 
   const dispatch = useDispatch();
-  const store = useSelector(store => store.ecommerce);
+  const store = useSelector(store => type === "Product" ? store.ecommerce: store.blog);
   const { categories } = store;
 
+  const services = type === "Product" ? productServices : blogServices;
+  const remove_category_action = type === "Product" ? removeItemInCategory : removeItemInBlogCategory;
+  
   // ** Function to handle pagination
   const handlePagination = page => {
     setCurrentPage(page.selected);
@@ -141,8 +147,10 @@ const Categories = () => {
 
     try {
       const url = urls.REMOVE_A_CATEGORY + category.category_id;
-      const res = await productServices.removeCategory(category.category_id);
-      dispatch(removeItemInCategory(category));
+
+      const res = await services.removeCategory(category.category_id);
+
+      dispatch(remove_category_action(category));
       onSuccessToast("Successfully removed.");
     } catch (error) {
       onErrorToast(error.data.massage);
@@ -191,7 +199,7 @@ const Categories = () => {
     },
     {
       name: "Parent Category",
-      selector: "parent_category",
+      selector: "parent_id",
       sortable: true,
       minWidth: "10px",
       cell: row => {
@@ -220,7 +228,11 @@ const Categories = () => {
   return (
     <Card>
       <CardHeader className="flex-md-row flex-column align-md-items-center align-items-start border-bottom">
-        <CardTitle tag="h4">Categories</CardTitle>
+        {
+          type === "Product" ? 
+          <CardTitle tag="h4">Product Categories</CardTitle> :
+          <CardTitle tag="h4">Blog Categories</CardTitle>
+        }
         <div className="d-flex mt-md-0 mt-1">
           <Button className="ml-2" color="primary" onClick={toggleSidebar}>
             <Plus size={15} />
@@ -266,6 +278,9 @@ const Categories = () => {
         selectedCategory={selectedCategory}
         getParentCategory={getParentCategory}
         categoryRef={categoryRef}
+        services={services}
+        categories={categories}
+        type={type}
       />
     </Card>
   );

@@ -11,6 +11,7 @@ import {
   User,
   ShoppingBag,
   Command,
+  Book,
   Tag,
   Settings,
   Database,
@@ -170,6 +171,40 @@ export default [
         navLink: "/apps/ecommerce/attributes",
       },
     ],
+  },
+  {
+    id: 'blog',
+    title: 'Blog',
+    icon: <Book size={12} />,
+    children: [
+      {
+        id: 'blogList',
+        title: 'List',
+        icon: <Circle size={12} />,
+        permissions: ['admin', 'editor'],
+        navLink: '/apps/blog/list'
+      },
+      {
+        id: "blogList-category",
+        title: "Category",
+        icon: <Circle size={12} />,
+        navLink: "/apps/blog/blogCategory",
+      },
+      {
+        id: 'blogDetail',
+        title: 'Detail',
+        icon: <Circle size={12} />,
+        permissions: ['admin', 'editor'],
+        navLink: '/apps/blog/detail'
+      },
+      // {
+      //   id: 'blogEdit',
+      //   title: 'Edit',
+      //   icon: <Circle size={12} />,
+      //   permissions: ['admin', 'editor'],
+      //   navLink: '/apps/blog/edit'
+      // }
+    ]
   },
   {
     id: "comment",

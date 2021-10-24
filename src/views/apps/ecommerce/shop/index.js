@@ -12,7 +12,7 @@ import Breadcrumbs from '@components/breadcrumbs'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   addToCart,
-  getProducts,
+  addProducts,
   getCartItems,
   addToWishlist,
   deleteCartItem,
@@ -26,26 +26,29 @@ import { removeMediaFiles } from '../../media/store/action'
 
 const Shop = () => {
   // ** States
+  const initialSelectedCategory = "All"
   const [activeView, setActiveView] = useState('grid')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [selected, setSelected] = useState(initialSelectedCategory)
 
   // ** Vars
   const dispatch = useDispatch()
   const store = useSelector(state => state.ecommerce)
 
-  // ** Get products
-  useEffect(() => {
-    dispatch(
-      getProducts({
-        q: '',
-        sortBy: 'featured',
-        perPage: 9,
-        page: 1
-      })
-    )
-    // dispatch(removeMediaFiles())
-    // dispatch(closeUpload())
-  }, [dispatch])
+  // useEffect(() => {
+  //   dispatch(
+  //     addProducts({
+  //       q: '',
+  //       sortBy: 'featured',
+  //       perPage: 9,
+  //       page: 1
+  //     })
+  //   )
+  //   // dispatch(removeMediaFiles())
+  //   // dispatch(closeUpload())
+  // }, [])
+
+
   return (
     <Fragment>
       <Breadcrumbs breadCrumbTitle='Shop' breadCrumbParent='eCommerce' breadCrumbActive='Shop' />
@@ -54,7 +57,7 @@ const Shop = () => {
         dispatch={dispatch}
         addToCart={addToCart}
         activeView={activeView}
-        getProducts={getProducts}
+        getProducts={addProducts}
         sidebarOpen={sidebarOpen}
         getCartItems={getCartItems}
         setActiveView={setActiveView}
@@ -62,8 +65,9 @@ const Shop = () => {
         setSidebarOpen={setSidebarOpen}
         deleteCartItem={deleteCartItem}
         deleteWishlistItem={deleteWishlistItem}
+        selected={selected}
       />
-      <Sidebar sidebarOpen={sidebarOpen} />
+      <Sidebar sidebarOpen={sidebarOpen} selected={selected} setSelected={setSelected} />
     </Fragment>
   )
 }

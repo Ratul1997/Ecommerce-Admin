@@ -9,10 +9,14 @@ import axiosInstance from "@configs/axiosInstance.js";
 import { useSelector } from "react-redux";
 import { onErrorToast } from "../../../common/Toaster";
 
-export default function ProductCategories() {
+export default function ProductCategories(props) {
+
+  const { selected, setSelected } = props;
+
   const store = useSelector(store => store.ecommerce);
   const { categories } = store;
   const [categoryList, setCategoryList] = useState(categories);
+
   useEffect(() => {
     if (categoryList.length === 0) {
       loadCategories();
@@ -28,6 +32,9 @@ export default function ProductCategories() {
       onErrorToast(err.data.massage);
     }
   };
+  const onhandleChange = e => {
+    setSelected(e.target.value)
+  }
   return (
     <>
       <h6 className="filter-title">Categories</h6>
@@ -38,7 +45,9 @@ export default function ProductCategories() {
             id={-1}
             label="All"
             name="category-radio"
+            value="All"
             defaultChecked={true}
+            onChange={onhandleChange}
           />
         </li>
         {categories.map(category => {
@@ -49,7 +58,9 @@ export default function ProductCategories() {
                 id={category.category_id}
                 label={category.name}
                 name="category-radio"
+                value={category.name}
                 defaultChecked={category.defaultChecked}
+                onChange={onhandleChange}
               />
             </li>
           );

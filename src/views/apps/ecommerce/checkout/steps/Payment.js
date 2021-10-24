@@ -1,8 +1,102 @@
-// ** Third Party Components
-import { PlusCircle } from 'react-feather'
-import { Form, Label, Input, Button, Card, CardHeader, CardTitle, CardBody, CardText, CustomInput } from 'reactstrap'
+/* eslint-disable  */
 
-const Payment = () => {
+// ** Third Party Components
+import { useState, useEffect } from "react"
+import { PlusCircle } from 'react-feather'
+import { Form, Label, Input, Button, Card, Col, FormGroup, CardHeader, CardTitle, CardBody, CardText, CustomInput } from 'reactstrap'
+import shippingServices from '../../../../../services/shippingServices'
+import { onErrorToast, onSuccessToast } from "../../../../common/Toaster"
+import SideBar from './SideBar'
+
+const Payment = props => {
+  
+  //** Props */
+  const {
+    store,
+    stepper,
+    customerDetails,
+    paymentSelectedMethod, 
+    setPaymentSelectedMethod, 
+    paymentMethodInfo, 
+    setPaymentMethodInfo, 
+    onlinePaymentMethod, 
+    setOnlinePaymentMethod,
+    countTotalPrice,
+    shippingCost,
+    payPhnNumber,
+    setPayPhnNumber,
+    payTransaction,
+    setPayTransaction,
+    message,
+    setMessage
+   } = props
+
+  //**constant Functions */
+  const getPaymentDetails = async () => {
+    const res = await shippingServices.getPaymentInfo()
+    setPaymentMethodInfo(res.data.results.paymentDetails)
+  }
+
+  const onPaymentMethodChange = e => {
+    //Cash on delivery or online payment
+    setPaymentSelectedMethod(e.target.value)
+  }
+
+  const onOnlinePaymentMethodChange = e => {
+    //online payment options
+    setOnlinePaymentMethod(e.target.value)
+  }
+
+  const onConfirmOrder = async e => {
+    e.preventDefault()
+    let fullName = customerDetails.firstName.concat(" ")
+    fullName = fullName.concat(customerDetails.lastName)
+
+    let orderItemInCart = []
+    if (store.cart) {
+      store.cart.map(item => {
+        orderItemInCart.push({
+          productId: item.product_id,
+          qty: item.quantity,
+          price: item.discount_price,
+          variants: "",
+          name: item.product_name
+        })
+      })
+    }
+    console.log(customerDetails)
+
+    try {
+      const res = await shippingServices.addCheckoutOrder({
+        userId: customerDetails.userId.value,
+        email: customerDetails.emailAddress,
+        fullName: fullName,
+        phoneNumber: customerDetails.phoneNumber,
+        country: customerDetails.countryName.value,
+        division: customerDetails.divisionName.label,
+        city: customerDetails.townName.label,
+        address: customerDetails.address,
+        payOption: paymentSelectedMethod,
+        payMedium: onlinePaymentMethod,
+        message: message,
+        payPhnNumber: payPhnNumber,
+        transId: payTransaction,
+        orderedItems: orderItemInCart,
+        totalCost: countTotalPrice(),
+        shippingCost: shippingCost,
+        orderTypeId: customerDetails.orderType.value
+      })
+      onSuccessToast("Succesfully ordered. Thank you")
+    } catch (error) {
+      onErrorToast("Something went wrong")
+    }
+  }
+
+  //** useEffect */
+  useEffect(() => {
+    getPaymentDetails()
+  }, [paymentSelectedMethod])
+
   return (
     <Form
       className='list-view product-checkout'
@@ -17,75 +111,119 @@ const Payment = () => {
             <CardText className='text-muted mt-25'>Be sure to click on correct payment option</CardText>
           </CardHeader>
           <CardBody>
-            <h6 className='card-holder-name my-75'>John Doe</h6>
-            <CustomInput
-              id='card'
-              type='radio'
-              defaultChecked
-              label='US Unlocked Debit Card 12XX XXXX XXXX 0000'
-              name='paymentMethod'
-            />
-            <div className='customer-cvv mt-1'>
-              <div className='form-inline'>
-                <Label className='mb-50' for='card-holder-cvv'>
-                  Enter CVV:
-                </Label>
-                <Input className='input-cvv ml-sm-75 ml-0 mb-50' id='card-holder-cvv' />
-                <Button className='btn-cvv ml-0 ml-sm-1 mb-50' color='primary'>
-                  Continue
-                </Button>
-              </div>
-            </div>
-            <hr className='my-2' />
             <ul className='other-payment-options list-unstyled'>
               <li className='py-50'>
-                <CustomInput type='radio' label='Credit / Debit / ATM Card' name='paymentMethod' id='payment-card' />
+                <CustomInput 
+                  type='radio' 
+                  label='Online payment'
+                  name='paymentMethod' 
+                  id='payment-card'
+                  value='Online payment'
+                  onChange={onPaymentMethodChange}
+                />
               </li>
               <li className='py-50'>
-                <CustomInput type='radio' label='Net Banking' name='paymentMethod' id='payment-net-banking' />
-              </li>
-              <li className='py-50'>
-                <CustomInput type='radio' label='EMI (Easy Installment)' name='paymentMethod' id='payment-emi' />
-              </li>
-              <li className='py-50'>
-                <CustomInput type='radio' label='Cash On Delivery' name='paymentMethod' id='payment-cod' />
+                <CustomInput 
+                  type='radio' 
+                  label='Cash on delivery' 
+                  name='paymentMethod' 
+                  id='payment-net-banking'
+                  value='Cash on delivery'
+                  defaultChecked={true}
+                  onChange={onPaymentMethodChange}
+                />
               </li>
             </ul>
-            <hr className='my-2' />
-            <div className='gift-card mb-25'>
-              <CardText>
-                <PlusCircle className='mr-50' size={21} />
-                <span className='align-middle'>Add Gift Card</span>
-              </CardText>
+            <hr />
+            <div>
+              {
+                paymentSelectedMethod === 'Online payment' ? 
+                <>
+                  <CardTitle tag='h4'>Select your payment method</CardTitle>
+                  <ul className="list-unstyled categories-list">
+                    {paymentMethodInfo.map(item => {
+                      if(item.status === 1) {
+                        return (
+                          <li key={item.payment_id}>
+                            <CustomInput
+                              type="radio"
+                              id={item.payment_id}
+                              label={item.payment_name}
+                              name="category-radio"
+                              value={item.payment_name}
+                              onChange={onOnlinePaymentMethodChange}
+                            />
+                          </li>
+                        );
+                      }
+                    })}
+                  </ul>
+                  <div className="text-center">
+                    {
+                      paymentMethodInfo ? paymentMethodInfo.map(item => {
+                        if (item.payment_name === onlinePaymentMethod) {
+                          return <div>Please Send money to this {item.payment_name} number: 0{item.payment_number}</div>
+                        }
+                      }) : null
+                    }
+                  </div>
+                  <div>
+                    <Col md='6' sm='12'>
+                      <FormGroup className='mb-2'>
+                        <Label for='checkout-number'>Your payment phone number:</Label>
+                        <Input
+                          type='number'
+                          name='checkout-number'
+                          id='checkout-number'
+                          placeholder='01XXXXXXXXX'
+                          onChange={e => setPayPhnNumber(e.target.value)}
+                        />
+                      </FormGroup>
+                    </Col>
+                    <Col md='6' sm='12'>
+                      <FormGroup className='mb-2'>
+                        <Label for='checkout-number'>Transaction Id:</Label>
+                        <Input
+                          placeholder='Transaction Id'
+                          onChange={e => setPayTransaction(e.target.value)}
+                        />
+                      </FormGroup>
+                    </Col>
+                  </div>
+                </> : 
+                <Col md='6' sm='12'>
+                  <FormGroup className='mb-2'>
+                    <Label for='checkout-number'>Message</Label>
+                    <Input
+                     placeholder='Message'
+                     onChange={e => setMessage(e.target.value)}
+                    />
+                    <Label>Make sure to type a message that contains at least 4 characters</Label>
+                  </FormGroup>
+                </Col>
+              }
             </div>
           </CardBody>
         </Card>
       </div>
-      <div className='amount-payable checkout-options'>
+      <div className='checkout-options'>
         <Card>
-          <CardHeader>
-            <CardTitle tag='h4'>Price Details</CardTitle>
-          </CardHeader>
           <CardBody>
-            <ul className='list-unstyled price-details'>
-              <li className='price-detail'>
-                <div className='details-title'>Price of 3 items</div>
-                <div className='detail-amt'>
-                  <strong>$699.30</strong>
-                </div>
-              </li>
-              <li className='price-detail'>
-                <div className='details-title'>Delivery Charges</div>
-                <div className='detail-amt discount-amt text-success'>Free</div>
-              </li>
-            </ul>
-            <hr />
-            <ul className='list-unstyled price-details'>
-              <li className='price-detail'>
-                <div className='details-title'>Amount Payable</div>
-                <div className='detail-amt font-weight-bolder'>$699.30</div>
-              </li>
-            </ul>
+            <SideBar 
+              stepper={stepper}
+              store={store}
+              shippingCost={shippingCost}
+              countTotalPrice={countTotalPrice}
+            />
+            <Button.Ripple
+              color='primary'
+              classnames='btn-next place-order'
+              block
+              disabled={!store.products.length}
+              onClick={onConfirmOrder}
+            >
+              Confirm Order
+            </Button.Ripple>
           </CardBody>
         </Card>
       </div>

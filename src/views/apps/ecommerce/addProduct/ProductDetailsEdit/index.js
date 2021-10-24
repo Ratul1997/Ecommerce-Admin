@@ -144,6 +144,7 @@ const ProductDetailsEdit = () => {
 
     consoleLog(updatedData.product_status_id);
     onUploadUpdatedData(updatedData);
+    console.log(updatedData.long_description)
   };
 
   const onUploadUpdatedData = async updatedData => {

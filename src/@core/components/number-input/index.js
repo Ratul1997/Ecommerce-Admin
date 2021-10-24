@@ -7,6 +7,7 @@ import { InputGroup, InputGroupAddon, Input, Button } from 'reactstrap'
 
 // ** Styles
 import './number-input.scss'
+import productServices from '../../../services/productServices'
 
 // ** Keycode Vars
 const KEYCODE_UP = 38
@@ -21,6 +22,12 @@ const NumberInput = props => {
     size,
     wrap,
     value,
+    store,
+    currentItem,
+    addToCart,
+    dispatch,
+    // count,
+    // setCount,
     style,
     upIcon,
     disabled,
@@ -36,10 +43,12 @@ const NumberInput = props => {
   } = props
 
   // ** State
-  const [count, setCount] = useState(value || min)
+  const [count, setCount] = useState(currentItem.quantity || min)
 
   // ** Handle btn down click
   const handleDecrement = () => {
+    const temp_cart = []
+
     if (!disabled && !readonly) {
       // ** If count is equals or smaller than min then return and do nothing
       if (!wrap && count <= min) {
@@ -60,6 +69,14 @@ const NumberInput = props => {
       }
 
       setCount(countCondition())
+      store.cart.map(item => {
+        if (currentItem.product_id === item.product_id) {
+          temp_cart.push({...item, discount_price: currentItem.discount_price - (currentItem.discount_price / count), quantity: currentItem.quantity - 1})
+        } else {
+          temp_cart.push(item)
+        }
+        dispatch(addToCart(temp_cart))
+      })
 
       if (onDecrement) {
         onIncrement(count)
@@ -69,6 +86,8 @@ const NumberInput = props => {
 
   // ** Handle btn up click
   const handleIncrement = () => {
+    const temp_cart = []
+
     if (!disabled && !readonly) {
       // ** If count is equals or larger than min then return and do nothing
       if (!wrap && count >= max) {
@@ -90,6 +109,15 @@ const NumberInput = props => {
 
       setCount(countCondition())
 
+      store.cart.map(item => {
+        if (currentItem.product_id === item.product_id) {
+          temp_cart.push({...item, discount_price: currentItem.discount_price + (currentItem.discount_price / count), quantity: currentItem.quantity + 1})
+        } else {
+          temp_cart.push(item)
+        }
+        dispatch(addToCart(temp_cart))
+      })
+      
       if (onIncrement) {
         onIncrement(count)
       }

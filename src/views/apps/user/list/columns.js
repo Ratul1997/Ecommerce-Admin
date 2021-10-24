@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import Avatar from "@components/avatar";
 
 // ** Store & Actions
-import { getUser, deleteUser } from "../store/action";
+//import { getUser, deleteUser } from "../store/action";
 import { store } from "@store/storeConfig/store";
 
 // ** Third Party Components

@@ -76,6 +76,7 @@ export const urls = {
   // Customers
   GET_USERS: `api/users`,
   GET_USERS_BY_ID: `api/users/`,
+  ADD_USER: `/api/auth/register`,
 
   // Admin
   GET_ADMIN_INFO: `api/admin/admin-info`,
@@ -114,4 +115,23 @@ export const urls = {
   DELETE_EMAIL_TEMPLATES:`api/email-templates/`,
   UPDATE_EMAIL_TEMPLATES:`api/email-templates/`,
   GET_EMAIL_TEMPLATES_BY_ID:`api/email-templates/`,
+
+  //BlogCatagory
+  GET_BLOG_CATEGORIES: `api/blog/categories`,
+  ADD_A_BLOG_CATEGORY: `api/blog/categories`,
+  REMOVE_A_BLOG_CATEGORY: `api/blog/categories/`,
+  UPDATE_A_BLOG_CATEGORY: `api/blog/categories/`,
+
+  //Blog
+  GET_ALL_BLOG: '/api/blogs',
+  ADD_A_BLOG: '/api/blogs',
+  UPDATE_A_BLOG: '/api/blogs/',
+  DELETE_A_BLOG: '/api/blogs/',
+
+  //ShippingCost
+  GET_SHIPPING_COST: '/api/ecommrece/shippingCost/',
+
+  //Checkout order
+  ADD_CHECKOUT_ORDER: '/api/ecommrece/checkout',
+  GET_ORDER_TYPE: '/api/order-type',  
 };

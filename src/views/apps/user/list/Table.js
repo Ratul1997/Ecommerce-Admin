@@ -9,7 +9,7 @@ import Sidebar from "./Sidebar";
 import { columns } from "./columns";
 
 // ** Store & Actions
-import { getAllData, getData } from "../store/action";
+import { getAllData, addUsers } from "../store/action";
 import { useDispatch, useSelector } from "react-redux";
 
 // ** Third Party Components
@@ -18,6 +18,8 @@ import ReactPaginate from "react-paginate";
 import { ChevronDown } from "react-feather";
 import DataTable from "react-data-table-component";
 import { selectThemeColors } from "@utils";
+import userServices from "../../../../services/userServices"
+
 import {
   Card,
   CardHeader,
@@ -48,6 +50,7 @@ const CustomHeader = ({
   searchTerm,
   currentRole,
 }) => {
+
   return (
     <div className="invoice-list-table-header w-100 mr-1 ml-50 mt-2 mb-75">
       <Row>
@@ -95,9 +98,9 @@ const CustomHeader = ({
               onChange={e => handleFilter(e.target.value)}
             />
           </div>
-          {/* <Button.Ripple color="primary" onClick={toggleSidebar}>
+          <Button.Ripple color="primary" onClick={toggleSidebar}>
             Add New User
-          </Button.Ripple> */}
+          </Button.Ripple>
         </Col>
       </Row>
     </div>
@@ -105,6 +108,9 @@ const CustomHeader = ({
 };
 
 const UsersList = () => {
+  const store = useSelector(store => store.users);
+  const { allUsers } = store;
+
   // ** States
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -123,26 +129,13 @@ const UsersList = () => {
     label: "Select Status",
     number: 0,
   });
-  const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [users, setUsers] = useState(allUsers);
+  const [isLoading, setIsLoading] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   // ** Function to toggle sidebar
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
-  useEffect(() => {
-    loadUsers();
-  }, []);
-
-  const loadUsers = async () => {
-    try {
-      const res = await axiosInstance().get(urls.GET_USERS);
-      setUsers(res.data.results);
-      setIsLoading(false);
-    } catch (error) {
-      setIsLoading(false);
-      
-    }
-  };
+  
 
   // ** Function in get data on search query change
   const handleFilter = val => {
@@ -150,7 +143,7 @@ const UsersList = () => {
     const value = val;
     let updatedData = [];
     if (value.length) {
-      updatedData = users.filter(item => {
+      updatedData = allUsers.filter(item => {
         const startsWith =
           item.first_name.toLowerCase().startsWith(val.toLowerCase()) ||
           item.phone_number.toLowerCase().startsWith(val.toLowerCase()) ||
@@ -182,7 +175,7 @@ const UsersList = () => {
     return (
       <ReactPaginate
         pageCount={
-          searchTerm.length ? filteredData.length / 10 : users.length / 10 || 1
+          searchTerm.length ? filteredData.length / 10 : allUsers.length / 10 || 1
         }
         nextLabel=""
         breakLabel="..."
@@ -278,7 +271,7 @@ const UsersList = () => {
           className="react-dataTable"
           paginationPerPage={10}
           paginationComponent={CustomPagination}
-          data={searchTerm.length ? filteredData : users}
+          data={searchTerm.length ? filteredData : allUsers}
           subHeaderComponent={
             <CustomHeader
               toggleSidebar={toggleSidebar}
