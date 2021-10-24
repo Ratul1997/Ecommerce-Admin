@@ -34,7 +34,7 @@ const SideBar = props => {
               <ul className='list-unstyled'>
                 <li className='price-detail'>
                   <div className='detail-title detail-total'>Total</div>
-                  <div className='detail-amt font-weight-bolder'>{countTotalPrice() + shippingCost}</div>
+                  <div className='detail-amt font-weight-bolder'>{countTotalPrice() + shippingCost} BDT</div>
                 </li>
               </ul>
             </div>

@@ -519,7 +519,7 @@
   
   export const divisionOptions = [
     {
-      id: "1",
+      value: "1",
       name: "Barishal",
       label: "Barishal",
 
@@ -528,7 +528,7 @@
       long: "90.353451"
     },
     {
-      id: "2",
+      value: "2",
       name: "Chattogram",
       label: "Chattogram",
 
@@ -537,7 +537,7 @@
       long: "91.783182"
     },
     {
-      id: "3",
+      value: "3",
       name: "Dhaka",
       label: "Dhaka",
 
@@ -546,7 +546,7 @@
       long: "90.412518"
     },
     {
-      id: "4",
+      value: "4",
       name: "Khulna",
       label: "Khulna",
 
@@ -555,7 +555,7 @@
       long: "89.540328"
     },
     {
-      id: "5",
+      value: "5",
       name: "Rajshahi",
       label: "Rajshahi",
 
@@ -564,7 +564,7 @@
       long: "88.624135"
     },
     {
-      id: "6",
+      value: "6",
       name: "Rangpur",
       label: "Rangpur",
 
@@ -573,7 +573,7 @@
       long: "89.275227"
     },
     {
-      id: "7",
+      value: "7",
       name: "Sylhet",
       label: "Sylhet",
 
@@ -582,7 +582,7 @@
       long: "91.868706"
     },
     {
-      id: "8",
+      value: "8",
       name: "Mymensingh",
       label: "Mymensingh",
 
